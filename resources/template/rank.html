@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+      body {
+          font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+          background-color: #e2e8f0;
+          margin: 0;
+          padding: 15px;
+          display: flex;
+          justify-content: center;
+      }
+      .container {
+          width: 800px;
+          background-color: #fff;
+          border-radius: 8px;
+          padding: 25px 30px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      }
+      .header {
+          text-align: center;
+          font-size: 26px;
+          font-weight: bold;
+          color: #1e293b;
+          margin-bottom: 25px;
+          padding-bottom: 15px;
+          border-bottom: 1px solid #f1f5f9;
+      }
+      .row {
+          display: flex;
+          align-items: center;
+          margin-bottom: 20px;
+          height: 80px;
+      }
+      .rank-num {
+          width: 30px;
+          font-size: 22px;
+          font-weight: bold;
+          color: #94a3b8;
+          text-align: left;
+          font-style: italic;
+          flex-shrink: 0;
+          margin-right: 10px;
+      }
+      /* 序号达到三位数后缩小字体 */
+      .rank-num.small {
+          font-size: 18px;
+          letter-spacing: -0.5px; /* 缩小字间距 */
+      }
+      .avatar {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          margin-right: 17px;
+          margin-left: 5px;
+          flex-shrink: 0;
+          background-color: #f8fafc;
+      }
+      .bar-container {
+          flex-grow: 1;
+          height: 40px;
+          /* background-color: #f1f5f9; /* 柱状图灰色背景 */*/
+          border-radius: 6px;
+          position: relative;
+          overflow: hidden; /* 防止柱子边角溢出 */
+          display: flex;
+          justify-content: space-between; /* 名字和分数分别靠左和靠右 */
+          align-items: center;
+          padding: 0 15px; /* 文字距离左右两边的间距 */
+          margin-left: 1px; /* 和头像的间距 */
+      }
+      .bar {
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          z-index: 1; /* 层级1，沉在最下 */
+          border-radius: 8px;
+          transition: width 0.3s ease;
+      }
+      /* 换头大王 */
+      .bar.avatar {
+          background-color: #d3f8e1;
+      }
+      /* 马甲大王 */
+      .bar.vest {
+          background-color: #d5e2ff;
+      }
+      /* 专一大王 */
+      .bar.loyal { background-color: #ffead4; }
+      /* 潜水大王 */
+      .bar.diver { background-color: #cbf0ff; }
+      /* 冒泡大王 */
+      .bar.active { background-color: #ffd6e7; }
+      /* 老资历 */
+      .bar.veteran { background-color: #ffd4d4; }
+      /* 小资历 */
+      .bar.newbie { background-color: #efffd0; }
+      /* 名字悬浮在第二层 */
+      .name {
+          position: relative;
+          z-index: 2; /* 层级2，浮在上面 */
+          font-size: 18px;
+          color: #334155;
+          font-weight: bold;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 80%; /* 防止名字太长盖住分数 */
+          /* text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8), -1px -1px 2px rgba(255, 255, 255, 0.8); */
+      }
+
+      /* 分数悬浮在第二层 */
+      .score {
+          position: relative;
+          z-index: 2; /* 浮在柱子上 */
+          font-size: 16px;
+          /* font-weight: bold;*/
+          color: #3341556a;
+          white-space: nowrap;
+          /* text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8), -1px -1px 2px rgba(255, 255, 255, 0.8); */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">{{groupName}} {{title}}</div>
+      {{each list item i}}
+      <div class="row">
+        <div class="rank-num {{if i + 1 >= 100}}small{{/if}}">#{{i + 1}}</div>
+        <img class="avatar" src="{{item.avatar}}" />
+
+        <div class="bar-container">
+          <div class="bar {{rankType}}" style="width: {{item.barWidth}}%;"></div>
+
+          <div class="name">{{item.displayName}}</div>
+
+          <div class="score">{{item.displayScore}}</div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </body>
+</html>

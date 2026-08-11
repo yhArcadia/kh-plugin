@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>群聊记录</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", "Noto Sans Math"; */
+        /* font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "WenQuanYi Micro Hei", "微软雅黑", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji"; */
+        font-family:
+          "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC",
+          "WenQuanYi Micro Hei", "Microsoft YaHei", "微软雅黑", Arial, sans-serif,
+          "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+      }
+      .container {
+        width: 800px; /* 截图宽度 */
+        margin: 0 auto;
+        background-color: #f5f5f5;
+      }
+      .header {
+        background-color: #fff;
+        padding: 30px; /* 群名大小 */
+        text-align: center; /* 居中 */
+        font-size: 25px;
+        font-weight: bold;
+        border-bottom: 1px solid #e0e0e0;
+        color: #333;
+        word-break: break-all;
+      }
+      .chat-log {
+        padding: 20px 30px;
+      }
+      .message {
+        display: flex;
+        margin-bottom: 30px;
+      }
+      .avatar {
+        width: 100px; /* 头像大小 */
+        height: 100px; /* 头像大小 */
+        border-radius: 50%;
+        margin-right: 20px;
+        flex-shrink: 0;
+      }
+      .message-body {
+        display: flex;
+        flex-direction: column;
+        max-width: 85%;
+        width: 100%; /* 气泡宽度设为100使得气泡固定为最宽。注释此行以实现自适应气泡宽度 */
+      }
+      .nickname-container {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+      }
+      .nickname {
+        color: #888;
+        font-size: 26px;
+        /* font-weight: 500; */
+        font-weight: normal;
+        word-break: break-all;
+      }
+      .title-badge {
+        /* background-color: #dda0dd;  先移除固定颜色，改为内联样式 */
+        font-size: 20px;
+        padding: 4px 10px;
+        border-radius: 6px; /* 圆角矩形 */
+        margin-right: 10px; /* 间距 (在昵称右侧) */
+        font-weight: bold;
+        white-space: nowrap;
+      }
+      .message-bubble {
+        background-color: #fff;
+        padding: 20px 25px;
+        border-radius: 12px;
+        position: relative;
+        border: 1px solid #eee;
+        line-height: 1.6;
+        font-size: 30px;
+        word-wrap: break-word;
+      }
+      .message-bubble::before {
+        content: "";
+        position: absolute;
+        left: -10px;
+        top: 14px;
+        width: 0;
+        height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid #fff;
+      }
+      /* 系统消息 */
+      .system-message {
+        text-align: center; /* 文本居中 */
+        margin: 13px 0 27px 0;
+        color: #aaa;
+        font-size: 24px;
+        /* font-weight: 500; */
+        font-weight: normal;
+        padding: 8px 18px;
+        background: #e6e6e6;
+        display: inline-block;
+        border-radius: 8px;
+      }
+      .system-message-container {
+        text-align: center; /* 容器居中 */
+      }
+      .content-text {
+        color: #333;
+      }
+      .content-text {
+        color: #333;
+      }
+      .content-time {
+        /* 卡片坐下日期时间 */
+        color: #999;
+        font-size: 0.8em;
+        display: block;
+        margin-top: 12px;
+        line-height: 1;
+      }
+      .record-index {
+        /* 卡片右下序号 */
+        position: absolute;
+        right: 19px;
+        bottom: 14px;
+        font-size: 24px;
+        color: #e0e0e0;
+        font-weight: 280; /* 加粗 */
+        font-style: italic;
+        user-select: none;
+        z-index: 1;
+      }
+      /* 占位容器，撑开内部垂直间距 */
+      .timeline-spacer {
+        position: relative;
+        width: 100%;
+        height: 14px;
+        margin-top: 6px;
+        margin-bottom: 6px;
+      }
+      /* 时间轴外层 */
+      .timeline-wrapper {
+        position: absolute;
+        left: -25px;
+        top: 0;
+        width: 618px; /* 总长 */
+        height: 14px;
+        z-index: 10;
+      }
+      /* 基础轴 */
+      .timeline-base {
+        position: absolute;
+        top: 6px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #ebebeb;
+      }
+      /* 滑块 */
+      .timeline-slider {
+        position: absolute;
+        top: 5px;
+        height: 4px;
+        background-color: #c9c9c9;
+      }
+      /* 线端 */
+      .timeline-slider::before,
+      .timeline-slider::after {
+        content: "";
+        position: absolute;
+        top: -3px;
+        width: 2px;
+        height: 10px;
+        background-color: #bebcbc;
+      }
+      /* .timeline-slider::before { left: -1px; } */
+      /* .timeline-slider::after { right: -1px; } */
+      .timeline-slider::before {
+        left: 0px;
+      }
+      .timeline-slider::after {
+        right: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">{{groupName}}</div>
+      <div class="chat-log">
+        {{each history item i}} {{if item.isSystemMessage}}
+        <div class="system-message-container" style="animation-delay: {{i * 0.1}}s;">
+          <span class="system-message">{{@ item.content}}</span>
+        </div>
+        {{else}}
+        <div class="message" style="animation-delay: {{i * 0.1}}s;">
+          <img src="{{item.avatar}}" alt="avatar" class="avatar" />
+          <div class="message-body">
+            <div class="nickname-container">
+              <span
+                class="title-badge"
+                style="background-color: {{item.badgeColor}}; color: {{item.badgeTextColor}};"
+                >{{item.badgeText}}</span
+              >
+              <span class="nickname">{{item.nickname}}</span>
+            </div>
+            <div class="message-bubble">
+              <span class="content-text">{{@ item.content}}</span>
+            </div>
+          </div>
+        </div>
+        {{/if}} {{/each}}
+      </div>
+    </div>
+  </body>
+</html>

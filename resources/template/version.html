@@ -1,0 +1,109 @@
+<!--
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-06 19:58:58
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-08-11 18:06:23
+ * @FilePath: /Yunzai/plugins/who-are-you-plugin/resources/template/version.html
+ * @Description: 
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+-->
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>#who版本</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+        color: #333;
+        font-family:
+          "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC",
+          "WenQuanYi Micro Hei", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .container {
+        width: 800px;
+        margin: 0 auto;
+        background-color: #f5f5f5;
+      }
+
+      .header {
+        padding: 30px;
+        border-bottom: 1px solid #e0e0e0;
+        background-color: #fff;
+        color: #333;
+        text-align: center;
+        font-size: 25px;
+        font-weight: bold;
+      }
+
+      .content {
+        padding: 20px 30px 30px;
+      }
+
+      .log {
+        padding: 25px 30px 30px;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        background-color: #fff;
+      }
+
+      .log-title {
+        margin: 0 0 22px;
+        color: #333;
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .date {
+        margin-left: 12px;
+        color: #999;
+        font-size: 18px;
+        font-weight: normal;
+      }
+
+      .notes {
+        margin: 0;
+        padding-left: 30px;
+      }
+
+      .notes li {
+        margin: 10px 0;
+        padding: 0;
+        color: #333;
+        font-size: 22px;
+        line-height: 1.6;
+        word-break: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">{{pluginName}} 版本信息</div>
+      <div class="content">
+        <div class="log">
+          <div class="log-title">
+            {{version === '版本信息' ? version : 'v' + version}}
+            <span class="date">{{date}}</span>
+          </div>
+          <ul class="notes">
+            {{each highlights note}}
+            <li>{{@note}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
