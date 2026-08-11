@@ -271,11 +271,11 @@ export function supportGuoba() {
       title: 'who-are-you-plugin',
       author: '渔火Arcadia',
       authorLink: 'https://github.com/yhArcadia',
-      link: '',
+      link: 'https://github.com/yhArcadia/who-are-you-plugin',
       isV2: false,
       isV3: true,
       showInMenu: 'auto',
-      description: '群成员头像昵称记录留档工具，有效制裁群友“改头换面”、秽土转生。'
+      description: '群成员头像昵称记录留档工具，有效制裁群友“改头换面”、秽土转生。(如链接打不开请把github换成gitee)'
     },
     configInfo: {
       schemas,
