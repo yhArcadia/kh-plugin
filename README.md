@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 17:02:19
+ * @LastEditTime: 2026-08-12 00:18:31
  * @FilePath: /Yunzai/plugins/who-are-you-plugin/README.md
  * @Description: 
  * 
@@ -12,19 +12,30 @@
 
 基于Yunzai的群成员昵称、群名片、头衔、权限与头像历史记录存档插件。有效克制群友“改头换面”秽土转生。
 
+<img decoding="async" src="./resources/img/meme.jpg" width="20%">
+
 </br>
 
+
+
+## 核心功能
 **查询群友历史身份**
 
-<img decoding="async" src="./resources/img/history.jpg" width="35%">
+<img decoding="async" src="./resources/img/history.jpg" width="45%">
 
 </br>
 
 **支持主动推送**
 
-<img decoding="async" src="./resources/img/push.jpg" width="35%">
+<img decoding="async" src="./resources/img/push.jpg" width="45%">
 
 
+
+## 扩展功能
+
+**趣味排行**、获取历史头像文件等。详见[指令列表](./README.md#指令列表)。
+
+<img decoding="async" src="./resources/img/veteran.jpg" width="45%"><img decoding="async" src="./resources/img/vest_king.jpg" width="45%">
 
 ## 安装与升级
 使用锅巴安装
@@ -48,7 +59,7 @@ git clone https://gitee.com/yhArcadia/who-are-you-plugin ./plugins/who-are-you-p
 
 
 
-## 指令
+## 指令列表
 
 - `开合 @某人` / `kh @某人` / `KH @某人` / `你是谁 @某人` / `他是谁 @某人`
 - `更新群员信息` / `静默更新信息`
@@ -63,6 +74,7 @@ git clone https://gitee.com/yhArcadia/who-are-you-plugin ./plugins/who-are-you-p
 
 ## QA
 
+-
 
 
 ## 相关链接
