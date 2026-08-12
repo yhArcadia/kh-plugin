@@ -1,14 +1,14 @@
 import { isDivingGroup } from '../utils/group-policy.js';
-import { WhoApp } from '../components/base-app.js';
+import { BaseApp } from '../components/base-app.js';
 import { config, scanLegacyKeys, OPERATION_LOCK_KEY } from '../components/runtime.js';
 import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 import { log } from '../utils/logger.js';
 
-export class WhoAdmin extends WhoApp {
+export class KhAdmin extends BaseApp {
     constructor() {
         super({
-            name: 'Who插件-管理',
-            dsc: 'WhoAreYou 记录管理',
+            name: 'kh插件-管理',
+            dsc: 'kh插件 记录管理',
             priority: 5000,
             startScheduler: false,
             rule: [

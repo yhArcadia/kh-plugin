@@ -2,8 +2,8 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 18:10:32
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/components/paths.js
+ * @LastEditTime: 2026-08-12 16:55:34
+ * @FilePath: /kh-plugin/components/paths.js
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
@@ -16,7 +16,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const pluginRoot = path.resolve(__dirname, '..');
-export const dataRoot = path.join(process.cwd(), 'data', 'who_are_you_plugin');
+export const dataRoot = path.join(process.cwd(), 'data', 'who_are_you_plugin'); //兼容旧版数据目录，对应Yunzai/data/who_are_you_plugin，该处没有头像时才采用插件内data目录。
 const legacyHeadsDir = path.join(dataRoot, 'heads');
 const pluginHeadsDir = path.join(pluginRoot, 'data', 'heads');
 export const headsDir = hasFiles(legacyHeadsDir) ? legacyHeadsDir : pluginHeadsDir;

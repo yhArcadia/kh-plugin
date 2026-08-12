@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import moment from 'moment';
 import { isDivingGroup } from '../utils/group-policy.js';
-import { WhoApp } from '../components/base-app.js';
+import { BaseApp } from '../components/base-app.js';
 import {
     config,
     headDir,
@@ -12,11 +12,11 @@ import {
 } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
 
-export class WhoDebug extends WhoApp {
+export class Debug extends BaseApp {
     constructor() {
         super({
-            name: 'Who插件-调试工具',
-            dsc: 'WhoAreYou 调试工具',
+            name: 'kh插件-调试工具',
+            dsc: 'kh插件 调试工具',
             priority: 5000,
             startScheduler: false,
             rule: [

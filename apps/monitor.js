@@ -1,4 +1,4 @@
-import { WhoApp } from '../components/base-app.js';
+import { BaseApp } from '../components/base-app.js';
 import {
     config,
     memberUpdater,
@@ -7,11 +7,11 @@ import {
 } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
 
-export class WhoMonitor extends WhoApp {
+export class Monitor extends BaseApp {
     constructor() {
         super({
-            name: 'Who插件-群员身份实时监听',
-            dsc: 'WhoAreYou 实时身份监听',
+            name: 'kh插件-群员身份实时监听',
+            dsc: 'kh插件 实时身份监听',
             priority: 6000, rule: [
                 {
                     reg: '',

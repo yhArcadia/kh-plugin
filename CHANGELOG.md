@@ -2,8 +2,8 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 15:57:02
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/CHANGELOG.md
+ * @LastEditTime: 2026-08-12 16:11:09
+ * @FilePath: /kh-plugin/CHANGELOG.md
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 

@@ -1,17 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import moment from 'moment';
-import { WhoApp } from '../components/base-app.js';
+import { BaseApp } from '../components/base-app.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { headDir, config } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
 
-export class WhoAvatars extends WhoApp {
+export class Avatars extends BaseApp {
     constructor() {
         super({
-            name: 'Who插件-历史头像',
-            dsc: 'WhoAreYou 历史头像',
+            name: 'kh插件-历史头像',
+            dsc: 'kh插件 历史头像',
             priority: 5000,
             rule: [
                 {

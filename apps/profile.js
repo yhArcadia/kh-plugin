@@ -3,16 +3,16 @@ import path from 'node:path';
 import moment from 'moment';
 import { formatDuration, getLevelIcons } from '../utils/format.js';
 import { isDivingGroup } from '../utils/group-policy.js';
-import { WhoApp } from '../components/base-app.js';
+import { BaseApp } from '../components/base-app.js';
 import { config, memberUpdater } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
 
-export class WhoProfile extends WhoApp {
+export class KhProfile extends BaseApp {
     constructor() {
         super({
-            name: 'Who插件-成员基础信息查询',
-            dsc: 'WhoAreYou 成员信息查询',
+            name: 'kh插件-成员基础信息查询',
+            dsc: 'kh插件 成员基础信息查询',
             priority: 5000,
             startScheduler: false,
             rule: [

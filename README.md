@@ -2,13 +2,13 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 00:18:31
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/README.md
+ * @LastEditTime: 2026-08-12 16:06:52
+ * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
 -->
-# WhoAreYou Plugin
+# Kh-Plugin
 
 基于Yunzai的群成员昵称、群名片、头衔、权限与头像历史记录存档插件。有效克制群友“改头换面”秽土转生。
 
@@ -37,23 +37,25 @@
 
 <img decoding="async" src="./resources/img/veteran.jpg" width="45%"><img decoding="async" src="./resources/img/vest_king.jpg" width="45%">
 
+
+
 ## 安装与升级
 使用锅巴安装
 或者
 在Yunzai根目录下执行：
 ```
-git clone https://github.com/yhArcadia/who-are-you-plugin ./plugins/who-are-you-plugin
+git clone https://github.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 ```
 或
 ```
-git clone https://gitee.com/yhArcadia/who-are-you-plugin ./plugins/who-are-you-plugin
+git clone https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 ```
 
 
 
 ## Gunba-Plugin
 
-推荐使用锅巴进行个性化配置。
+推荐使用[锅巴插件](https://github.com/guoba-yunzai/guoba-plugin)进行个性化配置。
 
 <img decoding="async" src="./resources/img/guoba.jpg" width="80%">
 

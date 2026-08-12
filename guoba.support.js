@@ -159,7 +159,7 @@ const schemas = [
 ];
 
 function redisClient() {
-  if (!global.redis) throw new Error('Redis 尚未连接，无法读取 WhoAreYou 数据。');
+  if (!global.redis) throw new Error('Redis 尚未连接，无法读取 kh-plugin 数据。');
   return global.redis;
 }
 
@@ -267,11 +267,11 @@ async function runAction(action, input, context = {}) {
 export function supportGuoba() {
   return {
     pluginInfo: {
-      name: 'who-are-you-plugin',
-      title: 'who-are-you-plugin',
+      name: 'kh-plugin',
+      title: 'kh-plugin',
       author: '渔火Arcadia',
       authorLink: 'https://github.com/yhArcadia',
-      link: 'https://github.com/yhArcadia/who-are-you-plugin',
+      link: 'https://github.com/yhArcadia/kh-plugin',
       isV2: false,
       isV3: true,
       showInMenu: 'auto',

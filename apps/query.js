@@ -2,15 +2,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import moment from 'moment';
 import { isDivingGroup } from '../utils/group-policy.js';
-import { WhoApp } from '../components/base-app.js';
+import { BaseApp } from '../components/base-app.js';
 import { config, memberUpdater } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
 
-export class WhoQuery extends WhoApp {
+export class KhQuery extends BaseApp {
     constructor() {
         super({
-            name: 'Who插件-群员历史身份（KH）',
+            name: 'kh插件-群员历史身份（KH）',
             dsc: '查询群友身份与历史头像',
             priority: 5000,
             startScheduler: false,

@@ -2,21 +2,21 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-10 19:20:39
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/apps/scheduler.js
+ * @LastEditTime: 2026-08-12 16:46:15
+ * @FilePath: /kh-plugin/apps/scheduler.js
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
-import { WhoApp } from '../components/base-app.js';
+import { BaseApp } from '../components/base-app.js';
 import { config, memberUpdater } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
 
-export class WhoScheduler extends WhoApp {
+export class KhScheduler extends BaseApp {
     constructor() {
         super({
-            name: 'Who插件-定时更新群员信息调度',
-            dsc: 'WhoAreYou 定时更新群员信息调度',
+            name: 'kh插件-定时更新群员信息调度',
+            dsc: 'kh插件 定时更新群员信息调度',
             priority: 6000,
             startScheduler: true,
             rule: []

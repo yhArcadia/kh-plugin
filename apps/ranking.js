@@ -3,7 +3,7 @@ import path from 'node:path';
 import moment from 'moment';
 import { formatDuration } from '../utils/format.js';
 import { isDivingGroup } from '../utils/group-policy.js';
-import { WhoApp } from '../components/base-app.js';
+import { BaseApp } from '../components/base-app.js';
 import {
     config,
     headDir,
@@ -11,11 +11,11 @@ import {
 } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
 
-export class WhoRanking extends WhoApp {
+export class KhRanking extends BaseApp {
     constructor() {
         super({
-            name: 'Who插件-排行榜',
-            dsc: 'WhoAreYou 排行榜',
+            name: 'kh插件-排行榜',
+            dsc: 'kh插件 排行榜',
             priority: 5000, startScheduler: false,
             rule: [
                 {

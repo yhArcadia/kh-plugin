@@ -2,8 +2,8 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:15:20
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-09 13:38:12
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/components/base-app.js
+ * @LastEditTime: 2026-08-12 16:38:54
+ * @FilePath: /kh-plugin/components/base-app.js
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
@@ -13,7 +13,7 @@ import { renderHistory } from '../render/history-renderer.js';
 import { config, getBot, schedulerState, OPERATION_LOCK_KEY } from './runtime.js';
 import { Scheduler } from './scheduler.js';
 
-export class WhoApp extends plugin {
+export class BaseApp extends plugin {
   constructor({ name, dsc, rule, priority = 5000, startScheduler = false }) {
     super({
       name,

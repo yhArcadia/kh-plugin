@@ -1,15 +1,15 @@
-import { WhoApp } from '../components/base-app.js';
+import { BaseApp } from '../components/base-app.js';
 import { config, OPERATION_LOCK_KEY, memberUpdater } from '../components/runtime.js';
 import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { setMsgEmojiLike } from '../utils/message.js';
 import { log } from '../utils/logger.js';
 
-export class WhoMemberUpdate extends WhoApp {
+export class MemberInfoUpdate extends BaseApp {
     constructor() {
         super({
-            name: 'Who插件-手动更新群员信息',
-            dsc: 'WhoAreYou 手动更新群员信息',
+            name: 'kh插件-手动更新群员信息',
+            dsc: 'kh插件 手动更新群员信息',
             priority: 5000,
             rule: [
                 {

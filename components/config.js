@@ -7,7 +7,7 @@ const pluginRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '.
 const configDir = path.join(pluginRoot, 'config');
 const defaultConfigPath = path.join(configDir, 'default_config.yaml');
 const userConfigPath = path.join(configDir, 'config.yaml');
-const legacyDataRoot = path.join(process.cwd(), 'data', 'who_are_you_plugin');
+const legacyDataRoot = path.join(process.cwd(), 'data', 'who_are_you_plugin');  //兼容旧版插件数据目录，将旧版配置从yunzai/data迁移至插件目录下
 const legacyConfigDir = path.join(legacyDataRoot, 'config');
 const legacyDefaultConfigPath = path.join(legacyConfigDir, 'default_config.yaml');
 const legacyUserConfigPath = path.join(legacyConfigDir, 'config.yaml');
@@ -40,7 +40,7 @@ export const defaultConfig = Object.freeze({
 const configFields = Object.freeze(Object.keys(defaultConfig));
 const numericFields = new Set(['maxSaveLength', 'maxRenderLength', 'maxNotifyRenderLength', 'monitorCD', 'rankLimit']);
 const arrayFields = new Set(['linkedGroups', 'autoUpdateGroups', 'notifyGroups', 'groupWhitelist', 'groupBlacklist', 'userBlacklist', 'divingGroups']);
-const header = '# WhoAreYou 用户配置。仅填写需要覆盖 default_config.yaml 的项目。\n';
+const header = '# kh-plugin 用户配置。仅填写需要覆盖 default_config.yaml 的项目。\n';
 
 function ensurePaths() { fs.mkdirSync(configDir, { recursive: true }); }
 

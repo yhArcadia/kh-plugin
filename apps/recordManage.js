@@ -1,17 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { isDivingGroup } from '../utils/group-policy.js';
-import { WhoApp } from '../components/base-app.js';
+import { BaseApp } from '../components/base-app.js';
 import { config, headDir, OPERATION_LOCK_KEY } from '../components/runtime.js';
 import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
 
-export class WhoRecordManage extends WhoApp {
+export class KhRecordManage extends BaseApp {
     constructor() {
         super({
-            name: 'Who插件-群员记录管理',
-            dsc: 'WhoAreYou 删除记录管理',
+            name: 'kh插件-群员记录管理',
+            dsc: 'kh插件 删除记录管理',
             priority: 5000,
             startScheduler: false,
             rule: [

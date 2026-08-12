@@ -2,8 +2,8 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:56
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 18:09:14
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/components/version.js
+ * @LastEditTime: 2026-08-12 16:59:31
+ * @FilePath: /kh-plugin/components/version.js
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
@@ -92,7 +92,7 @@ export function versionCardData(file) {
   const parsed = parseChangelog(file);
   const highlights = parsed.highlights.length ? parsed.highlights : ['未找到可展示的更新说明。'];
   return {
-    pluginName: 'WhoAreYou',
+    pluginName: 'kh-plugin',
     subtitle: '群成员身份记录插件',
     version: parsed.version,
     // date: parsed.date || '未标注发布日期',

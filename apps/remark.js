@@ -2,22 +2,22 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-10 19:18:41
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/apps/remark.js
+ * @LastEditTime: 2026-08-12 16:45:55
+ * @FilePath: /kh-plugin/apps/remark.js
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
-import { WhoApp } from '../components/base-app.js';
+import { BaseApp } from '../components/base-app.js';
 import { config } from '../components/runtime.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { log } from '../utils/logger.js';
 
-export class WhoRemark extends WhoApp {
+export class KhRemark extends BaseApp {
     constructor() {
         super({
-            name: 'Who插件-群员备注管理',
-            dsc: 'WhoAreYou 备注管理',
+            name: 'kh插件-群员备注管理',
+            dsc: 'kh插件 备注管理',
             priority: 5000,
             rule: [
                 {
