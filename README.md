@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 16:06:52
+ * @LastEditTime: 2026-08-12 17:19:31
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -76,8 +76,8 @@ git clone https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 
 ## QA
 
--
-
+- Q：插件名kh代表什么意思？  A：kh是 看history 的缩写，即看看历史身份。并没有其他含义。
+- Q：为什么我的排行榜人数很少？  A：初次使用排行类命令，建议先在对应群里执行 更新群员信息 来拉取全员信息，否则排行榜只会包含以发言的群员。
 
 ## 相关链接
 
