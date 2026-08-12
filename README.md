@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 17:19:31
+ * @LastEditTime: 2026-08-12 17:27:29
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -70,7 +70,7 @@ git clone https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 - `#换头大王`、`#马甲大王`、`#专一大王`、`#潜水大王`、`#活跃大王`、`#冒泡大王`、`#老资历`、`#小资历`
 - `#最老QQ`、`#最短QQ`、`#最小QQ`、`#最新QQ`、`#最长QQ`、`#最年轻QQ`
 - `#查信息 [QQ/@某人]`、`#头像时间` / `#头像时长`
-- `#who版本`
+- `#kh版本`
 
 
 

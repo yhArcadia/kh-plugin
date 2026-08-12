@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 16:09:34
+ * @LastEditTime: 2026-08-12 18:07:59
  * @FilePath: /kh-plugin/index.js
  * @Description: 插件入口
  * 
@@ -13,6 +13,7 @@ import fs from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import { ensureLegacyPluginFilesBackedUp } from './components/legacy-cleanup.js';
+import { migratePluginDirectory } from './components/plugin-rename-migration.js';
 
 logger.info("[kh-plugin] 开始载入")
 ensureLegacyPluginFilesBackedUp();
@@ -44,6 +45,9 @@ for (let index = 0; index < files.length; index++) {
   }
   apps[name] = App;
 }
+
+// app 的动态导入已全部结束后，重命名插件。
+migratePluginDirectory();
 
 export { apps };
 
