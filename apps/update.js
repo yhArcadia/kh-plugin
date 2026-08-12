@@ -47,7 +47,13 @@ export class KhUpdate extends plugin {
     }
 
     async updateLog() {
-        this.e.msg = '#更新日志kh-plugin';
-        return false;
+        const updater = new YunzaiUpdate(this.e);
+
+        updater.e = {
+            ...this.e,
+            msg: '#更新日志kh-plugin'
+        };
+
+        return updater.updateLog();
     }
 }
