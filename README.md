@@ -40,7 +40,7 @@
 
 
 ## 安装与升级
-使用锅巴安装
+使用[锅巴](https://github.com/guoba-yunzai/guoba-plugin)安装
 或者
 在Yunzai根目录下执行：
 ```
