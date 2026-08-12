@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 18:07:59
+ * @LastEditTime: 2026-08-12 19:12:21
  * @FilePath: /kh-plugin/index.js
  * @Description: 插件入口
  * 
@@ -16,38 +16,58 @@ import { ensureLegacyPluginFilesBackedUp } from './components/legacy-cleanup.js'
 import { migratePluginDirectory } from './components/plugin-rename-migration.js';
 
 logger.info("[kh-plugin] 开始载入")
+const apps = {};
+
+// 处理 plugins/example 下的 1.x 单文件旧入口。
 ensureLegacyPluginFilesBackedUp();
 
-// 载入 apps 目录下的所有文件
-const appsDir = fileURLToPath(new URL('./apps/', import.meta.url));
-const files = fs.readdirSync(appsDir)
-  .filter(file => file.endsWith('.js'))
-  .sort();
-const results = await Promise.allSettled(
-  files.map(file => import(pathToFileURL(path.join(appsDir, file)).href))
-);
+// 旧目录迁移成功后，本轮不再载入任何插件业务模块。
+const migration = migratePluginDirectory();
+if (migration.status === 'migrated') {
+  logger.warn('[kh-plugin] 本轮已停止载入本插件功能，请重启 Yunzai。');
+  setTimeout(() => {
+    const message = '【kh-plugin】插件目录已从 who-are-you-plugin 迁移为 kh-plugin。\n本次启动已安全跳过插件功能加载，请再重启一次 Yunzai 使新目录生效。';
+    const bot = globalThis.Bot;
+    if (!bot || typeof bot.sendMasterMsg !== 'function') {
+      logger.warn('[kh-plugin] 无法通知主人：Bot.sendMasterMsg 不可用。');
+      return;
+    }
 
-const apps = {};
-for (let index = 0; index < files.length; index++) {
-  const file = files[index];
-  const name = path.basename(file, '.js');
-  const result = results[index];
-  if (result.status !== 'fulfilled') {
-    logger.error(`[kh-plugin] 载入 app 失败：${logger.red?.(name) || name}`);
-    logger.error(result.reason);
-    continue;
+    try {
+      Promise.resolve(bot.sendMasterMsg(message, undefined, 0))
+        .catch(() => logger.warn('[kh-plugin] 发送目录迁移重启提醒失败。'));
+    } catch {
+      logger.warn('[kh-plugin] 发送目录迁移重启提醒失败。');
+    }
+  }, 3000);
+} else {
+  // 载入 apps 目录下的所有文件
+  const appsDir = fileURLToPath(new URL('./apps/', import.meta.url));
+  const files = fs.readdirSync(appsDir)
+    .filter(file => file.endsWith('.js'))
+    .sort();
+  const results = await Promise.allSettled(
+    files.map(file => import(pathToFileURL(path.join(appsDir, file)).href))
+  );
+
+  for (let index = 0; index < files.length; index++) {
+    const file = files[index];
+    const name = path.basename(file, '.js');
+    const result = results[index];
+    if (result.status !== 'fulfilled') {
+      logger.error(`[kh-plugin] 载入 app 失败：${logger.red?.(name) || name}`);
+      logger.error(result.reason);
+      continue;
+    }
+    const exported = Object.values(result.value);
+    const App = exported.find(value => typeof value === 'function' && value.prototype instanceof plugin);
+    if (!App) {
+      logger.error(`[kh-plugin] apps/${file} 未导出有效的 plugin 类，已跳过。`);
+      continue;
+    }
+    apps[name] = App;
   }
-  const exported = Object.values(result.value);
-  const App = exported.find(value => typeof value === 'function' && value.prototype instanceof plugin);
-  if (!App) {
-    logger.error(`[kh-plugin] apps/${file} 未导出有效的 plugin 类，已跳过。`);
-    continue;
-  }
-  apps[name] = App;
 }
-
-// app 的动态导入已全部结束后，重命名插件。
-migratePluginDirectory();
 
 export { apps };
 

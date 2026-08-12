@@ -7,8 +7,22 @@ import { log } from '../utils/logger.js';
 const OLD_PLUGIN_NAME = 'who-are-you-plugin';
 const NEW_PLUGIN_NAME = 'kh-plugin';
 const ORIGIN_RENAMES = new Map([
-  ['https://github.com/yhArcadia/who-are-you-plugin.git', 'https://github.com/yhArcadia/kh-plugin.git'],
-  ['https://gitee.com/yhArcadia/who-are-you-plugin.git', 'https://gitee.com/yhArcadia/kh-plugin.git']
+  [
+    'https://github.com/yhArcadia/who-are-you-plugin.git',
+    'https://github.com/yhArcadia/kh-plugin.git'
+  ],
+  [
+    'https://github.com/yhArcadia/who-are-you-plugin',
+    'https://github.com/yhArcadia/kh-plugin.git'
+  ],
+  [
+    'https://gitee.com/yhArcadia/who-are-you-plugin.git',
+    'https://gitee.com/yhArcadia/kh-plugin.git'
+  ],
+  [
+    'https://gitee.com/yhArcadia/who-are-you-plugin',
+    'https://gitee.com/yhArcadia/kh-plugin.git'
+  ]
 ]);
 
 const modulePluginRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
