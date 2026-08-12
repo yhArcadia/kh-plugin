@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 19:12:21
+ * @LastEditTime: 2026-08-12 19:20:40
  * @FilePath: /kh-plugin/index.js
  * @Description: 插件入口
  * 
@@ -72,3 +72,4 @@ if (migration.status === 'migrated') {
 export { apps };
 
 logger.info("[kh-plugin] 载入完成")
+logger.info("[kh-plugin] 插件交流＆反馈请加群：134086404")
