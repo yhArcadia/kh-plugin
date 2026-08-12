@@ -28,7 +28,11 @@ export class KhQuery extends BaseApp {
                     fnc: 'who_are_you'
                 },
                 {
-                    reg: '(你是什么猫猫|nssmmm|kh|KH)',
+                    reg: '^#?(kh|KH)$',
+                    fnc: 'who_are_you'
+                },
+                {
+                    reg: '(你是什么猫猫|nssmmm)',
                     fnc: 'who_are_you'
                 }
             ]

@@ -8,6 +8,9 @@
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
+
+import { update as YunzaiUpdate } from '../../other/update.js';
+
 export class KhUpdate extends plugin {
     constructor() {
         super({
@@ -32,8 +35,15 @@ export class KhUpdate extends plugin {
     }
 
     async updatePlugin() {
-        this.e.msg = this.e.msg.includes('强制') ? '#强制更新kh-plugin' : '#更新kh-plugin';
-        return false;
+        const updater = new YunzaiUpdate(this.e);
+        updater.e = {
+            ...this.e,
+            msg: this.e.msg.includes('强制')
+                ? '#强制更新kh-plugin'
+                : '#更新kh-plugin'
+        };
+
+        return updater.update();
     }
 
     async updateLog() {
