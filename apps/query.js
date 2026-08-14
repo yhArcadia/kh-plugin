@@ -20,11 +20,11 @@ export class KhQuery extends BaseApp {
                     fnc: 'who_are_you'
                 },
                 {
-                    reg: '开(合|盒)',
+                    reg: '^#?开(合|盒)$',
                     fnc: 'who_are_you'
                 },
                 {
-                    reg: '你是？',
+                    reg: '^#?你是？$',
                     fnc: 'who_are_you'
                 },
                 {
