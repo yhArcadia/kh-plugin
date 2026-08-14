@@ -71,6 +71,7 @@ git clone https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 - `#最老QQ`、`#最短QQ`、`#最小QQ`、`#最新QQ`、`#最长QQ`、`#最年轻QQ`
 - `#查信息 [QQ/@某人]`、`#头像时间` / `#头像时长`
 - `#kh版本`
+- `#kh更新` / `#kh强制更新` / `#kh更新日志`
 
 
 
