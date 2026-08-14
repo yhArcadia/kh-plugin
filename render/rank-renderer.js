@@ -2,12 +2,13 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-07 00:23:37
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 18:07:57
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/render/rank-renderer.js
- * @Description: 
+ * @LastEditTime: 2026-08-14 23:16:49
+ * @FilePath: /kh-plugin/render/rank-renderer.js
+ * @Description: 排行榜渲染器
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
+
 import fs from 'node:fs';
 import path from 'node:path';
 import template from 'art-template';

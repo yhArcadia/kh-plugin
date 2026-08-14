@@ -2,9 +2,9 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-10 21:36:06
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 18:11:20
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/components/legacy-cleanup.js
- * @Description: 
+ * @LastEditTime: 2026-08-14 23:08:00
+ * @FilePath: /kh-plugin/components/legacy-cleanup.js
+ * @Description: 处理旧版js插件
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */

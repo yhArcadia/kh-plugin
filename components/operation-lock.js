@@ -2,12 +2,13 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-11 19:11:22
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 19:23:30
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/components/operation-lock.js
- * @Description: 
+ * @LastEditTime: 2026-08-14 23:11:58
+ * @FilePath: /kh-plugin/components/operation-lock.js
+ * @Description: 操作锁
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
+
 import { randomUUID } from 'node:crypto';
 
 const RENEW_IF_OWNER = `

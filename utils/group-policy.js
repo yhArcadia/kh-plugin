@@ -2,9 +2,9 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-07 00:23:33
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-09 20:05:03
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/utils/group-policy.js
- * @Description: 
+ * @LastEditTime: 2026-08-14 23:18:14
+ * @FilePath: /kh-plugin/utils/group-policy.js
+ * @Description: 潜水群判定
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */

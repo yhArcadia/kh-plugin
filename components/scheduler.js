@@ -2,9 +2,9 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:57
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 19:30:15
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/components/scheduler.js
- * @Description: 
+ * @LastEditTime: 2026-08-14 23:14:05
+ * @FilePath: /kh-plugin/components/scheduler.js
+ * @Description: 定时任务
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */

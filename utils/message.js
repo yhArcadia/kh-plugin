@@ -2,8 +2,8 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-07 00:23:33
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 23:37:21
- * @FilePath: /who-are-you-plugin/utils/message.js
+ * @LastEditTime: 2026-08-14 23:18:40
+ * @FilePath: /kh-plugin/utils/message.js
  * @Description: 为消息添加贴表情回应。
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 

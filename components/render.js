@@ -2,12 +2,13 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:56
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 23:31:58
- * @FilePath: /who-are-you-plugin/components/render.js
- * @Description: 
+ * @LastEditTime: 2026-08-14 23:12:59
+ * @FilePath: /kh-plugin/components/render.js
+ * @Description: 渲染模板
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
+
 import fs from 'node:fs';
 import path from 'node:path';
 import template from 'art-template';

@@ -2,12 +2,13 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:15:20
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 18:10:02
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/components/runtime.js
- * @Description: 
+ * @LastEditTime: 2026-08-14 23:13:38
+ * @FilePath: /kh-plugin/components/runtime.js
+ * @Description: 运行时状态
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
+
 import { ensureRuntimePaths, headsDir } from './paths.js';
 import { loadConfig } from './config.js';
 import { scanKeys } from './storage.js';

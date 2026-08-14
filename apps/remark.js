@@ -2,12 +2,13 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 16:45:55
+ * @LastEditTime: 2026-08-14 23:10:05
  * @FilePath: /kh-plugin/apps/remark.js
- * @Description: 
+ * @Description: 群员备注管理
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
+
 import { BaseApp } from '../components/base-app.js';
 import { config } from '../components/runtime.js';
 import { isDivingGroup } from '../utils/group-policy.js';

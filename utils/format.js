@@ -2,8 +2,8 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-07 00:23:33
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-09 19:48:05
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/utils/format.js
+ * @LastEditTime: 2026-08-14 23:17:45
+ * @FilePath: /kh-plugin/utils/format.js
  * @Description: 一些格式化工具
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 

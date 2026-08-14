@@ -2,12 +2,13 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:56
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-10 19:32:10
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/components/storage.js
- * @Description: 
+ * @LastEditTime: 2026-08-14 23:15:44
+ * @FilePath: /kh-plugin/components/storage.js
+ * @Description: 存取
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
+
 export function historyKey(config, gid, uid) { return `${config.redisPrefix}:${gid}:${uid}`; }
 export function remarkKey(config, gid, uid) { return `${config.redisPrefix}:remark:${gid}:${uid}`; }
 const historySuffix = /^\d+:\d+$/;
