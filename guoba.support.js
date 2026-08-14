@@ -18,7 +18,7 @@ let statsCache = { expiresAt: 0, value: null };
 const labels = {
   linkedGroups: '互通群组',
   maxSaveLength: '单人保留记录上限',
-  maxRenderLength: 'KH卡最大渲染记录条数',
+  maxRenderLength: 'kh卡最大渲染记录条数',
   autoUpdateGroups: '自动更新群',
   updateSchedule: '自动更新 Cron',
   notifyGroups: '实时推送群',

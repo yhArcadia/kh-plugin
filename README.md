@@ -12,7 +12,7 @@
 
 基于Yunzai的群成员昵称、群名片、头衔、权限与头像历史记录存档插件。有效克制群友“改头换面”秽土转生。
 
-<img decoding="async" src="./resources/img/meme.jpg" width="20%">
+<img decoding="async" src="./resources/img/meme.jpg" width="25%">
 
 </br>
 
@@ -53,7 +53,7 @@ git clone https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 
 
 
-## Gunba-Plugin
+## Guoba-Plugin
 
 推荐使用[锅巴插件](https://github.com/guoba-yunzai/guoba-plugin)进行个性化配置。
 

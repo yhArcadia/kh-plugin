@@ -3,8 +3,9 @@ import path from 'node:path';
 import template from 'art-template';
 import moment from 'moment';
 import puppeteer from '../../../lib/puppeteer/puppeteer.js';
-import { headsDir, templateDir } from '../components/paths.js';
+import { headsDir, templateDir, pluginRoot } from '../components/paths.js';
 import { escapeHtml } from '../utils/html.js';
+import cfg from '../../../lib/config/config.js';
 
 export async function renderHistory({ e, groupId, gname, member, inquirer, fullHistory, renderLimit = 0, showTimeline = true, redis, config, logger }) {
 
@@ -218,9 +219,11 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
 
     // 模板所需的主数据
     logger.info(`[who_are_you] 群名称: ${gname}`);
+    const khPluginVersion = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version;
     const renderData = {
         history: processedHistory,
         groupName: gname || groupId.toString(),
+        footer: `Created By TRSS-Yunzai v${cfg.package.version} & kh-plugin v${khPluginVersion}`
     };
 
     // 读取模板并渲染
