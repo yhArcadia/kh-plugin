@@ -11,6 +11,7 @@ import { BaseApp } from '../components/base-app.js';
 import { config, memberUpdater } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
+import { getAvatarPalette } from '../utils/avatar-palette.js';
 
 export class KhProfile extends BaseApp {
     constructor() {
@@ -220,6 +221,7 @@ export class KhProfile extends BaseApp {
         const durationStr = formatDuration(durationSec);
 
         const avatarUrl = `https://q1.qlogo.cn/g?b=qq&s=0&nk=${targetUid}`;
+        const avatarPalette = await getAvatarPalette(avatarUrl);
 
         const khPluginVersion = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version;
         const renderData = {
@@ -228,6 +230,7 @@ export class KhProfile extends BaseApp {
             displayName,
             durationStr,
             startTimeStr,
+            ...avatarPalette,
             footer: `Created By TRSS-Yunzai v${cfg.package.version} & kh-plugin v${khPluginVersion}`
         };
         const img = await puppeteer.screenshot('who_are_you_profile', {
