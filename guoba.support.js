@@ -1,6 +1,7 @@
 import { loadConfig, loadUserConfig, saveConfig, configPaths, linkedGroupsToGuoba } from './components/config.js';
 import { scanHistoryKeys, getHistory } from './components/storage.js';
-
+import { pluginRoot } from './components/paths.js';
+import path from "path";
 
 const STATS_CACHE_TTL_MS = 30_000;
 const GROUPS_PAGE_SIZE = 50;
@@ -275,6 +276,7 @@ export function supportGuoba() {
       isV2: false,
       isV3: true,
       showInMenu: 'auto',
+      iconPath: path.join(pluginRoot, 'resources/img/icon.png'),
       description: '群成员头像昵称记录留档工具，有效制裁群友“改头换面”、秽土转生。(如链接打不开请把github换成gitee)'
     },
     configInfo: {
