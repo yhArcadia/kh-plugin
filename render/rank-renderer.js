@@ -13,7 +13,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import template from 'art-template';
 import puppeteer from '../../../lib/puppeteer/puppeteer.js';
-import { templateDir } from '../components/paths.js';
+import { templateDir, pluginRoot } from '../components/paths.js';
+import cfg from '../../../lib/config/config.js';
 
 export async function rankRender({ gid, gname, topN, rankType, rankTitle, config }) {
 
@@ -31,7 +32,8 @@ export async function rankRender({ gid, gname, topN, rankType, rankTitle, config
         title: rankTitle,
         limit: config.rankLimit,
         rankType: rankType,
-        list: renderList
+        list: renderList,
+        footer: `Created By TRSS-Yunzai v${cfg.package.version} & kh-plugin v${JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version}`
     };
 
     const templateContent = fs.readFileSync(path.join(templateDir, "rank.html"), 'utf-8');
