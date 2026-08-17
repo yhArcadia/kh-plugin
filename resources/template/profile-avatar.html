@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>头像时长查询</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+      body {
+        font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+        background: #e8eef6;
+        margin: 0;
+        padding: 16px;
+        display: flex;
+        justify-content: center;
+      }
+      .container {
+        width: 800px;
+        background: #fff;
+        border-radius: 14px;
+        padding: 26px 34px 0;
+        box-shadow: 0 10px 30px rgba(30, 41, 59, 0.12);
+        overflow: hidden;
+      }
+      .header {
+        text-align: center;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #1e293b;
+        padding: 0 0 18px;
+        border-bottom: 1px solid #dbe4ee;
+      }
+      .main-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 34px;
+        min-height: 218px;
+        padding: 16px 12px 20px;
+      }
+      .avatar-wrapper {
+        position: relative;
+        flex: 0 0 176px;
+      }
+      .avatar {
+        display: block;
+        width: 176px;
+        height: 176px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #d9e3ef;
+        box-shadow: 0 4px 12px rgba(30, 41, 59, 0.12);
+      }   
+      .avatar-badge {
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        background-color: #10b981;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 4px 10px;
+        border-radius: 12px;
+        white-space: nowrap;
+      }
+      .info-section {
+        flex: 1;
+        min-width: 0;
+      }
+      .user-name {
+        font-size: 24px;
+        line-height: 1.32;
+        font-weight: 700;
+        color: #1e293b;
+        overflow-wrap: anywhere;
+        margin: 0 0 14px;
+      }
+      .user-uid {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-bottom: 20px;
+      }
+      .duration-card {
+        background: #edf6ff;
+        border: 1px solid #c7d8eb;
+        border-radius: 12px;
+        padding: 16px 20px 17px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
+      }
+      .duration-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 6px;
+      }
+      .duration-value {
+        font-size: 30px;
+        line-height: 1.18;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: 0.2px;
+      }
+      .duration-value.time {
+        color: #3b82f6;
+      }
+      .duration-detail {
+        font-size: 14px;
+        color: #64748b;
+        margin-top: 8px;
+      }
+      .footer {
+        margin: 0 -34px;
+        padding: 12px 20px 13px;
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.35;
+        color: #7b8ba0;
+        border-top: 1px solid #dbe4ee;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">头像时长查询</div>
+
+      <div class="main-content">
+        <div class="avatar-wrapper">
+          <img class="avatar" src="{{avatarUrl}}" />
+        </div>
+
+        <div class="info-section">
+          <div class="user-name">{{displayName}}</div>
+          <!-- <div class="user-uid">QQ: {{targetUid}}</div> -->
+
+          <div class="duration-card">
+            <div class="duration-label">当前已用时长：</div>
+            <div class="duration-value">{{durationStr}}</div>
+            <div class="duration-detail">更换于 {{startTimeStr}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">{{footer}}</div>
+    </div>
+  </body>
+</html>

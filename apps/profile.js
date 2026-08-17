@@ -1,6 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import moment from 'moment';
+import template from 'art-template';
+import puppeteer from '../../../lib/puppeteer/puppeteer.js';
+import cfg from '../../../lib/config/config.js';
+import { templateDir, pluginRoot } from '../components/paths.js';
 import { formatDuration, getLevelIcons } from '../utils/format.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
@@ -215,15 +219,25 @@ export class KhProfile extends BaseApp {
         const durationSec = Math.max(0, Math.floor((nowMs - validHeadtime) / 1000));
         const durationStr = formatDuration(durationSec);
 
-        let msg = ` `;
-        msg += `════════════\n`;
-        msg += `${displayName} (${targetUid})\n`;
-        msg += `头像更换： ${startTimeStr}\n`;
-        msg += `已用时长： ${durationStr}\n`;
-        msg += `════════════`;
-
         const avatarUrl = `https://q1.qlogo.cn/g?b=qq&s=0&nk=${targetUid}`;
-        await e.reply([segment.image(avatarUrl), msg]);
+
+        const khPluginVersion = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version;
+        const renderData = {
+            avatarUrl,
+            targetUid,
+            displayName,
+            durationStr,
+            startTimeStr,
+            footer: `Created By TRSS-Yunzai v${cfg.package.version} & kh-plugin v${khPluginVersion}`
+        };
+        const img = await puppeteer.screenshot('who_are_you_profile', {
+            tplFile: path.join(templateDir, 'profile-avatar.html'),
+            saveId: `avatar_${e.group_id}_${targetUid}`,
+            ...renderData
+        });
+
+        await e.reply(img);
+
         return true;
 
     }
