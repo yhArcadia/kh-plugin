@@ -1,109 +1,121 @@
-<!--
- * @Author: 渔火Arcadia  https://github.com/yhArcadia
- * @Date: 2026-08-06 19:58:58
- * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-11 18:06:23
- * @FilePath: /Yunzai/plugins/who-are-you-plugin/resources/template/version.html
- * @Description: 
- * 
- * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
--->
 <!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>#who版本</title>
+    <title>kh-plugin 版本信息</title>
     <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
-
+      *, *::before, *::after { box-sizing: border-box; }
       body {
         margin: 0;
-        padding: 0;
-        background-color: #f5f5f5;
-        color: #333;
-        font-family:
-          "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC",
-          "WenQuanYi Micro Hei", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+        background: #eef3f8;
+        color: #263548;
+        font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
         -webkit-font-smoothing: antialiased;
       }
-
       .container {
         width: 800px;
         margin: 0 auto;
-        background-color: #f5f5f5;
+        padding: 22px 24px 24px;
+        background: #eef3f8;
       }
-
       .header {
-        padding: 30px;
-        border-bottom: 1px solid #e0e0e0;
-        background-color: #fff;
-        color: #333;
-        text-align: center;
-        font-size: 25px;
-        font-weight: bold;
+        padding: 22px 26px 21px;
+        border: 1px solid #dce6f0;
+        border-radius: 16px 16px 0 0;
+        background: #fff;
+        box-shadow: 0 8px 24px rgba(48, 72, 96, .08);
       }
-
+      .title-row { display: flex; align-items: baseline; }
+      .title { margin: 0; font-size: 28px; line-height: 1.25; font-weight: 750; letter-spacing: .2px; }
       .content {
-        padding: 20px 30px 30px;
+        padding: 18px 20px 20px;
+        border: 1px solid #dce6f0;
+        border-top: 0;
+        border-radius: 0 0 16px 16px;
+        background: rgba(255,255,255,.62);
+        box-shadow: 0 8px 24px rgba(48, 72, 96, .08);
       }
-
-      .log {
-        padding: 25px 30px 30px;
-        border: 1px solid #eee;
+      .release {
+        position: relative;
+        padding: 16px 18px 16px 22px;
+        border: 1px solid #dce6f0;
         border-radius: 12px;
-        background-color: #fff;
+        background: #fff;
       }
-
-      .log-title {
-        margin: 0 0 22px;
-        color: #333;
-        font-size: 28px;
-        font-weight: bold;
+      .release + .release { margin-top: 12px; }
+      .release::before {
+        position: absolute;
+        top: 17px;
+        bottom: 17px;
+        left: 0;
+        width: 4px;
+        border-radius: 0 4px 4px 0;
+        background: #97b6d6;
+        content: "";
       }
-
-      .date {
-        margin-left: 12px;
-        color: #999;
-        font-size: 18px;
-        font-weight: normal;
-      }
-
-      .notes {
-        margin: 0;
-        padding-left: 30px;
-      }
-
+      .release:first-child::before { background: #5e88b1; }
+      .release-head { display: flex; align-items: baseline; gap: 10px; }
+      .release-version { color: #263548; font-size: 22px; line-height: 1.25; font-weight: 750; }
+      .release:first-child .release-version { color: #365f8b; }
+      .date { color: #91a0b3; font-size: 13px; }
+      .notes { margin: 10px 0 0; padding: 0; list-style: none; }
       .notes li {
-        margin: 10px 0;
-        padding: 0;
-        color: #333;
-        font-size: 22px;
-        line-height: 1.6;
+        position: relative;
+        margin: 7px 0;
+        padding-left: 15px;
+        color: #405166;
+        font-size: 16px;
+        line-height: 1.58;
         word-break: break-word;
+      }
+      .notes li::before { position: absolute; top: .7em; left: 0; width: 5px; height: 5px; border-radius: 50%; background: #8ba9c7; content: ""; }
+      .cmd, .strong {
+        display: inline-block;
+        margin: 0 2px;
+        padding: 0 6px;
+        border-radius: 5px;
+        font-weight: 700;
+        line-height: 1.45;
+      }
+      .cmd { border: 1px solid #c8d9eb; background: #eaf3fc; color: #356c9f; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: .92em; }
+      .strong { background: #fff1d9; color: #a86618; }
+      .footer {
+        margin: 0 -20px -20px;
+        padding: 12px 20px 13px;
+        border-top: 1px solid #dbe4ee;
+        color: #7b8ba0;
+        font-size: 14px;
+        line-height: 1.35;
+        text-align: center;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="header">{{pluginName}} 版本信息</div>
-      <div class="content">
-        <div class="log">
-          <div class="log-title">
-            {{version === '版本信息' ? version : 'v' + version}}
-            <span class="date">{{date}}</span>
+      <div class="header">
+        <div class="title-row">
+          <h1 class="title">{{pluginName}} 更新日志</h1>
+        </div>
+      </div>
+      <main class="content">
+        {{each releases release}}
+        <section class="release">
+          <div class="release-head">
+            <span class="release-version">{{release.version === '版本信息' ? release.version : 'v' + release.version}}</span>
+            {{if release.date}}<span class="date">{{release.date}}</span>{{/if}}
           </div>
+          {{if release.highlights.length}}
           <ul class="notes">
-            {{each highlights note}}
+            {{each release.highlights note}}
             <li>{{@note}}</li>
             {{/each}}
           </ul>
-        </div>
-      </div>
+          {{/if}}
+        </section>
+        {{/each}}
+      </main>
+      <div class="footer">{{footer}}</div>
     </div>
   </body>
 </html>
