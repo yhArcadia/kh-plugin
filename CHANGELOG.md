@@ -2,13 +2,17 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 16:11:09
+ * @LastEditTime: 2026-08-17 20:54:43
  * @FilePath: /kh-plugin/CHANGELOG.md
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
 -->
 # Changelog
+
+# 2.0.1
+
+* `#头像时间`功能从文本形式改为美观的图片形式。
 
 # 2.0.0
 
