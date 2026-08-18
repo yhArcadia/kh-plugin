@@ -19,7 +19,7 @@ export class KhRanking extends BaseApp {
             priority: 5000, startScheduler: false,
             rule: [
                 {
-                    reg: '^#(换头|马甲|专一|潜水|活跃|冒泡)大王$|^#(老|小)资历$',
+                    reg: '^#(换头|马甲|专一|潜水|活跃|冒泡|加群)大王$|^#(老|小)资历$',
                     fnc: 'showRank'
                 },
                 {
@@ -57,6 +57,9 @@ export class KhRanking extends BaseApp {
             rankType = 'active';
             rankTitle = '近期发言';
             isAscending = true;
+        } else if (e.msg.includes("加群")) {
+            rankType = 'join';
+            rankTitle = '加群大王';
         } else if (e.msg.includes("老资历")) {
             rankType = 'veteran';
             rankTitle = '老资历';
@@ -82,9 +85,21 @@ export class KhRanking extends BaseApp {
             tempMsgId = res.message_id;
         }
 
-        // 如果潜水大王，先拉取名单来过滤退群的人
+        const currentGroupId = Number(e.group_id);
+        const matchedLinkedGroups = Array.isArray(config.linkedGroups)
+            ? config.linkedGroups.filter(groupIds => groupIds.includes(currentGroupId))
+            : [];
+        const joinedGroupIds = rankType === 'join'
+            ? [...new Set(matchedLinkedGroups.flat().map(Number).filter(Number.isSafeInteger))]
+            : [currentGroupId];
+
+        if (rankType === 'join' && joinedGroupIds.length === 0) {
+            await e.reply("本群尚未配置互通群组，无法统计加群大王。");
+            return true;
+        }
+
         let currentMemberMap = null;
-        if (rankType === 'diver' || rankType === 'active' || isQQRank) {
+        if (rankType === 'diver' || rankType === 'active' || isQQRank || rankType === 'join') {
             try {
                 currentMemberMap = await e.group.getMemberMap();
             } catch (err) {
@@ -92,9 +107,29 @@ export class KhRanking extends BaseApp {
             }
         }
 
+        const joinedMemberMaps = new Map();
+        if (rankType === 'join') {
+            for (const groupId of joinedGroupIds) {
+                if (groupId === currentGroupId) {
+                    joinedMemberMaps.set(groupId, currentMemberMap);
+                    continue;
+                }
+                try {
+                    const group = e.bot?.pickGroup?.(groupId);
+                    const memberMap = group?.getMemberMap ? await group.getMemberMap() : null;
+                    joinedMemberMaps.set(groupId, memberMap instanceof Map ? memberMap : null);
+                } catch (err) {
+                    joinedMemberMaps.set(groupId, null);
+                    log.w(`获取互通群 ${groupId} 成员列表失败，将使用 KH 历史记录补充。`);
+                }
+            }
+        }
+
         const keys = await scanLegacyKeys(`${config.redisPrefix}:${e.group_id}:*`);
         const prefix = `${config.redisPrefix}:${e.group_id}:`;
-        const userKeys = keys.filter(k => /^\d+$/.test(k.slice(prefix.length)));
+        const userKeys = rankType === 'join' && currentMemberMap instanceof Map
+            ? [...currentMemberMap.keys()].map(uid => `${prefix}${uid}`)
+            : keys.filter(k => /^\d+$/.test(k.slice(prefix.length)));
 
         if (userKeys.length === 0) {
             await e.reply("本群暂无任何身份记录。");
@@ -113,17 +148,28 @@ export class KhRanking extends BaseApp {
 
             let history = [];
             try {
-                history = JSON.parse(historyJson);
+                history = historyJson ? JSON.parse(historyJson) : [];
             } catch (err) { continue; }
 
-            if (history.length === 0) continue;
+            if (rankType !== 'join' && history.length === 0) continue;
             if ((rankType === 'avatar' || rankType === 'vest') && history.length <= 1) continue;
 
             let score = 0;
             let displayScore = ""; // 专门用于显示的格式化文字
-            const latestRecord = history[history.length - 1];
+            const latestRecord = history[history.length - 1] || {};
 
-            if (rankType === 'avatar') {
+            if (rankType === 'join') {
+                for (const groupId of joinedGroupIds) {
+                    const memberMap = joinedMemberMaps.get(groupId);
+                    if (memberMap instanceof Map && memberMap.has(uid)) {
+                        score++;
+                        continue;
+                    }
+                    // 实时名单中没有时，仍保留 KH 历史记录：历史上加入过也计入。
+                    if (await redis.exists(`${config.redisPrefix}:${groupId}:${uid}`)) score++;
+                }
+                displayScore = `${score} 个群`;
+            } else if (rankType === 'avatar') {
                 const uniqueHeads = new Set();
                 for (const r of history) {
                     if (r.headtime && r.headtime !== 631152000000) {
@@ -168,6 +214,7 @@ export class KhRanking extends BaseApp {
                 }
             }
 
+            if (rankType === 'join' && score <= 0) continue;
             // 此处允许 active 的得分为 0
             if (score <= 0 && rankType !== 'newbie' && rankType !== 'active') continue;
             if ((rankType === 'veteran' || rankType === 'newbie') && latestRecord.join_time === 0) continue;
