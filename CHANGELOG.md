@@ -2,13 +2,17 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-18 18:35:42
+ * @LastEditTime: 2026-08-18 23:19:59
  * @FilePath: /kh-plugin/CHANGELOG.md
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
 -->
 # Changelog
+
+# 2.0.3
+
+* 增加`#查看头像`指令，等效于`#头像时间`。在该指令的卡片下方增加展示额外最多8个历史头像。
 
 # 2.0.2
 
