@@ -70,7 +70,7 @@
         word-break: break-word;
       }
       .notes li::before { position: absolute; top: .7em; left: 0; width: 5px; height: 5px; border-radius: 50%; background: #8ba9c7; content: ""; }
-      .cmd, .strong {
+      .cmd {
         display: inline-block;
         margin: 0 2px;
         padding: 0 6px;
@@ -79,7 +79,18 @@
         line-height: 1.45;
       }
       .cmd { border: 1px solid #c8d9eb; background: #eaf3fc; color: #356c9f; font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: .92em; }
-      .strong { background: #fff1d9; color: #a86618; }
+      .strong {
+        display: inline-block;
+        margin: 0 1px;
+        padding: 0 1px;
+        border-radius: 5px;
+        font-weight: 700;
+        line-height: 1.58;
+      }
+      .strong { 
+        /* background: #fff1d9;  */
+        color: #b57526; 
+      }
       .footer {
         margin: 0 -20px -20px;
         padding: 12px 20px 13px;

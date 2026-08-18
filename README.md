@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 17:27:29
+ * @LastEditTime: 2026-08-18 18:16:22
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -67,7 +67,7 @@ git clone https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 - `更新群员信息` / `静默更新信息`
 - `#删除记录1,2 @某人`、`#添加备注 文本 @某人`、`#设置备注 文本 @某人`、`#删除备注1 @某人`
 - `#历史头像 @某人`
-- `#换头大王`、`#马甲大王`、`#专一大王`、`#潜水大王`、`#活跃大王`、`#冒泡大王`、`#老资历`、`#小资历`
+- `#换头大王`、`#马甲大王`、`#专一大王`、`#潜水大王`、`#活跃大王`、`#冒泡大王`、`#加群大王`、`#老资历`、`#小资历`
 - `#最老QQ`、`#最短QQ`、`#最小QQ`、`#最新QQ`、`#最长QQ`、`#最年轻QQ`
 - `#查信息 [QQ/@某人]`、`#头像时间` / `#头像时长`
 - `#kh版本`
