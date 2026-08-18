@@ -18,7 +18,7 @@ export class KhProfile extends BaseApp {
         super({
             name: 'kh插件-成员基础信息查询',
             dsc: 'kh插件 成员基础信息查询',
-            priority: 5000,
+            priority: 499,
             startScheduler: false,
             rule: [
                 {
@@ -27,6 +27,10 @@ export class KhProfile extends BaseApp {
                 },
                 {
                     reg: '^#头像(时间|时长)$',
+                    fnc: 'getAvatarDuration'
+                },
+                {
+                    reg: '^#查看头像$',
                     fnc: 'getAvatarDuration'
                 }
             ]
@@ -227,6 +231,7 @@ export class KhProfile extends BaseApp {
         const renderData = {
             avatarUrl,
             targetUid,
+            displayTitle: e.msg.includes('时') ? '头像时长查询' : '查看头像',
             displayName,
             durationStr,
             startTimeStr,
