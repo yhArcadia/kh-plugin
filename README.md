@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-18 23:43:01
+ * @LastEditTime: 2026-08-18 23:52:11
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -90,8 +90,7 @@ git clone https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 
 ## 交流群
 
-[134086404](https://qm.qq.com/qr?k=HMlQmx0ZdUZqia139vHwPFuZllwEFvuv&jump_from=webapi&authKey=N9Il0vS+QU3As8ZgfqjWSr1GZtzDH4D+z25Lv4a7rBKs0Ftpt7eXQd4Nx/5ADPXJ)
-
+<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=0yUY_6Icq8Nw9rdRONBJS-rzP1Wkm14V&jump_from=webapi&authKey=8MK6cXSsrSKV+y1W7kqBq/mxhb6TEqu0qrT8XZy5d30jMBqVaub8FX7Z+2Cbhxdg">134086404</a>
 
 
 
