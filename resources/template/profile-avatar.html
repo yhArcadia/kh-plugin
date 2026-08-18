@@ -43,15 +43,50 @@
         position: relative;
         flex: 0 0 176px;
       }
+      .history-track {
+        position: relative;
+        height: {{historyTrackHeight}}px;
+        margin: 0 12px 20px;
+        width: 708px;
+        max-width: 100%;
+        overflow: hidden;
+      }
+      .history-avatar {
+        position: absolute;
+        top: 0;
+        left: var(--left-px);
+        width: 72px;
+        height: 72px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid var(--avatar-border-color);
+        box-shadow: 0 1px 3px rgba(30, 41, 59, 0.16);
+      }
+      .history-more {
+        position: absolute;
+        top: 0;
+        left: var(--left-px);
+        width: 72px;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 2px solid #939393;
+        background: rgba(30, 41, 59, 0.78);
+        color: #fff;
+        font-size: clamp(14px, calc(var(--avatar-size) * 0.28), 22px);
+        font-weight: 700;
+      }
       .avatar {
         display: block;
-        width: 176px;
-        height: 176px;
+        width: 186px;
+        height: 186px;
         object-fit: cover;
         border-radius: 50%;
         border: 4px solid {{avatarBorderColor}};
         box-shadow: 0 4px 12px rgba(30, 41, 59, 0.12);
-      }   
+      }
       .avatar-badge {
         position: absolute;
         bottom: -5px;
@@ -140,6 +175,15 @@
           </div>
         </div>
       </div>
+
+      {{if historyAvatarPositions && historyAvatarPositions.length}}
+      <div class="history-track">
+        {{each historyAvatarPositions item i}}
+        <img class="history-avatar" style="--left-px: {{item.leftPx}}px; --avatar-border-color: {{item.avatarPalette.avatarBorderColor}};" src="{{item.avatar}}" />
+        {{if item.hiddenCount}}<span class="history-more" style="--left-px: {{item.leftPx}}px; --avatar-border-color: {{item.avatarPalette.avatarBorderColor}};">+{{item.hiddenCount}}</span>{{/if}}
+        {{/each}}
+      </div>
+      {{/if}}
 
       <div class="footer">{{footer}}</div>
     </div>

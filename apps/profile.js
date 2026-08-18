@@ -8,7 +8,7 @@ import { templateDir, pluginRoot } from '../components/paths.js';
 import { formatDuration, getLevelIcons } from '../utils/format.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
-import { config, memberUpdater } from '../components/runtime.js';
+import { config, headDir, memberUpdater } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
 import { getAvatarPalette } from '../utils/avatar-palette.js';
@@ -227,6 +227,47 @@ export class KhProfile extends BaseApp {
         const avatarUrl = `https://q1.qlogo.cn/g?b=qq&s=0&nk=${targetUid}`;
         const avatarPalette = await getAvatarPalette(avatarUrl);
 
+        const currentHeadtime = latestRecord?.headtime;
+        // 按头像时间戳去重
+        const uniqueHeadtimes = [...new Set(history
+            .map(record => record?.headtime)
+            .filter(headtime => headtime && headtime !== 631152000000 && headtime !== currentHeadtime))]
+            .sort((a, b) => b - a);
+        const historyPerRow = 8; // 每行最多 8 个
+        const historyAvatarSize = 72; // 头像尺寸
+        const historyHorizontalGap = 14.5; // 头像间距
+        const historyTrackWidth = 708;
+        const historyAvatars = uniqueHeadtimes
+            .map(headtime => {
+                const file = path.join(headDir, `${e.group_id}_${targetUid}_${headtime}.jpg`);
+                if (!fs.existsSync(file)) return null;
+                return { headtime, buffer: fs.readFileSync(file) };
+            })
+            .filter(Boolean);
+        const visibleCount = Math.min(historyAvatars.length, historyPerRow);
+        const hiddenCount = Math.max(0, historyAvatars.length - visibleCount);
+        const historyAvatarPositions = [];
+        for (let index = 0; index < visibleCount; index++) {
+            const isLastVisible = index === visibleCount - 1;
+            historyAvatarPositions.push({
+                avatar: `data:image/jpeg;base64,${historyAvatars[index].buffer.toString('base64')}`,
+                headtime: historyAvatars[index].headtime,
+                avatarPalette: await getAvatarPalette(historyAvatars[index].buffer),
+                rowIndex: 0,
+                columnIndex: index,
+                rowCount: visibleCount,
+                hiddenCount: isLastVisible ? hiddenCount : 0,
+                avatarSize: historyAvatarSize,
+                topPx: 0
+            });
+        }
+        const historyRowWidth = visibleCount * historyAvatarSize + Math.max(0, visibleCount - 1) * historyHorizontalGap;
+        const historyLeftInset = 0;
+        for (const item of historyAvatarPositions) {
+            item.leftPx = historyLeftInset + item.columnIndex * (historyAvatarSize + historyHorizontalGap);
+        }
+        const historyTrackHeight = visibleCount > 0 ? historyAvatarSize : 0;
+
         const khPluginVersion = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version;
         const renderData = {
             avatarUrl,
@@ -235,6 +276,8 @@ export class KhProfile extends BaseApp {
             displayName,
             durationStr,
             startTimeStr,
+            historyAvatarPositions,
+            historyTrackHeight,
             ...avatarPalette,
             footer: `Created By TRSS-Yunzai v${cfg.package.version} & kh-plugin v${khPluginVersion}`
         };
