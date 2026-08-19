@@ -2,9 +2,9 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-18 23:19:59
+ * @LastEditTime: 2026-08-19 20:09:33
  * @FilePath: /kh-plugin/CHANGELOG.md
- * @Description: 
+ * @Description: 更新日志
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
 -->

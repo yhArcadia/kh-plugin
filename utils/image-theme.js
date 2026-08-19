@@ -1,5 +1,17 @@
 import fs from 'node:fs/promises';
-import sharp from 'sharp';
+
+let sharpModulePromise;
+
+async function loadSharp() {
+    if (!sharpModulePromise) {
+        sharpModulePromise = import('sharp').then(module => module.default || module).catch(error => {
+            sharpModulePromise = null;
+            error.code = 'KH_SHARP_UNAVAILABLE';
+            throw error;
+        });
+    }
+    return sharpModulePromise;
+}
 
 
 export const DEFAULT_IMAGE_THEME = Object.freeze({
@@ -69,7 +81,7 @@ async function readImageSource(source, fetchImpl, timeoutMs) {
  * 从 URL、本地文件路径或 Buffer 提取受约束、适合浅色 UI 的图片主题。
  *
  * @param {string|Buffer|Uint8Array} source
- * @param {{ fallback?: object, fetchImpl?: typeof fetch, timeoutMs?: number, sampleSize?: number, logDebug?: (message: string) => void }} options
+ * @param {{ fallback?: object, fetchImpl?: typeof fetch, timeoutMs?: number, sampleSize?: number, logDebug?: (message: string) => void, logFallback?: (message: string) => void }} options
  */
 export async function extractImageTheme(source, options = {}) {
     const {
@@ -77,10 +89,12 @@ export async function extractImageTheme(source, options = {}) {
         fetchImpl = globalThis.fetch,
         timeoutMs = 5000,
         sampleSize = 48,
-        logDebug
+        logDebug,
+        logFallback
     } = options;
     try {
         const image = await readImageSource(source, fetchImpl, timeoutMs);
+        const sharp = await loadSharp();
         const { data, info } = await sharp(image)
             .rotate()
             .resize(sampleSize, sampleSize, { fit: 'cover' })
@@ -120,7 +134,11 @@ export async function extractImageTheme(source, options = {}) {
             borderColor: rgbHex(mixRgb(accentRgb, [255, 255, 255], 0.72))
         };
     } catch (error) {
-        logDebug?.(`图片主题提取回退：${error.message}`);
+        const message = `图片主题色提取失败：${error.message}`;
+        logDebug?.(message);
+        if (error?.code === 'KH_SHARP_UNAVAILABLE') {
+            logFallback?.(`${message}，将采用默认主题色。请在插件目录执行：pnpm install sharp 以安装依赖`);
+        }
         return { ...fallback };
     }
 }

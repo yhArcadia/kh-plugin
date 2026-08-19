@@ -5,13 +5,30 @@
   "type": "module",
   "main": "index.js",
   "exports": "./index.js",
-  "files": ["apps", "components", "resources", "render", "services", "utils", "config/default_config.yaml", "index.js", "guoba.support.js", "package.json", "README.md", "CHANGELOG.md", "LICENSE"],
-  "engines": { "node": ">=18" },
+  "files": [
+    "apps",
+    "components",
+    "resources",
+    "render",
+    "services",
+    "utils",
+    "config/default_config.yaml",
+    "index.js",
+    "guoba.support.js",
+    "package.json",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "art-template": "^4.13.2",
     "moment": "^2.30.1",
     "node-fetch": "^3.3.2",
     "node-schedule": "^2.1.1",
+    "sharp": "^0.35.3",
     "yaml": "^2.8.1"
   },
   "license": "AGPL-3.0-or-later"

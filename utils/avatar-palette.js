@@ -28,7 +28,8 @@ export async function getAvatarPalette(avatarUrl, options = {}) {
             surfaceColor: DEFAULT_AVATAR_PALETTE.durationCardBg,
             borderColor: DEFAULT_AVATAR_PALETTE.durationCardBorder
         },
-        logDebug: message => log.d(`头像时长${message}`)
+        logDebug: message => log.d(`头像时长${message}`),
+        logFallback: message => log.w(`头像时长${message}`)
     });
     return {
         avatarBorderColor: theme.outlineColor,

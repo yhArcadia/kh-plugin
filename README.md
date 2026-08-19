@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-18 23:52:11
+ * @LastEditTime: 2026-08-19 21:20:54
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -40,9 +40,14 @@
 
 
 ## 安装与升级
-使用[锅巴](https://github.com/guoba-yunzai/guoba-plugin)安装
-或者
-在Yunzai根目录下执行：
+
+### 使用[锅巴](https://gitee.com/guoba-yunzai/guoba-plugin)安装
+
+进入锅巴后台，点击`插件管理` -> `未安装` -> 搜索`kh-plugin` -> `查看详情` -> `立即安装`
+
+### 手动安装
+
+在 Yunzai 根目录下执行：
 ```
 git clone https://github.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 ```
@@ -50,14 +55,19 @@ git clone https://github.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 ```
 git clone https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 ```
+根据网络情况选择其一即可。
 
+拉取完毕后，在 **Yunzai 根目录** 执行：
+```
+pnpm install --filter kh-plugin
+```
+以安装依赖
 
+## 插件配置
 
-## Guoba-Plugin
+推荐使用[锅巴插件](https://gitee.com/guoba-yunzai/guoba-plugin)进行个性化配置。
 
-推荐使用[锅巴插件](https://github.com/guoba-yunzai/guoba-plugin)进行个性化配置。
-
-<img decoding="async" src="./resources/img/guoba.jpg" width="80%">
+<img decoding="async" src="./resources/img/guoba.jpg" width="100%">
 
 
 
