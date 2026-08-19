@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-19 22:11:50
+ * @LastEditTime: 2026-08-19 23:08:55
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -63,15 +63,11 @@ pnpm install --filter kh-plugin
 ```
 以安装依赖
 
-## 插件配置
-
-推荐使用[锅巴插件](https://gitee.com/guoba-yunzai/guoba-plugin)进行个性化配置。
-
-<img decoding="async" src="./resources/img/guoba.jpg" width="100%">
-
 
 
 ## 指令列表
+
+> 详细使用说明请发送 `#kh帮助` 查看。
 
 - `开合 @某人` / `kh @某人` / `KH @某人` / `你是谁 @某人` / `他是谁 @某人`
 - `更新群员信息` / `静默更新信息`
@@ -83,6 +79,15 @@ pnpm install --filter kh-plugin
 - `#kh帮助`
 - `#kh版本`
 - `#kh更新` / `#kh强制更新` / `#kh更新日志`
+
+
+
+## 插件配置
+
+推荐使用[锅巴插件](https://gitee.com/guoba-yunzai/guoba-plugin)进行个性化配置。
+
+<img decoding="async" src="./resources/img/guoba.jpg" width="100%">
+
 
 
 
