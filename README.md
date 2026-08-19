@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-19 23:08:55
+ * @LastEditTime: 2026-08-19 23:16:39
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -10,7 +10,7 @@
 -->
 # Kh-Plugin
 
-基于Yunzai的群成员昵称、群名片、头衔、权限与头像历史记录存档插件。有效克制群友“改头换面”秽土转生。
+基于Yunzai的群成员昵称、群名片、头衔、权限与头像历史记录存档插件。**记录群友的每一副嘴脸**（?，有效克制群友“改头换面”秽土转生。
 
 <img decoding="async" src="./resources/img/meme.jpg" width="25%">
 
