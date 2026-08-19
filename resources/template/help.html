@@ -1,0 +1,193 @@
+<!--
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-19 21:41:47
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-08-19 23:05:30
+ * @FilePath: /kh-plugin/resources/template/help.html
+ * @Description: 帮助文档模板
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+-->
+
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kh-plugin 使用帮助</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef3f8;
+      color: #263548;
+      font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 800px;
+      margin: 0 auto;
+      padding: 22px 24px 24px;
+      background: #eef3f8;
+    }
+
+    .header {
+      padding: 24px 26px 22px;
+      border: 1px solid #dce6f0;
+      border-radius: 16px 16px 0 0;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(48, 72, 96, .08);
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      color: #7192b3;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 0;
+      color: #263548;
+      font-size: 29px;
+      line-height: 1.25;
+      font-weight: 750;
+    }
+
+    .subtitle {
+      margin: 9px 0 0;
+      color: #7d8da1;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .content {
+      padding: 18px 20px 20px;
+      border: 1px solid #dce6f0;
+      border-top: 0;
+      border-radius: 0 0 16px 16px;
+      background: rgba(255, 255, 255, .62);
+      box-shadow: 0 8px 24px rgba(48, 72, 96, .08);
+    }
+
+    .section {
+      padding: 15px 16px 13px;
+      border: 1px solid #dce6f0;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .section+.section {
+      margin-top: 12px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 10px;
+      color: #365f8b;
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 750;
+    }
+
+    .section-title::before {
+      width: 5px;
+      height: 20px;
+      border-radius: 5px;
+      background: #7fa5c9;
+      content: "";
+    }
+
+    .items {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .items li {
+      position: relative;
+      margin: 7px 0;
+      padding-left: 14px;
+      color: #405166;
+      font-size: 14px;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .items li::before {
+      position: absolute;
+      top: .7em;
+      left: 0;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #9bb5ce;
+      content: "";
+    }
+
+    .cmd {
+      display: inline-block;
+      margin: 0 1px;
+      padding: 0 5px;
+      border: 1px solid #c8d9eb;
+      border-radius: 5px;
+      background: #eaf3fc;
+      color: #356c9f;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: .91em;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .strong {
+      color: #b57526;
+      font-weight: 700;
+    }
+
+    .footer {
+      margin: 0 -20px -20px;
+      padding: 12px 20px 13px;
+      border-top: 1px solid #dbe4ee;
+      color: #7b8ba0;
+      font-size: 14px;
+      line-height: 1.35;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <p class="eyebrow">{{pluginName}}</p>
+      <h1 class="title">{{title}}</h1>
+      <p class="subtitle">{{subtitle}}</p>
+    </header>
+    <main class="content">
+      {{each sections section}}
+      <section class="section">
+        <h2 class="section-title">{{section.title}}</h2>
+        <ul class="items">
+          {{each section.items item}}
+          <li>{{@item}}</li>
+          {{/each}}
+        </ul>
+      </section>
+      {{/each}}
+    </main>
+    <div class="footer">{{footer}}</div>
+  </div>
+</body>
+
+</html>

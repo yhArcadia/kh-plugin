@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 16:55:34
+ * @LastEditTime: 2026-08-19 22:13:27
  * @FilePath: /kh-plugin/components/paths.js
  * @Description: 
  * 
@@ -22,6 +22,8 @@ const pluginHeadsDir = path.join(pluginRoot, 'data', 'heads');
 export const headsDir = hasFiles(legacyHeadsDir) ? legacyHeadsDir : pluginHeadsDir;
 export const templateDir = path.join(pluginRoot, 'resources', 'template');
 export const versionTemplate = path.join(templateDir, 'version.html');
+export const helpMarkdown = path.join(pluginRoot, 'resources', 'help', 'help.md');
+export const helpTemplate = path.join(templateDir, 'help.html');
 
 function hasFiles(dir) {
   try {

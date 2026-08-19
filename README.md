@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-19 21:20:54
+ * @LastEditTime: 2026-08-19 22:11:50
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -80,6 +80,7 @@ pnpm install --filter kh-plugin
 - `#换头大王`、`#马甲大王`、`#专一大王`、`#潜水大王`、`#活跃大王`、`#冒泡大王`、`#加群大王`、`#老资历`、`#小资历`
 - `#最老QQ`、`#最短QQ`、`#最小QQ`、`#最新QQ`、`#最长QQ`、`#最年轻QQ`
 - `#查信息 [QQ/@某人]`、`#查看头像` / `#头像时间` / `#头像时长`
+- `#kh帮助`
 - `#kh版本`
 - `#kh更新` / `#kh强制更新` / `#kh更新日志`
 
