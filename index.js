@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 19:20:40
+ * @LastEditTime: 2026-08-20 19:57:26
  * @FilePath: /kh-plugin/index.js
  * @Description: 插件入口
  * 
@@ -14,8 +14,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import { ensureLegacyPluginFilesBackedUp } from './components/legacy-cleanup.js';
 import { migratePluginDirectory } from './components/plugin-rename-migration.js';
+import { log } from './utils/logger.js';
 
-logger.info("[kh-plugin] 开始载入")
+log.i("开始载入")
 const apps = {};
 
 // 处理 plugins/example 下的 1.x 单文件旧入口。
@@ -37,7 +38,7 @@ if (migration.status === 'migrated') {
       Promise.resolve(bot.sendMasterMsg(message, undefined, 0))
         .catch(() => logger.warn('[kh-plugin] 发送目录迁移重启提醒失败。'));
     } catch {
-      logger.warn('[kh-plugin] 发送目录迁移重启提醒失败。');
+      log.w("发送目录迁移重启提醒失败。");
     }
   }, 3000);
 } else {
@@ -62,7 +63,7 @@ if (migration.status === 'migrated') {
     const exported = Object.values(result.value);
     const App = exported.find(value => typeof value === 'function' && value.prototype instanceof plugin);
     if (!App) {
-      logger.error(`[kh-plugin] apps/${file} 未导出有效的 plugin 类，已跳过。`);
+      log.e(`apps/${file} 未导出有效的 plugin 类，已跳过。`);
       continue;
     }
     apps[name] = App;
@@ -71,5 +72,5 @@ if (migration.status === 'migrated') {
 
 export { apps };
 
-logger.info("[kh-plugin] 载入完成")
-logger.info("[kh-plugin] 插件交流＆反馈请加群：134086404")
+log.i("载入完成")
+log.i("欢迎加群交流＆反馈：134086404")

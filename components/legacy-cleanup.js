@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-10 21:36:06
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-14 23:08:00
+ * @LastEditTime: 2026-08-20 19:48:43
  * @FilePath: /kh-plugin/components/legacy-cleanup.js
  * @Description: 处理旧版js插件
  * 
@@ -32,9 +32,9 @@ export function backupLegacyPluginFiles(rootDir = process.cwd()) {
     try {
       fs.renameSync(sourcePath, backupPath);
       backedUp.push(fileName);
-      log.i(`[who_are_you] 已备份旧版文件：${fileName} -> ${path.basename(backupPath)}`);
+      log.i(`已备份旧版文件：${fileName} -> ${path.basename(backupPath)}`);
     } catch (error) {
-      log.w(`[who_are_you] 备份旧版文件 ${fileName} 失败：${error.message}`);
+      log.w(`备份旧版文件 ${fileName} 失败：${error.message}`);
     }
   }
 
@@ -47,7 +47,7 @@ export function ensureLegacyPluginFilesBackedUp(rootDir = process.cwd()) {
   if (!remainingFiles.length) return;
 
   const exampleDir = path.join(rootDir, 'plugins', 'example');
-  const message = `[who_are_you] 检测到旧版插件文件仍存在，当前插件拒绝载入。请手动删除以下文件后重启：${remainingFiles.map(file => path.join(exampleDir, file)).join('、')}`;
+  const message = `检测到旧版插件文件仍存在，当前插件拒绝载入。请手动删除以下文件后重启：${remainingFiles.map(file => path.join(exampleDir, file)).join('、')}`;
   log.e(message);
   throw new Error(message);
 }
@@ -61,7 +61,7 @@ export function findLegacyPluginFiles(rootDir = process.cwd()) {
       .map(entry => entry.name)
       .sort();
   } catch (error) {
-    if (error.code !== 'ENOENT') log.w(`[who_are_you] 检查旧版文件失败：${error.message}`);
+    if (error.code !== 'ENOENT') log.w(`检查旧版文件失败：${error.message}`);
     return [];
   }
 }

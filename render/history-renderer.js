@@ -6,6 +6,7 @@ import puppeteer from '../../../lib/puppeteer/puppeteer.js';
 import { headsDir, templateDir, pluginRoot } from '../components/paths.js';
 import { escapeHtml } from '../utils/html.js';
 import cfg from '../../../lib/config/config.js';
+import { log } from '../utils/logger.js';
 
 export async function renderHistory({ e, groupId, gname, member, inquirer, fullHistory, renderLimit = 0, showTimeline = true, redis, config, logger }) {
 
@@ -93,10 +94,10 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
                     const avatarBuf = fs.readFileSync(headPicPath);
                     avatarBase64 = `data:image/jpeg;base64,${avatarBuf.toString('base64')}`;
                 } catch (err) {
-                    logger.warn(`[who_are_you] 渲染时读取文件失败: ${headPicPath}`, err);
+                    log.w(`渲染时读取文件失败: ${headPicPath}`, err)
                 }
             } else {
-                logger.warn(`[who_are_you] 渲染时文件丢失: ${headPicPath}`);
+                log.w(`渲染时文件丢失: ${headPicPath}`);
             }
         }
 
@@ -200,7 +201,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
         try {
             remarkList = JSON.parse(remarkData);
         } catch (err) {
-            logger.warn(`[who_are_you] 读取备注 JSON 失败: ${err}`);
+            log.w(`读取备注 JSON 失败: ${err}`);
         }
 
         if (Array.isArray(remarkList)) {
@@ -218,7 +219,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
     }
 
     // 模板所需的主数据
-    logger.info(`[who_are_you] 群名称: ${gname}`);
+    log.i(`群名称: ${gname}`);
     const khPluginVersion = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version;
     const renderData = {
         history: processedHistory,

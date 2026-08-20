@@ -7,24 +7,43 @@ import {
 } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
 
+const MONITOR_LISTENER_KEY = Symbol.for('kh-plugin.monitor.message-group-listener');
+
 export class Monitor extends BaseApp {
     constructor() {
         super({
             name: 'kh插件-群员身份实时监听',
             dsc: 'kh插件 实时身份监听',
-            priority: 6000, rule: [
-                {
-                    reg: '',
-                    fnc: 'monitorMessage',
-                    log: false
-                }
-            ]
+            priority: 6000,
+            rule: []
         });
+
+        this.registerMessageListener();
+    }
+
+    registerMessageListener() {
+        const bot = this.Bot || globalThis.Bot;
+        if (!bot || typeof bot.on !== 'function') {
+            log.w?.('实时监听注册失败：Bot.on 不可用。');
+            return;
+        }
+        if (globalThis[MONITOR_LISTENER_KEY]) return;
+
+        const handler = event => {
+            if (event?.message_type !== 'group' || !event?.group_id || !event?.user_id) return;
+            this.monitorMessage(event).catch(err => {
+                log.i(`静默检测发生异常: ${err.message}`);
+            });
+        };
+
+        bot.on('message.group', handler);
+        globalThis[MONITOR_LISTENER_KEY] = handler;
+        log.i('已注册message.group监听全部目标群消息。');
     }
 
     async monitorMessage(e) {
 
-        if (!e.isGroup || !e.user_id) return false;
+        if (e?.message_type !== 'group' || !e.group_id || !e.user_id) return false;
 
         const gid = Number(e.group_id);
         const uid = Number(e.user_id);

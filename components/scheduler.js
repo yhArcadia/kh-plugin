@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:57
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-14 23:14:05
+ * @LastEditTime: 2026-08-20 19:55:37
  * @FilePath: /kh-plugin/components/scheduler.js
  * @Description: 定时任务
  * 
@@ -24,9 +24,9 @@ export class Scheduler {
     if (this.job || process.env.WHO_ARE_YOU_DISABLE_SCHEDULER === '1') return;
     import('node-schedule').then(({ default: schedule }) => {
       if (this.job) return;
-      this.job = schedule.scheduleJob(this.config.updateSchedule, () => this.execute().catch(err => this.log?.warn?.(`[who_are_you] 定时更新失败: ${err.message}`)));
-      this.log?.mark?.(`[who_are_you] 定时更新已设置: ${this.config.updateSchedule}`);
-    }).catch(err => this.log?.warn?.(`[who_are_you] 无法加载 node-schedule: ${err.message}`));
+      this.job = schedule.scheduleJob(this.config.updateSchedule, () => this.execute().catch(err => this.log?.warn?.(`[kh-plugin]  定时更新任务设置失败: ${err.message}`)));
+      this.log?.mark?.(`[kh-plugin]  定时更新群员信息任务已设置: ${this.config.updateSchedule}`);
+    }).catch(err => this.log?.warn?.(`[kh-plugin] 无法加载 node-schedule: ${err.message}`));
   }
 
   stop() { if (this.job) this.job.cancel(); this.job = null; }
@@ -42,7 +42,7 @@ export class Scheduler {
       Math.max(1_000, Math.floor(Number(this.config.lockTTL || 3600) * 500)),
       () => {
         lost = true;
-        this.log?.warn?.('[who_are_you] 自动更新操作锁已失去所有权，将停止后续群更新。');
+        this.log?.warn?.('[kh-plugin] 自动更新操作锁已失去所有权，将停止后续群更新。');
       }
     );
     try {
@@ -50,7 +50,7 @@ export class Scheduler {
       return !lost;
     } finally {
       stopRenewer();
-      await lock.release().catch(err => this.log?.warn?.(`[who_are_you] 自动更新锁释放失败: ${err.message}`));
+      await lock.release().catch(err => this.log?.warn?.(`[kh-plugin] 自动更新锁释放失败: ${err.message}`));
     }
   }
 }
