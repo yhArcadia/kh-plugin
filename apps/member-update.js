@@ -13,7 +13,7 @@ export class MemberInfoUpdate extends BaseApp {
             priority: 5000,
             rule: [
                 {
-                    reg: '^(静默)?更新(群员)?信息$',
+                    reg: '^#?(静默)?更新(群员)?信息$',
                     fnc: 'updateMembers'
                 }
             ]

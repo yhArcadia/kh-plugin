@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 16:03:54
+ * @LastEditTime: 2026-08-20 16:06:48
  * @FilePath: /kh-plugin/apps/update.js
  * @Description: 更新插件
  * 
@@ -20,12 +20,12 @@ export class KhUpdate extends plugin {
             priority: 500,
             rule: [
                 {
-                    reg: '^#kh(插件)?(强制)?更新$',
+                    reg: '^#?kh(插件)?(强制)?更新$',
                     fnc: 'updatePlugin',
                     permission: 'master'
                 },
                 {
-                    reg: '^#kh(插件)?更新日志$',
+                    reg: '^#?kh(插件)?更新日志$',
                     fnc: 'updateLog',
                     permission: 'master'
                 }

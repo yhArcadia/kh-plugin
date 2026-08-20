@@ -2,9 +2,9 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:56
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-17 22:42:27
+ * @LastEditTime: 2026-08-20 15:59:04
  * @FilePath: /kh-plugin/components/version.js
- * @Description: 
+ * @Description: 插件版本信息渲染组件
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
@@ -17,8 +17,9 @@ import { screenshot } from './render.js';
 
 const MAX_RELEASES = 4; // 最多解析几个版本
 const MAX_HIGHLIGHTS = 50; //每个版本最多几条
-const MAX_TEXT_LENGTH = 1500; 
-const VERSION_HEADING = /^#{1,6}\s+\[?v?(\d+(?:\.\d+){1,3}(?:[-+][\w.]+)?)\]?\s*(?:[-—–:]\s*)?(.*)$/i;
+const MAX_TEXT_LENGTH = 1500; //文本截断
+const VERSION_PART = '\\d+(?:\\.\\d+){1,3}(?:[-+][\\w.]+)?';
+const VERSION_HEADING = new RegExp(`^#{1,6}\\s+\\[?v?(${VERSION_PART}(?:\\s*[~～]\\s*v?${VERSION_PART})?)\\]?\\s*(?:[-—–:]\\s*)?(.*)$`, 'i');
 const DATE = /\b(20\d{2}[-/.]\d{1,2}[-/.]\d{1,2})\b/;
 
 export function truncateText(value, limit = MAX_TEXT_LENGTH) {

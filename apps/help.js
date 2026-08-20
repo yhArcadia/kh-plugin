@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-19 21:41:45
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-19 22:11:57
+ * @LastEditTime: 2026-08-20 16:01:00
  * @FilePath: /kh-plugin/apps/help.js
  * @Description: 帮助文档
  * 
@@ -20,7 +20,7 @@ export class KhHelp extends BaseApp {
             priority: 4999,
             rule: [
                 {
-                    reg: '^#kh帮助$',
+                    reg: '^#?kh帮助$',
                     fnc: 'khHelp'
                 }
             ]

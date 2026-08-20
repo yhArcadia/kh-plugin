@@ -15,7 +15,7 @@ export class Avatars extends BaseApp {
             priority: 5000,
             rule: [
                 {
-                    reg: '^#历史头像',
+                    reg: '^#?历史头像',
                     fnc: 'showAllAvatars'
                 }
             ]

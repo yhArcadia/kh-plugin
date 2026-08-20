@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-14 23:10:05
+ * @LastEditTime: 2026-08-20 16:16:16
  * @FilePath: /kh-plugin/apps/remark.js
  * @Description: 群员备注管理
  * 
@@ -22,11 +22,11 @@ export class KhRemark extends BaseApp {
             priority: 5000,
             rule: [
                 {
-                    reg: '^#(添加|设置)备注',
+                    reg: '^#?(添加|设置)备注',
                     fnc: 'addRemark'
                 },
                 {
-                    reg: '^#删除备注',
+                    reg: '^#?删除备注',
                     fnc: 'delRemark'
                 }
             ]
@@ -42,7 +42,7 @@ export class KhRemark extends BaseApp {
         }
 
         // 提取内容
-        let content = e.msg.replace(/^#(添加|设置)备注/, '').trim();
+        let content = e.msg.replace(/^#?(添加|设置)备注/, '').trim();
         content = content.replace(/@\S+/g, '').trim(); // 去除@部分
 
         if (!content) {
@@ -82,7 +82,7 @@ export class KhRemark extends BaseApp {
             return true;
         }
 
-        let textWithoutCmd = e.msg.replace(/^#删除备注/, '').trim();
+        let textWithoutCmd = e.msg.replace(/^#?删除备注/, '').trim();
         textWithoutCmd = textWithoutCmd.replace(/@\S+/g, '').trim();
 
         const indexStr = textWithoutCmd.match(/^(\d+)$/);

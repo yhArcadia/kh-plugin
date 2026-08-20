@@ -16,7 +16,7 @@ export class KhRecordManage extends BaseApp {
             startScheduler: false,
             rule: [
                 {
-                    reg: '^#删除记录([\\d,，]+)',
+                    reg: '^#?删除记录([\\d,，]+)',
                     fnc: 'deleteRecord'
                 }
             ]
@@ -32,7 +32,7 @@ export class KhRecordManage extends BaseApp {
             return true;
         }
         e.msg = e.msg.replace(/[，,]+/g, ",");
-        const match = e.msg.match(/^#删除记录([\d,]+)/);
+        const match = e.msg.match(/^#?删除记录([\d,]+)/);
         if (!match) {
             return false;
         }

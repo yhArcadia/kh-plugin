@@ -16,7 +16,7 @@ export class KhQuery extends BaseApp {
             startScheduler: false,
             rule: [
                 {
-                    reg: '(你|他)(几把|寄吧)?是?谁？?啊?？?',
+                    reg: '^#?(你|他)(几把|寄吧)?是?谁？?啊?？?',
                     fnc: 'who_are_you'
                 },
                 {
@@ -32,7 +32,7 @@ export class KhQuery extends BaseApp {
                     fnc: 'who_are_you'
                 },
                 {
-                    reg: '(你是什么猫猫|nssmmm)',
+                    reg: '^#?(你是什么猫猫|nssmmm)',
                     fnc: 'who_are_you'
                 }
             ]

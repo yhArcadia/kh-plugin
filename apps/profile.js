@@ -22,15 +22,15 @@ export class KhProfile extends BaseApp {
             startScheduler: false,
             rule: [
                 {
-                    reg: '^#查询?信息(\\s*\\d+)?$',
+                    reg: '^#?查询?信息(\\s*\\d+)?$',
                     fnc: 'queryInfo'
                 },
                 {
-                    reg: '^#头像(时间|时长)$',
+                    reg: '^#?头像(时间|时长)$',
                     fnc: 'getAvatarDuration'
                 },
                 {
-                    reg: '^#查看头像$',
+                    reg: '^#?查看头像$',
                     fnc: 'getAvatarDuration'
                 }
             ]

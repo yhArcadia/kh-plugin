@@ -13,7 +13,7 @@ export class KhAdmin extends BaseApp {
             startScheduler: false,
             rule: [
                 {
-                    reg: '^#清理幽灵记录$', //针对低于1.13.0的旧版而保留的清理功能
+                    reg: '^#?清理幽灵记录$', //针对低于1.13.0的旧版而保留的清理功能
                     fnc: 'cleanGhostRecords'
                 }
             ]

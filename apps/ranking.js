@@ -19,11 +19,11 @@ export class KhRanking extends BaseApp {
             priority: 5000, startScheduler: false,
             rule: [
                 {
-                    reg: '^#(换头|马甲|专一|潜水|活跃|冒泡|加群)大王$|^#(老|小)资历$',
+                    reg: '^#?(换头|马甲|专一|潜水|活跃|冒泡|加群)大王$|^#(老|小)资历$',
                     fnc: 'showRank'
                 },
                 {
-                    reg: '^#(最老|最短|最新|最小|最年轻|最长)(QQ|qq)$',
+                    reg: '^#?(最老|最短|最新|最小|最年轻|最长)(QQ|qq)$',
                     fnc: 'showRank'
                 }
             ]

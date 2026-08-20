@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:04
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 16:46:51
+ * @LastEditTime: 2026-08-20 16:06:59
  * @FilePath: /kh-plugin/apps/version.js
  * @Description: 
  * 
@@ -20,7 +20,7 @@ export class KhVersion extends BaseApp {
             priority: 5000,
             rule: [
                 {
-                    reg: '^#kh版本$',
+                    reg: '^#?kh版本$',
                     fnc: 'khVersion'
                 }
             ]
