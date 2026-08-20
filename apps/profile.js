@@ -283,7 +283,7 @@ export class KhProfile extends BaseApp {
             historyAvatarPositions,
             historyTrackHeight,
             ...avatarPalette,
-            footer: `Created By TRSS-Yunzai v${cfg.package.version} & kh-plugin v${khPluginVersion}`
+            footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${khPluginVersion}`
         };
         const img = await puppeteer.screenshot('who_are_you_profile', {
             tplFile: path.join(templateDir, 'profile-avatar.html'),

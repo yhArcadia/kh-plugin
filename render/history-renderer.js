@@ -223,7 +223,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
     const renderData = {
         history: processedHistory,
         groupName: gname || groupId.toString(),
-        footer: `Created By TRSS-Yunzai v${cfg.package.version} & kh-plugin v${khPluginVersion}`
+        footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${khPluginVersion}`
     };
 
     // 读取模板并渲染

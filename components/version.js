@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:56
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 15:59:04
+ * @LastEditTime: 2026-08-20 19:00:07
  * @FilePath: /kh-plugin/components/version.js
  * @Description: 插件版本信息渲染组件
  * 
@@ -161,7 +161,7 @@ export function versionCardData(file = path.join(pluginRoot, 'CHANGELOG.md')) {
         ? release.highlights.map(renderInlineMarkdown)
         : (release.title ? [renderInlineMarkdown(release.title)] : [])
     })) : [{ ...parsed, highlights: [renderInlineMarkdown(parsed.highlights[0])] }],
-    footer: `Created By TRSS-Yunzai v${cfg.package.version} & kh-plugin v${pluginVersion}`,
+    footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${pluginVersion}`,
     fallback: !releases.length
   };
 }

@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-07 00:23:37
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-14 23:16:49
+ * @LastEditTime: 2026-08-20 19:00:02
  * @FilePath: /kh-plugin/render/rank-renderer.js
  * @Description: 排行榜渲染器
  * 
@@ -33,7 +33,7 @@ export async function rankRender({ gid, gname, topN, rankType, rankTitle, config
         limit: config.rankLimit,
         rankType: rankType,
         list: renderList,
-        footer: `Created By TRSS-Yunzai v${cfg.package.version} & kh-plugin v${JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version}`
+        footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version}`
     };
 
     const templateContent = fs.readFileSync(path.join(templateDir, "rank.html"), 'utf-8');

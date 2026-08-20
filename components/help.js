@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-19 21:41:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-19 23:00:34
+ * @LastEditTime: 2026-08-20 19:00:08
  * @FilePath: /kh-plugin/components/help.js
  * @Description: 帮助文档渲染组件
  * 
@@ -68,7 +68,7 @@ export function helpCardData(file = helpMarkdown) {
         title: '指令与使用指南',
         subtitle: '记录群友的每一副嘴脸（',
         sections: parseHelpMarkdown(source),
-        footer: `Created By TRSS-Yunzai v${cfg.package.version} & kh-plugin v${pluginVersion}`
+        footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${pluginVersion}`
     };
 }
 
