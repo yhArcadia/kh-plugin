@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 20:26:22
+ * @LastEditTime: 2026-08-20 20:32:11
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -95,7 +95,7 @@ pnpm install --filter kh-plugin
 
 - Q：插件名kh代表什么意思？  A：kh是 看history 的缩写，即看看历史身份。并没有其他含义。
 - Q：为什么我的排行榜人数很少？  A：初次使用排行类命令，建议先在对应群里执行 更新群员信息 来拉取全员信息，否则排行榜只会包含已发言的群员。
-- Q: 为什么群友改名换头像后明明发言了，但是bot没有推送？ A: 需要将对应群加入实时推送列表。可以通过锅巴来配置，或者参考[这个](file:///root/Bot/Yunzai/plugins/kh-plugin/config/default_config.yaml#L67)去编辑[`kh-plugin/config/config.yaml`](file:///root/Bot/Yunzai/plugins/kh-plugin/config/config.yaml)。另：检测存在[个人cd](file:///root/Bot/Yunzai/plugins/kh-plugin/config/default_config.yaml#L73)，因此改名后发言未必会立刻被检测到。
+- Q: 为什么群友改名换头像后明明发言了，但是bot没有推送？ A: 需要将对应群加入实时推送列表。可以通过锅巴来配置，或者参考[这个](./config/default_config.yaml#L67)去创建和编辑`kh-plugin/config/config.yaml`。另：检测存在[个人cd](./config/default_config.yaml#L73)，因此改名后发言未必会立刻被检测到。
 
 ## 相关链接
 
