@@ -32,6 +32,10 @@ export class KhProfile extends BaseApp {
                 {
                     reg: '^#?查看头像$',
                     fnc: 'getAvatarDuration'
+                },
+                {
+                    reg: '^#?(我|他|她)的头像$',
+                    fnc: 'getAvatarDuration'
                 }
             ]
         });
