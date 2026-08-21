@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:56
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-17 22:39:56
+ * @LastEditTime: 2026-08-21 18:35:38
  * @FilePath: /kh-plugin/components/render.js
  * @Description: 渲染模板
  * 
@@ -21,6 +21,11 @@ export function renderTemplate(name, data) {
 export async function screenshot(name, saveId, data, tplFile = path.join(templateDir, `${name}.html`)) {
   const puppeteer = (await import('../../../lib/puppeteer/puppeteer.js')).default;
   return puppeteer.screenshot(`who_are_you_${name}`, { tplFile, saveId, ...data });
+}
+
+export async function screenshotBuffer(name, saveId, data, tplFile = path.join(templateDir, `${name}.html`)) {
+  const renderer = (await import('../../../lib/renderer/loader.js')).default.getRenderer();
+  return renderer.render(`who_are_you_${name}`, { tplFile, saveId, ...data });
 }
 
 export function formatDuration(seconds) {

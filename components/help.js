@@ -11,7 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pluginRoot, helpMarkdown, helpTemplate } from './paths.js';
-import { screenshot } from './render.js';
+import { screenshot, screenshotBuffer } from './render.js';
 import { escapeHtml } from './version.js';
 import cfg from '../../../lib/config/config.js';
 
@@ -72,8 +72,26 @@ export function helpCardData(file = helpMarkdown) {
     };
 }
 
+export async function renderHelpImageBuffer(data = helpCardData()) {
+    const image = await screenshotBuffer(
+        'help',
+        'help-info',
+        { ...data, scale: 1.2, imgType: 'png' },
+        helpTemplate
+    );
+    if (!Buffer.isBuffer(image) || image.length === 0) {
+        throw new Error('Puppeteer 未返回有效的帮助卡 PNG Buffer');
+    }
+    return image;
+}
+
 export async function renderHelpCard(data = helpCardData()) {
-    const image = await screenshot('help', 'help-info', { ...data, scale: 1.2, imgType: 'png' }, helpTemplate);
+    const image = await screenshot(
+        'help',
+        'help-info',
+        { ...data, scale: 1.2, imgType: 'png' },
+        helpTemplate
+    );
     if (!image) throw new Error('Puppeteer 未返回帮助卡图片');
     return image;
 }

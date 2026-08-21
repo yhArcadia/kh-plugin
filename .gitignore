@@ -3,7 +3,7 @@ data/
 config/config.yaml
 *.log
 test/
-
+sync-help-img*
 .env
 .env.*
 !.env.example

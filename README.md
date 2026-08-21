@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 23:28:40
+ * @LastEditTime: 2026-08-21 18:51:38
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -33,7 +33,7 @@
 
 ## 扩展功能
 
-**趣味排行**、获取历史头像文件等。详见[指令列表](./README.md#指令列表)。
+**趣味排行**、获取历史头像文件等。详见下方[指令列表&说明](./README.md#指令列表说明)。
 
 <img decoding="async" src="./resources/img/veteran.jpg" width="45%"><img decoding="async" src="./resources/img/vest_king.jpg" width="45%">
 
@@ -65,11 +65,17 @@ pnpm install --filter kh-plugin
 
 
 
-## 指令列表
+## 指令列表&说明
 
-> 详细使用说明请发送 `#kh帮助` 查看。
+<details>
+<summary>点击展开</summary>
 
-- `开合 @某人` / `kh @某人` / `KH @某人` / `你是谁 @某人` / `他是谁 @某人`
+<img decoding="async" src="./resources/img/help.png" width="90%">
+
+</details>
+
+
+<!-- - `开合 @某人` / `kh @某人` / `KH @某人` / `你是谁 @某人` / `他是谁 @某人`
 - `更新群员信息` / `静默更新信息`
 - `#删除记录1,2 @某人`、`#添加备注 文本 @某人`、`#设置备注 文本 @某人`、`#删除备注1 @某人`
 - `#历史头像 @某人`
@@ -78,7 +84,7 @@ pnpm install --filter kh-plugin
 - `#查信息 [QQ/@某人]`、`#查看头像` / `#头像时间` / `#头像时长`
 - `#kh帮助`
 - `#kh版本`
-- `#kh更新` / `#kh强制更新` / `#kh更新日志`
+- `#kh更新` / `#kh强制更新` / `#kh更新日志` -->
 
 
 
