@@ -107,25 +107,41 @@ export class KhRanking extends BaseApp {
             }
         }
 
-        const joinedMemberMaps = new Map();
+        // 加群大王只判断qq,降低内存占用
+        const joinedMemberSets = new Map();
         if (rankType === 'join') {
             for (const groupId of joinedGroupIds) {
                 if (groupId === currentGroupId) {
-                    joinedMemberMaps.set(groupId, currentMemberMap);
+                    joinedMemberSets.set(groupId, currentMemberMap instanceof Map ? new Set(currentMemberMap.keys()) : null);
                     continue;
                 }
                 try {
                     const group = e.bot?.pickGroup?.(groupId);
                     const memberMap = group?.getMemberMap ? await group.getMemberMap() : null;
-                    joinedMemberMaps.set(groupId, memberMap instanceof Map ? memberMap : null);
+                    joinedMemberSets.set(groupId, memberMap instanceof Map ? new Set(memberMap.keys()) : null);
                 } catch (err) {
-                    joinedMemberMaps.set(groupId, null);
+                    joinedMemberSets.set(groupId, null);
                     log.w(`获取互通群 ${groupId} 成员列表失败，将使用 KH 历史记录补充。`);
                 }
             }
         }
 
         const keys = await scanLegacyKeys(`${config.redisPrefix}:${e.group_id}:*`);
+        const joinedHistoryUserSets = new Map();
+        if (rankType === 'join') {
+            for (const groupId of joinedGroupIds) {
+                const groupKeys = groupId === currentGroupId
+                    ? keys
+                    : await scanLegacyKeys(`${config.redisPrefix}:${groupId}:*`);
+                const groupPrefix = `${config.redisPrefix}:${groupId}:`;
+                joinedHistoryUserSets.set(groupId, new Set(
+                    groupKeys
+                        .map(key => key.slice(groupPrefix.length))
+                        .filter(uid => /^\d+$/.test(uid))
+                        .map(Number)
+                ));
+            }
+        }
         const prefix = `${config.redisPrefix}:${e.group_id}:`;
         const userKeys = rankType === 'join' && currentMemberMap instanceof Map
             ? [...currentMemberMap.keys()].map(uid => `${prefix}${uid}`)
@@ -160,13 +176,13 @@ export class KhRanking extends BaseApp {
 
             if (rankType === 'join') {
                 for (const groupId of joinedGroupIds) {
-                    const memberMap = joinedMemberMaps.get(groupId);
-                    if (memberMap instanceof Map && memberMap.has(uid)) {
+                    const memberSet = joinedMemberSets.get(groupId);
+                    if (memberSet instanceof Set && memberSet.has(uid)) {
                         score++;
                         continue;
                     }
                     // 实时名单中没有时，仍保留 KH 历史记录：历史上加入过也计入。
-                    if (await redis.exists(`${config.redisPrefix}:${groupId}:${uid}`)) score++;
+                    if (joinedHistoryUserSets.get(groupId)?.has(uid)) score++;
                 }
                 displayScore = `${score} 个群`;
             } else if (rankType === 'avatar') {
