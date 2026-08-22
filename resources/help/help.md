@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-19 21:26:57
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 16:19:35
+ * @LastEditTime: 2026-08-22 22:54:39
  * @FilePath: /kh-plugin/resources/help/help.md
  * @Description: kh插件帮助文档
  * 
@@ -41,6 +41,7 @@
 # 插件管理
 
 - `#kh帮助`：查看插件帮助文档。
+- `#kh统计`：查看kh-plugin的硬盘占用情况。
 - `#kh版本`：查看 kh-plugin 的版本信息与更新日志。
 - `#kh更新` / `#kh强制更新`：更新 kh-plugin。
 
