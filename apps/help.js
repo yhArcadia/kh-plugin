@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-19 21:41:45
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 16:01:00
+ * @LastEditTime: 2026-08-22 22:30:56
  * @FilePath: /kh-plugin/apps/help.js
  * @Description: 帮助文档
  * 
@@ -11,6 +11,7 @@
 import { BaseApp } from '../components/base-app.js';
 import { helpScreenshot } from '../components/help.js';
 import { log } from '../utils/logger.js';
+import { isDivingGroup } from '../utils/group-policy.js';
 
 export class KhHelp extends BaseApp {
     constructor() {
@@ -28,6 +29,7 @@ export class KhHelp extends BaseApp {
     }
 
     async khHelp(e) {
+        if (isDivingGroup(e)) return false;
         try {
             await helpScreenshot(e);
         } catch (error) {

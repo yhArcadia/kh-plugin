@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 16:06:48
+ * @LastEditTime: 2026-08-22 22:37:02
  * @FilePath: /kh-plugin/apps/update.js
  * @Description: 更新插件
  * 
@@ -10,6 +10,7 @@
  */
 
 import { update as YunzaiUpdate } from '../../other/update.js';
+import { isDivingGroup } from '../utils/group-policy.js';
 
 export class KhUpdate extends plugin {
     constructor() {
@@ -35,6 +36,7 @@ export class KhUpdate extends plugin {
     }
 
     async updatePlugin() {
+        if (isDivingGroup(this.e)) return false;
         const updater = new YunzaiUpdate(this.e);
         updater.e = {
             ...this.e,
@@ -47,6 +49,7 @@ export class KhUpdate extends plugin {
     }
 
     async updateLog() {
+        if (isDivingGroup(this.e)) return false;
         const updater = new YunzaiUpdate(this.e);
 
         updater.e = {

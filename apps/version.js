@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:04
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 16:06:59
+ * @LastEditTime: 2026-08-22 22:33:01
  * @FilePath: /kh-plugin/apps/version.js
  * @Description: 
  * 
@@ -11,6 +11,7 @@
 import { BaseApp } from '../components/base-app.js';
 import { versionScreenshot } from '../components/version.js';
 import { log } from '../utils/logger.js';
+import { isDivingGroup } from '../utils/group-policy.js';
 
 export class KhVersion extends BaseApp {
     constructor() {
@@ -28,6 +29,7 @@ export class KhVersion extends BaseApp {
     }
 
     async khVersion(e) {
+        if (isDivingGroup(e)) return false;
         try {
             await versionScreenshot(e);
         } catch (err) {
