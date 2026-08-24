@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-24 19:47:42
+ * @LastEditTime: 2026-08-24 19:49:29
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -53,7 +53,6 @@
 
 <details>
 <summary>点击展开</summary>
-</br>
 
 在 **Yunzai 根目录** 下执行：
 ```
@@ -92,7 +91,6 @@ pnpm install --filter kh-plugin
 <summary>推荐使用锅巴插件进行个性化配置。</summary>
 <img decoding="async" src="./resources/img/guoba.jpg" width="100%">
 </details>
-</br>
 也可以手动编辑`kh-plugin/config/config.yaml`，请确保格式合法。
 
 
