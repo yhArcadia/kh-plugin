@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-24 19:49:29
+ * @LastEditTime: 2026-08-24 19:50:50
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -37,7 +37,6 @@
 
 <details>
 <summary>功能演示</summary>
-</br>
 <img decoding="async" src="./resources/img/veteran.jpg" width="45%">
 <img decoding="async" src="./resources/img/vest_king.jpg" width="45%">
 </details>
