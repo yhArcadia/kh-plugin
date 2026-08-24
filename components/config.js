@@ -40,7 +40,12 @@ export const defaultConfig = Object.freeze({
 const configFields = Object.freeze(Object.keys(defaultConfig));
 const numericFields = new Set(['maxSaveLength', 'maxRenderLength', 'maxNotifyRenderLength', 'monitorCD', 'rankLimit']);
 const arrayFields = new Set(['linkedGroups', 'autoUpdateGroups', 'notifyGroups', 'groupWhitelist', 'groupBlacklist', 'userBlacklist', 'divingGroups']);
-const header = '# kh-plugin 用户配置。仅填写需要覆盖 default_config.yaml 的项目。\n';
+const header = `# =======================================
+# 请将需要自定义的配置项从 default_config.yaml 复制到本文件并填写值。未在这里定义的配置将采用default_config.yaml的默认值。
+# 修改后需重启生效。
+# 如需反馈问题或建议可加群134086404
+# =======================================
+`;
 
 function ensurePaths() { fs.mkdirSync(configDir, { recursive: true }); }
 

@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-23 23:54:23
+ * @LastEditTime: 2026-08-24 19:43:22
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -33,10 +33,14 @@
 
 ## ✨ 扩展功能
 
-**趣味排行**、获取历史头像文件等。详见下方[📋指令列表&说明](./README.md#指令列表说明)。
+趣味排行、获取历史头像文件等。详见下方[📋指令列表&说明](./README.md#指令列表说明)。
 
-<img decoding="async" src="./resources/img/veteran.jpg" width="45%"><img decoding="async" src="./resources/img/vest_king.jpg" width="45%">
-
+<details>
+<summary>功能演示</summary>
+</br>
+<img decoding="async" src="./resources/img/veteran.jpg" width="45%">
+<img decoding="async" src="./resources/img/vest_king.jpg" width="45%">
+</details>
 
 
 ## 📦 安装与升级
@@ -47,6 +51,9 @@
 
 ### 或者手动安装
 
+<details>
+<summary>点击展开</summary>
+</br>
 在 **Yunzai 根目录** 下执行：
 ```
 git clone https://github.com/yhArcadia/kh-plugin ./plugins/kh-plugin
@@ -62,6 +69,7 @@ git clone https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 pnpm install --filter kh-plugin
 ```
 以安装依赖
+</details>
 
 
 
@@ -75,24 +83,16 @@ pnpm install --filter kh-plugin
 </details>
 
 
-<!-- - `开合 @某人` / `kh @某人` / `KH @某人` / `你是谁 @某人` / `他是谁 @某人`
-- `更新群员信息` / `静默更新信息`
-- `#删除记录1,2 @某人`、`#添加备注 文本 @某人`、`#设置备注 文本 @某人`、`#删除备注1 @某人`
-- `#历史头像 @某人`
-- `#换头大王`、`#马甲大王`、`#专一大王`、`#潜水大王`、`#活跃大王`、`#冒泡大王`、`#加群大王`、`#老资历`、`#小资历`
-- `#最老QQ`、`#最短QQ`、`#最小QQ`、`#最新QQ`、`#最长QQ`、`#最年轻QQ`
-- `#查信息 [QQ/@某人]`、`#查看头像` / `#头像时间` / `#头像时长`
-- `#kh帮助`
-- `#kh版本`
-- `#kh更新` / `#kh强制更新` / `#kh更新日志` -->
-
-
 
 ## ⚙️ 插件配置
 
-推荐使用[锅巴插件](https://gitee.com/guoba-yunzai/guoba-plugin)进行个性化配置。
-
+<details>
+<summary>推荐使用锅巴插件进行个性化配置。</summary>
+</br>
 <img decoding="async" src="./resources/img/guoba.jpg" width="100%">
+</details>
+</br>
+也可以手动编辑`kh-plugin/config/config.yaml`，请确保格式合法。
 
 
 
