@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-24 19:43:22
+ * @LastEditTime: 2026-08-24 19:47:42
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -54,6 +54,7 @@
 <details>
 <summary>点击展开</summary>
 </br>
+
 在 **Yunzai 根目录** 下执行：
 ```
 git clone https://github.com/yhArcadia/kh-plugin ./plugins/kh-plugin
@@ -69,6 +70,7 @@ git clone https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 pnpm install --filter kh-plugin
 ```
 以安装依赖
+
 </details>
 
 
@@ -88,7 +90,6 @@ pnpm install --filter kh-plugin
 
 <details>
 <summary>推荐使用锅巴插件进行个性化配置。</summary>
-</br>
 <img decoding="async" src="./resources/img/guoba.jpg" width="100%">
 </details>
 </br>
