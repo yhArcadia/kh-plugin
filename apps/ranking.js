@@ -206,6 +206,9 @@ export class KhRanking extends BaseApp {
 
             let score = 0;
             let displayScore = ""; // 专门用于显示的格式化文字
+            let silenceDuration = null;
+            let silenceDisplay = "";
+            let silenceRatio = null;
             const latestRecord = history[history.length - 1] || {};
 
             if (rankType === 'join') {
@@ -252,6 +255,12 @@ export class KhRanking extends BaseApp {
                 else if (latestRecord.join_time) {
                     score = Math.max(0, nowSec - latestRecord.join_time);
                     displayScore = formatDuration(score);
+                    if (!isQQRank && latestRecord.last_sent_time) {
+                        const totalDuration = Math.max(1, nowSec - latestRecord.join_time);
+                        silenceDuration = Math.max(0, nowSec - latestRecord.last_sent_time);
+                        silenceDisplay = formatDuration(silenceDuration);
+                        silenceRatio = Math.max(0, Math.min(1, silenceDuration / totalDuration));
+                    }
                 }
             } else if (rankType === 'diver' || rankType === 'active' || isQQRank) {
                 if (currentMemberMap && !currentMemberMap.has(uid)) continue; // 人已经不在群里，跳过
@@ -283,7 +292,13 @@ export class KhRanking extends BaseApp {
                 }
             }
 
-            rankList.push({ uid, displayName, score, displayScore, avatar: avatarBase64 });
+            rankList.push({
+                uid, displayName, score, displayScore, avatar: avatarBase64,
+                silenceDuration,
+                silenceDisplay,
+                silenceRatio,
+                showSilenceMarker: (rankType === 'veteran' || rankType === 'newbie') && silenceRatio !== null
+            });
         }
 
         // 3. 动态排序

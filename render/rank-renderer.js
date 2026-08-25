@@ -23,7 +23,10 @@ export async function rankRender({ gid, gname, topN, rankType, rankTitle, config
     const renderList = topN.map(item => {
         return {
             ...item,
-            barWidth: maxScore > 0 ? (item.score / maxScore) * 100 : 0
+            barWidth: maxScore > 0 ? (item.score / maxScore) * 100 : 0,
+            silenceMarkerLeft: item.showSilenceMarker && item.silenceRatio !== null
+                ? Math.max(1.5, Math.min((maxScore > 0 ? (item.score / maxScore) * 100 : 0) - 1.5, (maxScore > 0 ? (item.score / maxScore) * 100 : 0) * item.silenceRatio))
+                : null
         };
     });
 
