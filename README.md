@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-24 19:50:50
+ * @LastEditTime: 2026-08-25 17:12:35
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -25,7 +25,7 @@
 
 </br>
 
-**支持主动推送**
+**支持主动推送**（需要配置目标群）
 
 <img decoding="async" src="./resources/img/push.jpg" width="45%">
 
