@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-19 21:26:57
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-23 23:53:53
+ * @LastEditTime: 2026-08-25 15:52:03
  * @FilePath: /kh-plugin/resources/help/help.md
  * @Description: kh插件帮助文档
  * 
@@ -23,6 +23,7 @@
 - `#加群大王`：取当前群所在的**互通组**的**并集**，依据群友加入这些**互通组**中的群的数量为当前群的群员做排名。
 - `#最老QQ`&`#最短QQ`&`#最小QQ`：按QQ号码升序排行。
 - `#最新QQ`&`#最长QQ`&`#最年轻QQ`：按QQ号码降序排行。
+- **【补充】：**以上排行类指令均支持@，也可@多人，此时被@的群友会上提到排行榜开头，以方便看到其排名。如无@则默认将触发者上提到开头。
 
 # 查询与头像
 

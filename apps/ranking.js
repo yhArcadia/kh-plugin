@@ -39,7 +39,9 @@ function buildDisplayRankList(rankList, promotedUids, limit) {
         promotedSet.add(item.uid);
         promoted.push(item);
     }
-    const ordinary = rankedList.filter(item => !promotedSet.has(item.uid)).slice(0, limit);
+    const ordinary = rankedList
+        .slice(0, limit)
+        .filter(item => !promotedSet.has(item.uid));
     return [...promoted, ...ordinary];
 }
 
