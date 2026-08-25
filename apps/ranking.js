@@ -11,6 +11,38 @@ import {
 } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
 
+function extractPromotedUids(e) {
+    const segments = Array.isArray(e?.message) ? e.message : [];
+    const uids = [];
+    const seen = new Set();
+    for (const segment of segments) {
+        if (segment?.type !== 'at') continue;
+        const rawUid = segment.qq ?? segment.data?.qq ?? segment.user_id ?? segment.data?.user_id;
+        const uid = String(rawUid ?? '').trim();
+        if (!/^\d+$/.test(uid) || uid === 'all' || seen.has(uid)) continue;
+        seen.add(uid);
+        uids.push(Number(uid));
+    }
+    if (uids.length > 0) return uids;
+    const senderUid = Number(e?.user_id);
+    return Number.isSafeInteger(senderUid) && senderUid > 0 ? [senderUid] : [];
+}
+
+function buildDisplayRankList(rankList, promotedUids, limit) {
+    const rankedList = rankList.map((item, index) => ({ ...item, originalRank: index + 1 }));
+    const byUid = new Map(rankedList.map(item => [Number(item.uid), item]));
+    const promoted = [];
+    const promotedSet = new Set();
+    for (const uid of promotedUids) {
+        const item = byUid.get(Number(uid));
+        if (!item || promotedSet.has(item.uid)) continue;
+        promotedSet.add(item.uid);
+        promoted.push(item);
+    }
+    const ordinary = rankedList.filter(item => !promotedSet.has(item.uid)).slice(0, limit);
+    return [...promoted, ...ordinary];
+}
+
 export class KhRanking extends BaseApp {
     constructor() {
         super({
@@ -259,7 +291,8 @@ export class KhRanking extends BaseApp {
             rankList.sort((a, b) => b.score - a.score);
         }
 
-        const topN = rankList.slice(0, config.rankLimit);
+        const promotedUids = extractPromotedUids(e);
+        const topN = buildDisplayRankList(rankList, promotedUids, config.rankLimit);
 
         if (topN.length === 0) {
             await e.reply(`数据不足，暂无${rankTitle}诞生。`);

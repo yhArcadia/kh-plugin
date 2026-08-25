@@ -142,7 +142,7 @@
       <div class="header">{{groupName}} {{title}}</div>
       {{each list item i}}
       <div class="row">
-        <div class="rank-num {{if i + 1 >= 100}}small{{/if}}">#{{i + 1}}</div>
+        <div class="rank-num {{if item.originalRank >= 100}}small{{/if}}">#{{item.originalRank}}</div>
         <img class="avatar" src="{{item.avatar}}" />
 
         <div class="bar-container">
