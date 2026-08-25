@@ -49,6 +49,10 @@
           font-size: 18px;
           letter-spacing: -0.5px; /* 缩小字间距 */
       }
+      .rank-num.mini {
+          font-size: 15px;
+          letter-spacing: -0.5px;
+      }
       .avatar {
           width: 80px;
           height: 80px;
@@ -142,7 +146,7 @@
       <div class="header">{{groupName}} {{title}}</div>
       {{each list item i}}
       <div class="row">
-        <div class="rank-num {{if item.originalRank >= 100}}small{{/if}}">#{{item.originalRank}}</div>
+        <div class="rank-num {{if item.originalRank >= 1000}}mini{{else if item.originalRank >= 100}}small{{/if}}">#{{item.originalRank}}</div>
         <img class="avatar" src="{{item.avatar}}" />
 
         <div class="bar-container">
