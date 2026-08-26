@@ -81,6 +81,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
     const currentTimestamp = now.valueOf();
     const totalDuration = (currentTimestamp - firstRecordTime) || 1;
     const isSingleRecord = history.length === 1;
+    const historyStack = []
 
     for (let i = 0; i < history.length; i++) {
         const record = history[i];
@@ -179,7 +180,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
         finalContent += `<span class="record-index">#${offset + i + 1}</span>`;
 
 
-        processedHistory.push({
+        historyStack.push({
             avatar: avatarBase64,
             nickname: displayName,
             title: recordTitle,
@@ -190,6 +191,18 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
             isSystemMessage: false
         });
     }
+
+    const reverseHistoryThreshold = Number.isFinite(
+        Number(config.reverseHistoryThreshold)
+    )
+        ? Math.max(0, Math.floor(Number(config.reverseHistoryThreshold)))
+        : 999;
+
+    processedHistory.push(
+        ...(historyStack.length > reverseHistoryThreshold
+            ? [...historyStack].reverse()
+            : historyStack)
+    );
 
     // 七、备注
     // const remarkKey = `${config.redisPrefix}:remark:${groupId}:${e.at}`;

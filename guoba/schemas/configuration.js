@@ -21,6 +21,13 @@ export default [
   { field: 'maxSaveLength', label: labels.maxSaveLength, component: 'InputNumber', componentProps: { min: 1, max: 200 }, bottomHelpMessage: '每个用户在单个群内最多保存的记录条数，超过这个值的最早记录将被丢弃。' },
   { field: 'maxRenderLength', label: labels.maxRenderLength, component: 'InputNumber', componentProps: { min: 1, max: 100 }, bottomHelpMessage: '普通开合卡显示最近几条；大写KH会绕过此限制从而渲染完整的全部记录。' },
   { field: 'rankLimit', label: labels.rankLimit, component: 'InputNumber', componentProps: { min: 1, max: 500 }, bottomHelpMessage: '各类排行榜显示的最大人数(#换头大王、#老资历 等）。' },
+  {
+    field: 'reverseHistoryThreshold',
+    label: '身份卡片倒序显示',
+    component: 'InputNumber',
+    componentProps: { min: 0, max: 999 },
+    bottomHelpMessage: '要渲染的记录数超过此值时，将倒序显示，最新记录在前，方便查看。0 表示始终倒序，999 可视为始终正序。'
+  },
 
 
 

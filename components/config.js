@@ -25,6 +25,7 @@ export const defaultConfig = Object.freeze({
   linkedGroups: [],
   maxSaveLength: 100,
   maxRenderLength: 10,
+  reverseHistoryThreshold: 999,
   autoUpdateGroups: [],
   updateSchedule: '0 30 3 * * *',
   notifyGroups: [],
@@ -38,7 +39,7 @@ export const defaultConfig = Object.freeze({
 });
 
 const configFields = Object.freeze(Object.keys(defaultConfig));
-const numericFields = new Set(['maxSaveLength', 'maxRenderLength', 'maxNotifyRenderLength', 'monitorCD', 'rankLimit']);
+const numericFields = new Set(['maxSaveLength', 'maxRenderLength', 'reverseHistoryThreshold', 'maxNotifyRenderLength', 'monitorCD', 'rankLimit']);
 const arrayFields = new Set(['linkedGroups', 'autoUpdateGroups', 'notifyGroups', 'groupWhitelist', 'groupBlacklist', 'userBlacklist', 'divingGroups']);
 const header = `# =======================================
 # 请将需要自定义的配置项从 default_config.yaml 复制到本文件并填写值。未在这里定义的配置将采用default_config.yaml的默认值。
