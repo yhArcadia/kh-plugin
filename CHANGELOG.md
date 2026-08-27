@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-26 23:52:15
+ * @LastEditTime: 2026-08-27 15:37:11
  * @FilePath: /kh-plugin/CHANGELOG.md
  * @Description: 更新日志
  * 
@@ -12,7 +12,7 @@
 
 # 2.0.10
 
-* 新增配置项：历史身份倒序显示，可用于设置是否倒序显示身份卡片，使最新记录在前，方便查看。
+* **新增配置项**：**历史身份倒序显示**，可用于设置是否倒序显示身份卡片，使最新记录在前，方便查看。
 
 # 2.0.9
 
