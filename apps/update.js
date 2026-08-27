@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-25 14:35:47
+ * @LastEditTime: 2026-08-27 20:41:09
  * @FilePath: /kh-plugin/apps/update.js
  * @Description: 更新插件
  * 
@@ -34,7 +34,7 @@ export class KhUpdate extends plugin {
     }
 
     async updatePlugin() {
-        if (!e.isMaster) return false;
+        if (!this.e.isMaster) return false;
         if (isDivingGroup(this.e)) return false;
         const updater = new YunzaiUpdate(this.e);
         updater.e = {
@@ -48,7 +48,7 @@ export class KhUpdate extends plugin {
     }
 
     async updateLog() {
-        if (!e.isMaster) return false;
+        if (!this.e.isMaster) return false;
         if (isDivingGroup(this.e)) return false;
         const updater = new YunzaiUpdate(this.e);
 
