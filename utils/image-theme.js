@@ -1,17 +1,5 @@
 import fs from 'node:fs/promises';
-
-let sharpModulePromise;
-
-async function loadSharp() {
-    if (!sharpModulePromise) {
-        sharpModulePromise = import('sharp').then(module => module.default || module).catch(error => {
-            sharpModulePromise = null;
-            error.code = 'KH_SHARP_UNAVAILABLE';
-            throw error;
-        });
-    }
-    return sharpModulePromise;
-}
+import { loadSharp } from './sharp-loader.js';
 
 
 export const DEFAULT_IMAGE_THEME = Object.freeze({
