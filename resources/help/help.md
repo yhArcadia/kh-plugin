@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-19 21:26:57
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-25 17:26:56
+ * @LastEditTime: 2026-08-29 01:10:58
  * @FilePath: /kh-plugin/resources/help/help.md
  * @Description: kh插件帮助文档
  * 
@@ -31,6 +31,10 @@
 - `#查信息` / `#查询信息`：查询自己的注册时间等基本信息。可@人使用。
 - `#查看头像` / `#头像时间` / `#头像时长`：查看**当前头像**使用时长。可@人使用。
 - `#历史头像 @某人`：将指定群友的全部历史头像打包发出。
+
+# 娱乐功能
+
+- `#猜群友`：娱乐功能，bot发送随机群友头像一角供大家猜人，可引用该图片并at对应群友，或引用并回复“提示”来获取提示。
 
 # 记录与备注管理
 
