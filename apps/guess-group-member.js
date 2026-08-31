@@ -47,7 +47,7 @@ async function createGame(groupId, selfId) {
   for (const member of candidates) {
     try {
       const avatar = await downloadAvatar(member.userId)
-      const meta = await sharp(avatar).metadata()
+      const meta = await sharp(avatar).pipelineColourspace('srgb').metadata()
       const imageWidth = meta.width || 0
       const imageHeight = meta.height || 0
       if (!imageWidth || !imageHeight) throw new Error('头像尺寸无效')

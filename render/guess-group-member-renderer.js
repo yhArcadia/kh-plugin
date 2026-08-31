@@ -26,6 +26,7 @@ export function cropBounds(game) {
 export async function renderCrop(game) {
   const sharp = await getSharp()
   return sharp(game.avatar)
+    .pipelineColourspace('srgb')
     .extract(cropBounds(game))
     .resize({ width: 360, withoutEnlargement: false })
     .webp({ quality: 92 })
@@ -67,7 +68,11 @@ function drawRedFrame(data, info, bounds) {
 
 export async function renderReveal(game) {
   const sharp = await getSharp()
-  const { data, info } = await sharp(game.avatar).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  const { data, info } = await sharp(game.avatar)
+    .pipelineColourspace('srgb')
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true })
   const shownBounds = game.shownBounds?.length ? game.shownBounds : [cropBounds(game)]
   // 所有展示过的区域组成亮区并集；并不只高亮最后一张提示图。
   for (let y = 0; y < info.height; y++) {
@@ -90,6 +95,7 @@ export async function renderReveal(game) {
   for (const index of framed)
     drawRedFrame(data, info, shownBounds[index])
   return sharp(data, { raw: info })
+    .pipelineColourspace('srgb')
     .resize({ width: 640, withoutEnlargement: true })
     .webp({ quality: 92 })
     .toBuffer()

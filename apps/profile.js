@@ -55,7 +55,7 @@ export class KhProfile extends BaseApp {
 
         try {
             const res = await e.bot.sendApi('get_stranger_info', { user_id: targetUid });
-
+            log.d(res);
             if (!res || !res.data) {
                 await e.reply(`无法获取目标 ${targetUid} 的信息，可能是账号不存在或被风控屏蔽。`);
                 return true;
