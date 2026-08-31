@@ -14,7 +14,7 @@ const CORRECT_EMOJI = 144 // 🎉 礼花
 const WRONG_EMOJI = 123 // no
 const activeGames = new Map()
 
-async function recentSpeakers(groupId, selfId) {
+async function recentSpeakers(groupId, selfId, memberSet) {
   const prefix = `${config.redisPrefix}:${groupId}:`
   const keys = await redis.keys(`${prefix}*`)
   const speakers = []
@@ -24,6 +24,8 @@ async function recentSpeakers(groupId, selfId) {
       const record = history.at(-1)
       const userId = String(record?.user_id || key.slice(prefix.length))
       if (!record?.last_sent_time || record.is_robot || userId === String(selfId || ''))
+        continue
+      if (memberSet && !memberSet.has(userId))
         continue
       speakers.push({
         userId,
@@ -37,8 +39,8 @@ async function recentSpeakers(groupId, selfId) {
   return speakers.sort((a, b) => b.lastSentTime - a.lastSentTime).slice(0, CANDIDATE_LIMIT)
 }
 
-async function createGame(groupId, selfId) {
-  const pool = await recentSpeakers(groupId, selfId)
+async function createGame(groupId, selfId, memberSet) {
+  const pool = await recentSpeakers(groupId, selfId, memberSet)
   if (!pool.length) throw new Error('who_are_you 中没有可用的近期发言记录')
   const sharp = await getSharp()
   // 个别头像下载可能暂时失败，换候选继续尝试。
@@ -154,7 +156,14 @@ export class GuessGroupMember extends plugin {
     if (isDivingGroup(e)) return false
     if (!e.group_id) return false
     try {
-      const game = await createGame(e.group_id, e.self_id)
+      let memberSet
+      try {
+        const memberMap = await e.group.getMemberMap()
+        memberSet = new Set([...memberMap.keys()].map(String))
+      } catch (err) {
+        log.w('[猜群友] 获取群成员列表失败，将不过滤已退群成员', err)
+      }
+      const game = await createGame(e.group_id, e.self_id, memberSet)
       const result = await e.reply(segment.image(await renderCrop(game)))
       if (!saveGame(result?.message_id, game, e.group_id))
         log.w('[猜群友] 未取得题图消息 ID')
