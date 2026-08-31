@@ -1,6 +1,6 @@
 {
   "name": "kh-plugin",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "description": "Yunzai group member identity-history plugin",
   "type": "module",
   "main": "index.js",
