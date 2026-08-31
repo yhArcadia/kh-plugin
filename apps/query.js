@@ -5,6 +5,7 @@ import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
 import { config, memberUpdater } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
+import { getGroupName } from '../utils/group-name.js';
 import { log } from '../utils/logger.js';
 
 export class KhQuery extends BaseApp {
@@ -69,12 +70,7 @@ export class KhQuery extends BaseApp {
             let currentHistory = [];
 
             // 获取群名
-            let gname = groupId.toString();
-            try {
-                const groupInfo = e.bot.gl?.get(Number(groupId)) || e.bot.gl?.get(String(groupId));
-                if (groupInfo) gname = groupInfo.group_name || groupInfo.name || gname;
-                else gname = e.bot.pickGroup(groupId)?.name || gname;
-            } catch (err) { }
+            let gname = getGroupName(groupId, e.bot);
 
             if (groupId !== e.group_id) {
                 const inquirerKey = `${config.redisPrefix}:${groupId}:${e.user_id}`;

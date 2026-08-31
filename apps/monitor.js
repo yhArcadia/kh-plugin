@@ -9,6 +9,24 @@ import { log } from '../utils/logger.js';
 
 const MONITOR_LISTENER_KEY = Symbol.for('kh-plugin.monitor.message-group-listener');
 
+const CHANGE_TYPE_MAP = {
+    '昵称': 'nickname',
+    '头像': 'avatar',
+    '头衔': 'title',
+    '群名片': 'card',
+    '群权限': 'role'
+};
+
+function shouldNotifyForChanges(config, gid, changes) {
+    if (!changes || changes.length === 0) return false;
+    const rules = config.notifyRules;
+    const groupRules = rules.groups[gid] || rules.default;
+    return changes.some(change => {
+        const key = CHANGE_TYPE_MAP[change];
+        return key && groupRules[key] !== false;
+    });
+}
+
 export class Monitor extends BaseApp {
     constructor() {
         super({
@@ -116,7 +134,7 @@ export class Monitor extends BaseApp {
 
             // 潜水群不推送通报。
             const isDiving = (config.divingGroups || []).includes(Number(gid));
-            if (config.notifyGroups.includes(gid) && !isDiving) { //防止误把潜水群配进了通知群
+            if (config.notifyGroups.includes(gid) && !isDiving && shouldNotifyForChanges(config, gid, changes)) { //防止误把潜水群配进了通知群
                 // 用户自己作为inquirer
                 const inquirer = member
                 try {

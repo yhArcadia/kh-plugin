@@ -1,6 +1,7 @@
-import { loadConfig, loadUserConfig, saveConfig, configPaths, linkedGroupsToGuoba } from './components/config.js';
+import { loadConfig, configPaths } from './components/config.js';
 import { scanHistoryKeys, getHistory } from './components/storage.js';
 import { pluginRoot } from './components/paths.js';
+import { getConfigData, setConfigData, statsCache } from './guoba/config-handler.js';
 import path from "path";
 import  configuration_schemas  from './guoba/schemas/configuration.js';
 const schemas = [...configuration_schemas];
@@ -16,7 +17,6 @@ function resultOk(Result, data, message = '操作成功') {
 function resultError(Result, message) {
   return Result?.error ? Result.error(message) : { ok: false, message };
 }
-let statsCache = { expiresAt: 0, value: null };
 
 function redisClient() {
   if (!global.redis) throw new Error('Redis 尚未连接，无法读取 kh-plugin 数据。');
@@ -140,15 +140,8 @@ export function supportGuoba() {
     },
     configInfo: {
       schemas,
-      getConfigData: () => ({
-        ...loadUserConfig(),
-        linkedGroups: linkedGroupsToGuoba(loadUserConfig().linkedGroups)
-      }),
-      setConfigData: async data => {
-        const saved = saveConfig(data);
-        statsCache = { expiresAt: 0, value: null };
-        return { ...saved, linkedGroups: linkedGroupsToGuoba(saved.linkedGroups), notice: '配置已保存，重启Yunzai后全部配置生效。' };
-      },
+      getConfigData,
+      setConfigData,
       actions: {
         statistics: (args, context) => runAction(statistics, args, context),
         members: (args, context) => runAction(members, args, context),

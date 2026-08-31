@@ -6,6 +6,7 @@ import fetch from 'node-fetch';
 import moment from 'moment';
 import { getProgressBar } from '../utils/format.js';
 import { log } from '../utils/logger.js';
+import { getGroupName } from '../utils/group-name.js';
 import { parseHistory } from '../components/storage.js';
 
 export function createMemberUpdater({ redis, config, headsDir }) {
@@ -54,19 +55,13 @@ export function createMemberUpdater({ redis, config, headsDir }) {
         }
         let updatedUids = [];
         let group;
-        let gname = gid.toString();
+        let gname = getGroupName(gid, botInstance);
         try {
-            try {
-                const groupInfo = botInstance.gl?.get(Number(gid)) || botInstance.gl?.get(String(gid));
-                if (groupInfo) gname = groupInfo.group_name || groupInfo.name || gname;
-            } catch (err) { }
-
             group = botInstance.pickGroup(gid);
             if (!group) {
                 log.w(`无法找到群 ${gid}，可能 Bot 未加入该群。`);
                 return updatedUids;
             }
-            gname = group.name || gname;
 
             const memberMap = await group.getMemberMap();
             const totalMembers = memberMap.size;

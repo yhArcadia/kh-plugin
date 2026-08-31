@@ -30,11 +30,13 @@ export default [
     bottomHelpMessage: '要渲染的记录数超过此值时，将倒序显示，最新记录在前，方便查看。0 表示始终倒序，999 可视为始终正序。'
   },
 
-
-
   { component: 'Divider', label: '实时检测与推送' },
   { field: 'monitorCD', label: labels.monitorCD, component: 'InputNumber', componentProps: { min: 5, max: 86400 }, bottomHelpMessage: '对同一成员实时检测的间隔，单位秒。\n默认会全量判断在任何群发言了的任何群员的身份信息是否发生更新、并静默保存新身份资料，除非配置了黑白名单。' },
   { field: 'maxNotifyRenderLength', label: labels.maxNotifyRenderLength, component: 'InputNumber', componentProps: { min: 1, max: 200 }, bottomHelpMessage: '群员发言时本检测到身份信息更新后，触发的实时推送图片中包含的历史条数。默认2条即为新身份和上一身份。' },
+  
+  
+  { component: 'SOFT_GROUP_BEGIN', label: '推送规则' },
+  { component: 'Divider', label: '目标群聊' },
   {
     field: 'notifyGroups',
     label: labels.notifyGroups,
@@ -46,6 +48,41 @@ export default [
       \n二、对每个人的检测默认有10分钟间隔所以会有变更信息后即便发言也不立刻推送的可能；
       \n三、如果对该群配置了定时自动更新全员信息，那么如果该用户改名换头像后保持静默直到bot自动更新了其新身份后才发言，自然也不会触发推送。
       `
+  },
+  { component: 'Divider', label: '触发推送的类型' },
+  { field: 'notifyDefaultAvatar', label: '头像变更', component: 'Switch', componentProps: { defaultValue: true } },
+  { field: 'notifyDefaultNickname', label: '昵称变更', component: 'Switch', componentProps: { defaultValue: true } },
+  { field: 'notifyDefaultTitle', label: '头衔变更', component: 'Switch', componentProps: { defaultValue: true } },
+  { field: 'notifyDefaultCard', label: '群名片变更', component: 'Switch', componentProps: { defaultValue: true } },
+  { field: 'notifyDefaultRole', label: '群权限变更', component: 'Switch', componentProps: { defaultValue: true } },
+  { component: 'Divider', label: '为每个群定制推送规则' },
+  {
+    field: 'notifyRulesGroups',
+    label: '这里该写什么呢',
+    component: 'GSubForm',
+    componentProps: {
+      multiple: true,
+      schemas: [
+        {
+          field: 'groupName',
+          label: '群名',
+          component: 'Input',
+          componentProps: { placeholder: '填写群名（保存后自动获取）' }
+        },
+        {
+          field: 'groupId',
+          label: '群号',
+          component: 'GSelectGroup',
+          componentProps: { isRadioSelection: true, placeholder: '选择要单独配置推送规则的群' }
+        },
+        { field: 'avatar', label: '头像变更', component: 'Switch', componentProps: { defaultValue: false } },
+        { field: 'nickname', label: '昵称变更', component: 'Switch', componentProps: { defaultValue: false } },
+        { field: 'title', label: '头衔变更', component: 'Switch', componentProps: { defaultValue: false } },
+        { field: 'card', label: '群名片变更', component: 'Switch', componentProps: { defaultValue: false } },
+        { field: 'role', label: '群权限变更', component: 'Switch', componentProps: { defaultValue: false } }
+      ]
+    },
+    bottomHelpMessage: '为特定群单独配置推送类型，覆盖全局默认规则。未在此处配置的群将使用上方全局默认规则。'
   },
 
   { component: 'SOFT_GROUP_BEGIN', label: '生效范围' },

@@ -20,6 +20,35 @@ export const systemConfig = Object.freeze({
   lockTTL: 3600
 });
 
+const NOTIFY_RULE_KEYS = ['avatar', 'nickname', 'title', 'card', 'role'];
+
+function normalizeNotifyRule(rule) {
+  if (!rule || typeof rule !== 'object') rule = {};
+  const out = {};
+  for (const key of NOTIFY_RULE_KEYS) {
+    out[key] = rule[key] !== false;
+  }
+  return out;
+}
+
+function normalizeNotifyRules(value) {
+  if (!value || typeof value !== 'object') {
+    return { default: normalizeNotifyRule(null), groups: {} };
+  }
+  const def = normalizeNotifyRule(value.default);
+  const rawGroups = value.groups;
+  const groups = {};
+  if (rawGroups && typeof rawGroups === 'object' && !Array.isArray(rawGroups)) {
+    for (const [gid, rule] of Object.entries(rawGroups)) {
+      const num = Number(gid);
+      if (Number.isFinite(num) && num > 0) {
+        groups[num] = normalizeNotifyRule(rule);
+      }
+    }
+  }
+  return { default: def, groups };
+}
+
 /** 正常运行时 default_config.yaml 是用户配置默认值的唯一来源。 */
 export const defaultConfig = Object.freeze({
   linkedGroups: [],
@@ -35,7 +64,11 @@ export const defaultConfig = Object.freeze({
   groupWhitelist: [],
   groupBlacklist: [],
   userBlacklist: [],
-  divingGroups: []
+  divingGroups: [],
+  notifyRules: Object.freeze({
+    default: Object.freeze({ avatar: true, nickname: true, title: true, card: true, role: true }),
+    groups: Object.freeze({})
+  })
 });
 
 const configFields = Object.freeze(Object.keys(defaultConfig));
@@ -88,6 +121,7 @@ function normalize(raw = {}, fallbacks = defaultConfig) {
         : [...new Set(value.map(Number).filter(Number.isFinite))];
     }
     if (field === 'updateSchedule') value = String(value || fallback).trim();
+    if (field === 'notifyRules') value = normalizeNotifyRules(value);
     out[field] = value;
   }
   return out;
@@ -95,8 +129,9 @@ function normalize(raw = {}, fallbacks = defaultConfig) {
 
 function equalValue(left, right) { return JSON.stringify(left) === JSON.stringify(right); }
 function writeUserOverrides(overrides) {
-  const body = Object.keys(overrides).length ? YAML.stringify(overrides) : '';
-  fs.writeFileSync(userConfigPath, `${header}${body}`, 'utf8');
+  const body = Object.keys(overrides).length ? YAML.stringify(overrides, null, { lineWidth: 0 }) : '';
+  const cleaned = body.replace(/^(\s+)"(\d+)":/gm, '$1$2:');
+  fs.writeFileSync(userConfigPath, `${header}${cleaned}`, 'utf8');
 }
 
 export function loadDefaultConfig() {
@@ -131,12 +166,41 @@ export function linkedGroupsFromGuoba(value) {
   return value.map(item => Array.isArray(item) ? item : (item?.groupIds ?? item?.groups ?? item));
 }
 
+// 将 notifyRules.groups (object) 转为锅巴 GSubForm 数组格式
+export function notifyRulesGroupsToGuoba(notifyRules) {
+  const groups = notifyRules?.groups;
+  if (!groups || typeof groups !== 'object') return [];
+  return Object.entries(groups).map(([gid, rule]) => ({
+    groupId: Number(gid),
+    ...normalizeNotifyRule(rule)
+  }));
+}
+
+// 将锅巴 GSubForm 数组格式转回 notifyRules.groups (object)
+export function notifyRulesGroupsFromGuoba(arr) {
+  if (!Array.isArray(arr)) return {};
+  const groups = {};
+  for (const item of arr) {
+    const gid = Number(item?.groupId);
+    if (Number.isFinite(gid) && gid > 0) {
+      groups[gid] = normalizeNotifyRule(item);
+    }
+  }
+  return groups;
+}
+
 // 写入局部用户覆盖；Guoba 的 linkedGroups 对象行在这里转换回兼容的 number[][]。
 export function saveConfig(input = {}) {
   const base = loadDefaultConfig();
   const previous = loadUserOverrides();
   const safeInput = Object.fromEntries(configFields.filter(field => input[field] !== undefined).map(field => [field, input[field]]));
   if (safeInput.linkedGroups !== undefined) safeInput.linkedGroups = linkedGroupsFromGuoba(safeInput.linkedGroups);
+  if (input.notifyRulesDefault !== undefined || input.notifyRulesGroups !== undefined) {
+    safeInput.notifyRules = {
+      default: normalizeNotifyRule(input.notifyRulesDefault ?? previous.notifyRules?.default ?? base.notifyRules.default),
+      groups: notifyRulesGroupsFromGuoba(input.notifyRulesGroups ?? previous.notifyRules?.groups ?? base.notifyRules.groups)
+    };
+  }
   const effective = normalize({ ...base, ...previous, ...safeInput }, base);
   const overrides = Object.fromEntries(configFields
     .filter(field => !equalValue(effective[field], base[field]))

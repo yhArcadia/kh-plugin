@@ -114,3 +114,28 @@ userBlacklist: [
 divingGroups: [
 #    114514,   
 ]
+
+
+
+
+# 【推送类型规则】
+# 精细化控制哪些类型的变更会触发实时推送。
+# default: 全局默认规则，未在下方 groups 中单独配置的群走此规则。
+# groups: 按群号单独配置，覆盖全局默认规则。
+# 五种变更类型：avatar(头像)、nickname(昵称)、title(头衔)、card(群名片)、role(群权限)
+notifyRules:
+  default:
+    avatar: true
+    nickname: true
+    title: true
+    card: true
+    role: true
+  groups: {}
+  # 示例：
+  # groups:
+  #   114514:
+  #     avatar: true
+  #     nickname: false
+  #     title: false
+  #     card: false
+  #     role: false
