@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:25:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-01 19:42:56
+ * @LastEditTime: 2026-09-01 19:49:45
  * @FilePath: /kh-plugin/guoba/schemas/tab-advanced.js
  * @Description: 进阶配置页面
  * 
