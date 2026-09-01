@@ -1,9 +1,19 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:26:02
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-01 19:41:58
+ * @FilePath: /kh-plugin/guoba.support.js
+ * @Description: 锅巴支持模块
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import { loadConfig, configPaths } from './components/config.js';
 import { scanHistoryKeys, getHistory } from './components/storage.js';
 import { pluginRoot } from './components/paths.js';
 import { getConfigData, setConfigData, statsCache } from './guoba/config-handler.js';
 import path from "path";
-import  configuration_schemas  from './guoba/schemas/configuration.js';
+import  configuration_schemas  from './guoba/schemas/schema.js';
 const schemas = [...configuration_schemas];
 
 const STATS_CACHE_TTL_MS = 30_000;
