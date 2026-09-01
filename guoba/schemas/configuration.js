@@ -144,10 +144,16 @@ export default [
       multiple: true,
       schemas: [
         {
-          field: 'groupIds',
-          label: '互通群',
+          field: 'groupNames',
+          label: '勾选互通群',
           component: 'GSelectGroup',
           componentProps: { multiple: true, placeholder: '选择同一互通组内的群' }
+        },
+        {
+          field: 'groupNamesDisplay',
+          label: '预览（编辑无效）',
+          component: 'GTags',
+          componentProps: { allowAdd: false, allowDel: false }
         }
       ]
     },

@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 01:16:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-01 01:20:27
+ * @LastEditTime: 2026-09-01 19:06:02
  * @FilePath: /kh-plugin/guoba/config-handler.js
  * @Description: 配置数据转换：UI - YAML
  * 
@@ -13,6 +13,21 @@ import { getGroupName } from '../utils/group-name.js';
 
 export let statsCache = { expiresAt: 0, value: null };
 
+function addDisplay(lg) {
+  if (!Array.isArray(lg)) return lg;
+  return lg.map(g => ({
+    ...g,
+    groupNamesDisplay: Array.isArray(g.groupNames)
+      ? g.groupNames.map(id => getGroupName(id))
+      : []
+  }));
+}
+
+function toGroupNames(lg) {
+  if (!Array.isArray(lg)) return lg;
+  return lg.map(g => ({ groupNames: g.groupIds }));
+}
+
 export function getConfigData() {
   const cfg = loadUserConfig();
   const def = cfg.notifyRules?.default || {};
@@ -22,7 +37,7 @@ export function getConfigData() {
   }));
   return {
     ...cfg,
-    linkedGroups: linkedGroupsToGuoba(cfg.linkedGroups),
+    linkedGroups: addDisplay(toGroupNames(linkedGroupsToGuoba(cfg.linkedGroups))),
     notifyDefaultAvatar: def.avatar,
     notifyDefaultNickname: def.nickname,
     notifyDefaultTitle: def.title,
@@ -76,7 +91,7 @@ export async function setConfigData(data) {
 
   return {
     ...restSaved,
-    linkedGroups: linkedGroupsToGuoba(saved.linkedGroups),
+    linkedGroups: addDisplay(toGroupNames(linkedGroupsToGuoba(saved.linkedGroups))),
     notifyDefaultAvatar: def.avatar,
     notifyDefaultNickname: def.nickname,
     notifyDefaultTitle: def.title,

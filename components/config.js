@@ -160,10 +160,9 @@ export function linkedGroupsToGuoba(value) {
   return normalizeLinkedGroups(value).map(groupIds => ({ groupIds }));
 }
 
-// 仅在 Guoba 提交时接受其对象行；其余来源仍走旧的兼容规范化。
 export function linkedGroupsFromGuoba(value) {
   if (!Array.isArray(value)) return value;
-  return value.map(item => Array.isArray(item) ? item : (item?.groupIds ?? item?.groups ?? item));
+  return value.map(item => Array.isArray(item) ? item : (item?.groupIds ?? item?.groupNames ?? item?.groups ?? item));
 }
 
 // 将 notifyRules.groups (object) 转为锅巴 GSubForm 数组格式
