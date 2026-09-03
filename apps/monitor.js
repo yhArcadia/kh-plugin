@@ -90,7 +90,7 @@ export class Monitor extends BaseApp {
         }
 
         this.asyncCheckAndUpdate(e).catch(err => {
-            log.i(`静默检测发生异常: ${err.message}`);
+            log.e(`静默检测发生异常: ${err.message}`);
         });
 
         return false;

@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import moment from 'moment';
 import { formatDuration } from '../utils/format.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
@@ -43,6 +42,19 @@ function buildDisplayRankList(rankList, promotedUids, limit) {
         .slice(0, limit)
         .filter(item => !promotedSet.has(item.uid));
     return [...promoted, ...ordinary];
+}
+
+async function batchGetHistory(redis, keys, batchSize = 500) {
+    if (keys.length === 0) return new Map();
+    const result = new Map();
+    for (let i = 0; i < keys.length; i += batchSize) {
+        const batch = keys.slice(i, i + batchSize);
+        const values = await redis.mGet(batch);
+        for (let j = 0; j < batch.length; j++) {
+            result.set(batch[j], values[j]);
+        }
+    }
+    return result;
 }
 
 export class KhRanking extends BaseApp {
@@ -190,10 +202,13 @@ export class KhRanking extends BaseApp {
         const nowMs = Date.now();
         const nowSec = Math.floor(nowMs / 1000);
 
-        // 2. 遍历并计算每个人的分数
+        // 2. 预取所有用户的 Redis 数据
+        const historyMap = await batchGetHistory(redis, userKeys);
+
+        // 3. 遍历并计算每个人的分数
         for (const key of userKeys) {
             const uid = parseInt(key.split(':').pop());
-            const historyJson = await redis.get(key);
+            const historyJson = historyMap.get(key);
             if (!historyJson) continue;
 
             let history = [];
@@ -301,7 +316,7 @@ export class KhRanking extends BaseApp {
             });
         }
 
-        // 3. 动态排序
+        // 4. 动态排序
         if (isAscending) {
             rankList.sort((a, b) => a.score - b.score);
         } else {
@@ -316,7 +331,7 @@ export class KhRanking extends BaseApp {
             return true;
         }
 
-        // 4. 渲染
+        // 5. 渲染
         try {
             let gname = e.group_name || e.group_id.toString();
             const img = await this.rankRender(e.group_id, gname, topN, rankType, rankTitle);
