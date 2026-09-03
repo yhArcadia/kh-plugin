@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 19:57:26
+ * @LastEditTime: 2026-09-03 19:40:23
  * @FilePath: /kh-plugin/index.js
  * @Description: 插件入口
  * 
@@ -15,6 +15,7 @@ import path from 'node:path';
 import { ensureLegacyPluginFilesBackedUp } from './components/legacy-cleanup.js';
 import { migratePluginDirectory } from './components/plugin-rename-migration.js';
 import { log } from './utils/logger.js';
+import { boxLine, printBox, wrapModuleNames } from './utils/boxization.js';
 
 log.i("开始载入")
 const apps = {};
@@ -42,6 +43,7 @@ if (migration.status === 'migrated') {
     }
   }, 3000);
 } else {
+  const startTime = Date.now();
   // 载入 apps 目录下的所有文件
   const appsDir = fileURLToPath(new URL('./apps/', import.meta.url));
   const files = fs.readdirSync(appsDir)
@@ -51,11 +53,15 @@ if (migration.status === 'migrated') {
     files.map(file => import(pathToFileURL(path.join(appsDir, file)).href))
   );
 
+  const successModules = [];
+  const failedModules = [];
+
   for (let index = 0; index < files.length; index++) {
     const file = files[index];
     const name = path.basename(file, '.js');
     const result = results[index];
     if (result.status !== 'fulfilled') {
+      failedModules.push(file);
       logger.error(`[kh-plugin] 载入 app 失败：${logger.red?.(name) || name}`);
       logger.error(result.reason);
       continue;
@@ -63,14 +69,35 @@ if (migration.status === 'migrated') {
     const exported = Object.values(result.value);
     const App = exported.find(value => typeof value === 'function' && value.prototype instanceof plugin);
     if (!App) {
+      failedModules.push(file);
       log.e(`apps/${file} 未导出有效的 plugin 类，已跳过。`);
       continue;
     }
     apps[name] = App;
+    successModules.push(name);
   }
+
+  const elapsed = Date.now() - startTime;
+  const boxLines = [];
+
+  boxLines.push(boxLine(`载入完成！`));
+
+  if (successModules.length > 0) {
+    boxLines.push(boxLine(`成功载入 ${successModules.length} 个模块：`));
+    boxLines.push(...wrapModuleNames(successModules));
+  } else {
+    boxLines.push(boxLine('成功载入 0 个模块'));
+  }
+
+  if (failedModules.length > 0) {
+    boxLines.push({ line: boxLine('以下模块载入失败：'), level: 'w' });
+    for (const line of wrapModuleNames(failedModules)) {
+      boxLines.push({ line, level: 'w' });
+    }
+  }
+
+  boxLines.push(boxLine('欢迎加群交流＆反馈：134086404'));
+  printBox(boxLines);
 }
 
 export { apps };
-
-log.i("载入完成")
-log.i("欢迎加群交流＆反馈：134086404")
