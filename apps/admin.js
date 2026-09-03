@@ -1,6 +1,6 @@
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
-import { config, scanLegacyKeys, OPERATION_LOCK_KEY } from '../components/runtime.js';
+import { config, scanLegacyKeys } from '../components/runtime.js';
 import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 import { log } from '../utils/logger.js';
 
@@ -25,7 +25,7 @@ export class KhAdmin extends BaseApp {
         if (isDivingGroup(e, config)) return false;
         if (!e.isMaster) return false;
 
-        const lock = await acquireOperationLock(redis, OPERATION_LOCK_KEY, config.lockTTL, 'ghost-cleanup');
+        const lock = await acquireOperationLock(redis, `${config.redisPrefix}${config.lockKeyOperation}`, config.lockTTL, 'ghost-cleanup');
         if (!lock) {
             await e.reply("当前已有身份记录操作正在执行，请稍后再试。");
             return true;

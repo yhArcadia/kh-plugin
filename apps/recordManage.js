@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
-import { config, headDir, OPERATION_LOCK_KEY } from '../components/runtime.js';
+import { config, headDir } from '../components/runtime.js';
 import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
@@ -54,7 +54,7 @@ export class KhRecordManage extends BaseApp {
             await e.reply("已有其他更新或清理任务正在进行中，请稍后再试。");
             return true;
         }
-        const lock = await acquireOperationLock(redis, OPERATION_LOCK_KEY, 60, 'record-delete');
+        const lock = await acquireOperationLock(redis, `${config.redisPrefix}${config.lockKeyOperation}`, 60, 'record-delete');
         if (!lock) {
             await e.reply("未能获取操作锁，请稍后再试。");
             return true;

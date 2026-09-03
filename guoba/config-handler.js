@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 01:16:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-01 19:06:02
+ * @LastEditTime: 2026-09-03 18:46:55
  * @FilePath: /kh-plugin/guoba/config-handler.js
  * @Description: 配置数据转换：UI - YAML
  * 
@@ -98,6 +98,6 @@ export async function setConfigData(data) {
     notifyDefaultCard: def.card,
     notifyDefaultRole: def.role,
     notifyRulesGroups: groups,
-    notice: '配置已保存，重启Yunzai后全部配置生效。'
+    notice: '配置已生效。'
   };
 }

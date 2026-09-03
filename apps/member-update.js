@@ -1,5 +1,5 @@
 import { BaseApp } from '../components/base-app.js';
-import { config, OPERATION_LOCK_KEY, memberUpdater } from '../components/runtime.js';
+import { config, memberUpdater } from '../components/runtime.js';
 import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { setMsgEmojiLike } from '../utils/message.js';
@@ -34,7 +34,7 @@ export class MemberInfoUpdate extends BaseApp {
             return true;
         }
 
-        const lock = await acquireOperationLock(redis, OPERATION_LOCK_KEY, config.lockTTL, 'manual-update');
+        const lock = await acquireOperationLock(redis, `${config.redisPrefix}${config.lockKeyOperation}`, config.lockTTL, 'manual-update');
         if (!lock) {
             await this.respond(isSilent, 123, "未能获取操作锁，可能刚刚有其他任务开始，请稍后再试。", e);
             return true;

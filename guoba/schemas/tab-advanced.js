@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:25:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-01 19:49:45
+ * @LastEditTime: 2026-09-03 18:47:08
  * @FilePath: /kh-plugin/guoba/schemas/tab-advanced.js
  * @Description: 进阶配置页面
  * 
@@ -19,7 +19,7 @@ export default [
     field: 'updateSchedule',
     label: labels.updateSchedule,
     component: 'Input',
-    bottomHelpMessage: '定时更新 Cron 表达式，例如 0 30 3 * * * 表示每天凌晨 03:30执行一次。保存后重启 Yunzai 使配置和调度器生效。'
+    bottomHelpMessage: '定时更新 Cron 表达式，例如 0 30 3 * * * 表示每天凌晨 03:30执行一次。'
   },
   {
     field: 'autoUpdateGroups',

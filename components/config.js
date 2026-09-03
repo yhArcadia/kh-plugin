@@ -76,7 +76,7 @@ const numericFields = new Set(['maxSaveLength', 'maxRenderLength', 'reverseHisto
 const arrayFields = new Set(['linkedGroups', 'autoUpdateGroups', 'notifyGroups', 'groupWhitelist', 'groupBlacklist', 'userBlacklist', 'divingGroups']);
 const header = `# =======================================
 # 请将需要自定义的配置项从 default_config.yaml 复制到本文件并填写值。未在这里定义的配置将采用default_config.yaml的默认值。
-# 修改后需重启生效。
+# 修改后即时生效。
 # 如需反馈问题或建议可加群134086404
 # =======================================
 `;
@@ -154,6 +154,8 @@ export function loadUserConfig() {
 }
 
 export function loadConfig() { return { ...systemConfig, ...loadUserConfig() }; }
+
+export function reloadConfig() { return loadConfig(); }
 
 // 将内部 number[][] 转为锅巴 GSubForm/GSelectGroup 所需的对象行。
 export function linkedGroupsToGuoba(value) {

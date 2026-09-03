@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:15:20
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 16:38:54
+ * @LastEditTime: 2026-09-03 18:38:13
  * @FilePath: /kh-plugin/components/base-app.js
  * @Description: 
  * 
@@ -10,7 +10,7 @@
  */
 import { rankRender } from '../render/rank-renderer.js';
 import { renderHistory } from '../render/history-renderer.js';
-import { config, getBot, schedulerState, OPERATION_LOCK_KEY } from './runtime.js';
+import { config, getBot, schedulerState } from './runtime.js';
 import { Scheduler } from './scheduler.js';
 
 export class BaseApp extends plugin {
@@ -38,7 +38,7 @@ export class BaseApp extends plugin {
   }
 
   async isOperationRunning() {
-    return Boolean(await redis.exists(OPERATION_LOCK_KEY));
+    return Boolean(await redis.exists(`${this.config.redisPrefix}${this.config.lockKeyOperation}`));
   }
 
 
