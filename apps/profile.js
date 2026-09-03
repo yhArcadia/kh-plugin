@@ -1,10 +1,19 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:26:02
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-03 22:59:07
+ * @FilePath: /kh-plugin/apps/profile.js
+ * @Description: 成员基础信息及头像查询
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import fs from 'node:fs';
 import path from 'node:path';
 import moment from 'moment';
-import template from 'art-template';
 import puppeteer from '../../../lib/puppeteer/puppeteer.js';
 import cfg from '../../../lib/config/config.js';
-import { templateDir, pluginRoot } from '../components/paths.js';
+import { templateDir } from '../components/paths.js';
 import { formatDuration, getLevelIcons } from '../utils/format.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
@@ -12,6 +21,7 @@ import { config, headDir, memberUpdater } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
 import { getAvatarPalette } from '../utils/avatar-palette.js';
+import { getPluginVersion } from '../components/version.js';
 
 export class KhProfile extends BaseApp {
     constructor() {
@@ -272,7 +282,7 @@ export class KhProfile extends BaseApp {
         }
         const historyTrackHeight = visibleCount > 0 ? historyAvatarSize : 0;
 
-        const khPluginVersion = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version;
+        const khPluginVersion = getPluginVersion();
         const renderData = {
             avatarUrl,
             targetUid,

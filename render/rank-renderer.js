@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-07 00:23:37
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 19:00:02
+ * @LastEditTime: 2026-09-03 22:58:19
  * @FilePath: /kh-plugin/render/rank-renderer.js
  * @Description: 排行榜渲染器
  * 
@@ -13,7 +13,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import template from 'art-template';
 import puppeteer from '../../../lib/puppeteer/puppeteer.js';
-import { templateDir, pluginRoot } from '../components/paths.js';
+import { templateDir } from '../components/paths.js';
+import { getPluginVersion } from '../components/version.js';
 import cfg from '../../../lib/config/config.js';
 
 export async function rankRender({ gid, gname, topN, rankType, rankTitle, config }) {
@@ -36,7 +37,7 @@ export async function rankRender({ gid, gname, topN, rankType, rankTitle, config
         limit: config.rankLimit,
         rankType: rankType,
         list: renderList,
-        footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version}`
+        footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${getPluginVersion()}`
     };
 
     const templateContent = fs.readFileSync(path.join(templateDir, "rank.html"), 'utf-8');

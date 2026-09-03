@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:56
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 19:00:07
+ * @LastEditTime: 2026-09-03 22:49:32
  * @FilePath: /kh-plugin/components/version.js
  * @Description: 插件版本信息渲染组件
  * 
@@ -14,6 +14,14 @@ import path from 'node:path';
 import { pluginRoot, versionTemplate } from './paths.js';
 import cfg from '../../../lib/config/config.js';
 import { screenshot } from './render.js';
+
+let _cachedPluginVersion = null;
+export function getPluginVersion() {
+    if (_cachedPluginVersion === null) {
+        _cachedPluginVersion = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version;
+    }
+    return _cachedPluginVersion;
+}
 
 const MAX_RELEASES = 4; // 最多解析几个版本
 const MAX_HIGHLIGHTS = 50; //每个版本最多几条
@@ -150,7 +158,7 @@ export function versionCardData(file = path.join(pluginRoot, 'CHANGELOG.md')) {
     title: '',
     highlights: ['未找到可展示的更新说明。']
   };
-  const pluginVersion = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version;
+  const pluginVersion = getPluginVersion();
   return {
     pluginName: 'kh-plugin',
     version: parsed.version,

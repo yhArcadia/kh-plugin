@@ -2,17 +2,16 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-19 21:41:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 19:00:08
+ * @LastEditTime: 2026-09-03 22:56:25
  * @FilePath: /kh-plugin/components/help.js
  * @Description: 帮助文档渲染组件
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
 import fs from 'node:fs';
-import path from 'node:path';
 import { pluginRoot, helpMarkdown, helpTemplate } from './paths.js';
 import { screenshot, screenshotBuffer } from './render.js';
-import { escapeHtml } from './version.js';
+import { escapeHtml, getPluginVersion } from './version.js';
 import cfg from '../../../lib/config/config.js';
 
 const MAX_SECTIONS = 12;
@@ -62,7 +61,7 @@ export function parseHelpMarkdown(source) {
 
 export function helpCardData(file = helpMarkdown) {
     const source = fs.readFileSync(file, 'utf8');
-    const pluginVersion = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version;
+    const pluginVersion = getPluginVersion();
     return {
         pluginName: 'kh-plugin',
         title: '指令与使用指南',

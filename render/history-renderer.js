@@ -1,10 +1,21 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:18:58
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-03 22:58:03
+ * @FilePath: /kh-plugin/render/history-renderer.js
+ * @Description: 历史身份渲染组件
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import fs from 'node:fs';
 import path from 'node:path';
 import template from 'art-template';
 import moment from 'moment';
 import puppeteer from '../../../lib/puppeteer/puppeteer.js';
-import { headsDir, templateDir, pluginRoot } from '../components/paths.js';
+import { headsDir, templateDir } from '../components/paths.js';
 import { escapeHtml } from '../utils/html.js';
+import { getPluginVersion } from '../components/version.js';
 import cfg from '../../../lib/config/config.js';
 import { log } from '../utils/logger.js';
 
@@ -233,7 +244,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
 
     // 模板所需的主数据
     log.i(`群名称: ${gname}`);
-    const khPluginVersion = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'package.json'), 'utf8')).version;
+    const khPluginVersion = getPluginVersion();
     const renderData = {
         history: processedHistory,
         groupName: gname || groupId.toString(),
