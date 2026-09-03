@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:25:11
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-01 19:43:19
+ * @LastEditTime: 2026-09-03 21:05:00
  * @FilePath: /kh-plugin/guoba/schemas/tab-notify.js
  * @Description: 推送规则页面
  * 
@@ -47,7 +47,7 @@ export default [
           field: 'groupName',
           label: '群名',
           component: 'Input',
-          componentProps: { placeholder: '填写群名（保存后自动获取）' }
+          componentProps: { placeholder: '保存后自动获取' }
         },
         {
           field: 'groupId',
