@@ -175,11 +175,11 @@ export class GuessGroupMember extends plugin {
   }
 
   async hintGame(e) {
-    if (isDivingGroup(e))
-      return false
     // 必须引用仍在进行中的本局题图
     const game = referencedGame(e)
     if (!game)
+      return false
+    if (isDivingGroup(e))
       return false
     const isAlreadyFull = game.cropSide >= Math.max(game.imageWidth, game.imageHeight)
     // 完整头像再次被引用提示时，直接揭晓并结束，避免无意义重复发图。
@@ -203,11 +203,11 @@ export class GuessGroupMember extends plugin {
 
   async answerGame(e) {
     if(!e.at) return false
-    if (isDivingGroup(e)) return false
     const game = referencedGame(e)
     if (!game) return false
     const targetId = mentionedUserId(e)
     if (!targetId) return false
+    if (isDivingGroup(e)) return false
     if (targetId === game.member.userId) {
       const reacted = await setMsgEmojiLike(e, CORRECT_EMOJI)
       if (!reacted) {
