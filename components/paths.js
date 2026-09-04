@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-19 22:13:27
+ * @LastEditTime: 2026-09-04 23:43:49
  * @FilePath: /kh-plugin/components/paths.js
  * @Description: 
  * 
@@ -11,6 +11,7 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { encodeSafeUid } from '../utils/uid-encoder.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +25,7 @@ export const templateDir = path.join(pluginRoot, 'resources', 'template');
 export const versionTemplate = path.join(templateDir, 'version.html');
 export const helpMarkdown = path.join(pluginRoot, 'resources', 'help', 'help.md');
 export const helpTemplate = path.join(templateDir, 'help.html');
+export const orphansDir = path.join(headsDir, 'orphans');
 
 function hasFiles(dir) {
   try {
@@ -37,6 +39,40 @@ export function ensureRuntimePaths() {
   fs.mkdirSync(headsDir, { recursive: true });
 }
 
-export function headPath(gid, uid, headtime) {
-  return path.join(headsDir, `${gid}_${uid}_${headtime}.jpg`);
+export function orphanDateDir(dateStr) {
+  return path.join(orphansDir, dateStr);
+}
+
+export function ensureOrphanDirs(dateStr) {
+  const dir = orphanDateDir(dateStr);
+  fs.mkdirSync(dir, { recursive: true });
+  return dir;
+}
+
+export function headPath(uid, headtime, gid) {
+  const safeUid = encodeSafeUid(uid);
+  const newPath = path.join(headsDir, `${safeUid}_${headtime}.jpg`);
+  if (fs.existsSync(newPath) || gid == null) return newPath;
+
+  const oldPath = path.join(headsDir, `${gid}_${uid}_${headtime}.jpg`);
+  if (fs.existsSync(oldPath)) {
+    try { fs.linkSync(oldPath, newPath); } catch {}
+    return oldPath;
+  }
+  return newPath;
+}
+
+export function resolveHeadPath(uid, headtime, gid) {
+  const safeUid = encodeSafeUid(uid);
+  const newPath = path.join(headsDir, `${safeUid}_${headtime}.jpg`);
+  if (fs.existsSync(newPath)) return newPath;
+
+  if (gid != null) {
+    const oldPath = path.join(headsDir, `${gid}_${uid}_${headtime}.jpg`);
+    if (fs.existsSync(oldPath)) {
+      try { fs.linkSync(oldPath, newPath); } catch {}
+      return oldPath;
+    }
+  }
+  return null;
 }

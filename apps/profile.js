@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-04 14:34:05
+ * @LastEditTime: 2026-09-05 00:54:08
  * @FilePath: /kh-plugin/apps/profile.js
  * @Description: 成员基础信息及头像查询
  * 
@@ -13,11 +13,11 @@ import path from 'node:path';
 import moment from 'moment';
 import puppeteer from '../components/puppeteer.js';
 import cfg from '../../../lib/config/config.js';
-import { templateDir } from '../components/paths.js';
+import { templateDir, resolveHeadPath } from '../components/paths.js';
 import { formatDuration, getLevelIcons } from '../utils/format.js';
 import { isDivingGroup, isGroupAllowed } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
-import { config, headDir, memberUpdater } from '../components/runtime.js';
+import { config, memberUpdater } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
 import { getAvatarPalette } from '../utils/avatar-palette.js';
@@ -248,8 +248,8 @@ export class KhProfile extends BaseApp {
         const historyTrackWidth = 708;
         const historyAvatars = uniqueHeadtimes
             .map(headtime => {
-                const file = path.join(headDir, `${e.group_id}_${targetUid}_${headtime}.jpg`);
-                if (!fs.existsSync(file)) return null;
+                const file = resolveHeadPath(targetUid, headtime, e.group_id);
+                if (!file) return null;
                 return { headtime, buffer: fs.readFileSync(file) };
             })
             .filter(Boolean);

@@ -1,3 +1,13 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:18:58
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-05 00:57:17
+ * @FilePath: /kh-plugin/services/member-updater.js
+ * @Description: 群员记录更新
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import fs from 'node:fs';
 import path from 'node:path';
 import { pipeline } from 'node:stream';
@@ -8,6 +18,7 @@ import { getProgressBar } from '../utils/format.js';
 import { log } from '../utils/logger.js';
 import { getGroupName } from '../utils/group-name.js';
 import { parseHistory } from '../components/storage.js';
+import { encodeSafeUid } from '../utils/uid-encoder.js';
 
 export function createMemberUpdater({ redis, config, headsDir }) {
     const recordLocks = globalThis.__whoAreYouMemberRecordLocks ||= new Map();
@@ -278,34 +289,37 @@ export function createMemberUpdater({ redis, config, headsDir }) {
                     headtimeAsTimestamp = Date.now();
                 }
 
-                const picpath = path.join(headsDir, `${gid}_${uid}_${headtimeAsTimestamp}.jpg`);
-                const downloadController = new AbortController();
-                const downloadTimeoutId = setTimeout(() => downloadController.abort(), config.avatarFetchTimeout * 2);
+                const safeUid = encodeSafeUid(uid);
+                const picpath = path.join(headsDir, `${safeUid}_${headtimeAsTimestamp}.jpg`);
+                if (!fs.existsSync(picpath)) {
+                    const downloadController = new AbortController();
+                    const downloadTimeoutId = setTimeout(() => downloadController.abort(), config.avatarFetchTimeout * 2);
 
-                try {
-                    const downloadResponse = await fetch(avatarUrl, { signal: downloadController.signal });
-                    clearTimeout(downloadTimeoutId);
+                    try {
+                        const downloadResponse = await fetch(avatarUrl, { signal: downloadController.signal });
+                        clearTimeout(downloadTimeoutId);
 
-                    if (downloadResponse.ok) {
-                        const streamPipeline = promisify(pipeline);
-                        await streamPipeline(downloadResponse.body, fs.createWriteStream(picpath));
-                        actualContentLengthToSave = downloadResponse.headers.get("content-length") || actualContentLengthToSave;
-                    } else {
-                        log.w(`(群 ${gname || gid}) 重新下载头像失败 ${uid}: ${downloadResponse.status}`);
+                        if (downloadResponse.ok) {
+                            const streamPipeline = promisify(pipeline);
+                            await streamPipeline(downloadResponse.body, fs.createWriteStream(picpath));
+                            actualContentLengthToSave = downloadResponse.headers.get("content-length") || fs.statSync(picpath).size;
+                        } else {
+                            log.w(`(群 ${gname || gid}) 重新下载头像失败 ${uid}: ${downloadResponse.status}`);
+                            headtimeAsTimestamp = latestRecord?.headtime || null;
+                            actualHeadTimeToSave = latestRecord?.headtimeGMT || null;
+                            actualContentLengthToSave = latestRecord?.contentLength || null;
+                        }
+                    } catch (saveError) {
+                        clearTimeout(downloadTimeoutId);
+                        if (saveError.name === 'AbortError') {
+                            log.w(`(群 ${gname || gid}) 下载头像 ${picpath} 超时`);
+                        } else {
+                            log.w(`(群 ${gname || gid}) 保存头像 ${picpath} 失败: ${saveError}`);
+                        }
                         headtimeAsTimestamp = latestRecord?.headtime || null;
                         actualHeadTimeToSave = latestRecord?.headtimeGMT || null;
                         actualContentLengthToSave = latestRecord?.contentLength || null;
                     }
-                } catch (saveError) {
-                    clearTimeout(downloadTimeoutId);
-                    if (saveError.name === 'AbortError') {
-                        log.w(`(群 ${gname || gid}) 下载头像 ${picpath} 超时`);
-                    } else {
-                        log.w(`(群 ${gname || gid}) 保存头像 ${picpath} 失败: ${saveError}`);
-                    }
-                    headtimeAsTimestamp = latestRecord?.headtime || null;
-                    actualHeadTimeToSave = latestRecord?.headtimeGMT || null;
-                    actualContentLengthToSave = latestRecord?.contentLength || null;
                 }
             } else if (latestRecord) {
                 headtimeAsTimestamp = latestRecord.headtime;

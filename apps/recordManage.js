@@ -1,8 +1,18 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:26:02
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-05 00:54:56
+ * @FilePath: /kh-plugin/apps/recordManage.js
+ * @Description: 群员记录管理
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import fs from 'node:fs';
-import path from 'node:path';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
-import { config, headDir } from '../components/runtime.js';
+import { resolveHeadPath } from '../components/paths.js';
+import { config } from '../components/runtime.js';
 import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
@@ -117,9 +127,9 @@ export class KhRecordManage extends BaseApp {
                     // 检查剩余记录中是否还有使用此头像的
                     const isHeadtimeInUse = history.some(record => record.headtime === headtimeToDelete);
                     if (!isHeadtimeInUse) {
-                        const picpath = path.join(headDir, `${e.group_id}_${e.at}_${headtimeToDelete}.jpg`);
+                        const picpath = resolveHeadPath(e.at, headtimeToDelete, e.group_id);
                         try {
-                            if (fs.existsSync(picpath)) {
+                            if (picpath) {
                                 fs.unlinkSync(picpath);
                                 cleanedFiles++;
                             }

@@ -1,15 +1,19 @@
-import fs from 'node:fs';
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:26:02
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-05 00:53:04
+ * @FilePath: /kh-plugin/apps/debug.js
+ * @Description: 调试工具
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import path from 'node:path';
 import moment from 'moment';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
-import {
-    config,
-    headDir,
-    memberUpdater,
-    scanLegacyKeys,
-    checkAndSetMonitorCD
-} from '../components/runtime.js';
+import { resolveHeadPath } from '../components/paths.js';
+import { config } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
 
 export class Debug extends BaseApp {
@@ -100,11 +104,11 @@ export class Debug extends BaseApp {
             // });
 
             for (const headtime of uniqueHeadtimes) {
-                const fileName = `${e.group_id}_${targetUid}_${headtime}.jpg`;
-                const headPicPath = path.join(headDir, fileName);
-                const relativePath = path.relative(process.cwd(), headPicPath).replace(/\\/g, '/');
+                const headPicPath = resolveHeadPath(targetUid, headtime, e.group_id);
+                const relativePath = headPicPath ? path.relative(process.cwd(), headPicPath).replace(/\\/g, '/') : '';
+                const fileName = headPicPath ? path.basename(headPicPath) : '';
 
-                if (fs.existsSync(headPicPath)) {
+                if (headPicPath) {
                     const timeStr = moment(parseInt(headtime)).format('YYYY-MM-DD HH:mm:ss');
 
                     forwardMsgData.push({

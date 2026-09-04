@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:25:28
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-01 19:43:33
+ * @LastEditTime: 2026-09-05 00:14:00
  * @FilePath: /kh-plugin/guoba/schemas/tab-scope.js
  * @Description: 生效范围配置页
  * 
@@ -34,7 +34,7 @@ export default [
     field: 'groupWhitelist',
     label: labels.groupWhitelist,
     component: 'GSelectGroup',
-    componentProps: { placeholder: '选择白名单群' },
+    componentProps: { placeholder: '插件默认对全部群都生效。配置白名单以限制生效范围。' },
     bottomHelpMessage: '配置后，定时更新和群员发言实时检测将只在这些群生效。配置此项将导致【群黑名单不再生效】。'
   },
   {

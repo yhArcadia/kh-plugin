@@ -1,9 +1,18 @@
-import fs from 'node:fs';
-import path from 'node:path';
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:26:02
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-05 00:51:08
+ * @FilePath: /kh-plugin/apps/avatars.js
+ * @Description: 历史头像查询
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import moment from 'moment';
 import { BaseApp } from '../components/base-app.js';
 import { isDivingGroup } from '../utils/group-policy.js';
-import { headDir, config } from '../components/runtime.js';
+import { resolveHeadPath } from '../components/paths.js';
+import { config } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
 
@@ -77,10 +86,10 @@ export class Avatars extends BaseApp {
 
         for (const headtime of sortedHeadtimes) {
             // 组装图片路径
-            const headPicPath = path.join(headDir, `${gid}_${targetUid}_${headtime}.jpg`);
+            const headPicPath = resolveHeadPath(targetUid, headtime, gid);
 
             // 校验文件存在
-            if (fs.existsSync(headPicPath)) {
+            if (headPicPath) {
                 // 转换时间戳为可读时间
                 const timeStr = moment(parseInt(headtime)).format('YYYY-MM-DD HH:mm:ss');
 

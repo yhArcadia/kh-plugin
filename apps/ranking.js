@@ -1,11 +1,20 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-09-03 22:39:10
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-05 00:56:23
+ * @FilePath: /kh-plugin/apps/ranking.js
+ * @Description: 群员排行
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import fs from 'node:fs';
-import path from 'node:path';
 import { formatDuration } from '../utils/format.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
+import { resolveHeadPath } from '../components/paths.js';
 import {
     config,
-    headDir,
     scanLegacyKeys
 } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
@@ -298,8 +307,8 @@ export class KhRanking extends BaseApp {
             let avatarBase64 = `https://q1.qlogo.cn/g?b=qq&s=0&nk=${uid}`;
 
             if (latestRecord.headtime) {
-                const headPicPath = path.join(headDir, `${e.group_id}_${uid}_${latestRecord.headtime}.jpg`);
-                if (fs.existsSync(headPicPath)) {
+                const headPicPath = resolveHeadPath(uid, latestRecord.headtime, e.group_id);
+                if (headPicPath) {
                     try {
                         const avatarBuf = fs.readFileSync(headPicPath);
                         avatarBase64 = `data:image/jpeg;base64,${avatarBuf.toString('base64')}`;

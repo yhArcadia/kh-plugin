@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-04 14:34:30
+ * @LastEditTime: 2026-09-04 23:45:23
  * @FilePath: /kh-plugin/render/history-renderer.js
  * @Description: 历史身份渲染组件
  * 
@@ -13,7 +13,7 @@ import path from 'node:path';
 import template from 'art-template';
 import moment from 'moment';
 import puppeteer from '../components/puppeteer.js';
-import { headsDir, templateDir } from '../components/paths.js';
+import { templateDir, resolveHeadPath } from '../components/paths.js';
 import { escapeHtml } from '../utils/html.js';
 import { getPluginVersion } from '../components/version.js';
 import cfg from '../../../lib/config/config.js';
@@ -100,8 +100,8 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
         // 获取头像 base64
         let avatarBase64 = defaultAvatarBase64;
         if (record.headtime) {
-            const headPicPath = path.join(headsDir, `${groupId}_${targetUid}_${record.headtime}.jpg`);
-            if (fs.existsSync(headPicPath)) {
+            const headPicPath = resolveHeadPath(targetUid, record.headtime, groupId);
+            if (headPicPath) {
                 try {
                     const avatarBuf = fs.readFileSync(headPicPath);
                     avatarBase64 = `data:image/jpeg;base64,${avatarBuf.toString('base64')}`;

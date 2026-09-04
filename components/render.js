@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:56
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-21 18:35:38
+ * @LastEditTime: 2026-09-04 23:45:21
  * @FilePath: /kh-plugin/components/render.js
  * @Description: 渲染模板
  * 
@@ -12,7 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import template from 'art-template';
-import { templateDir, headPath } from './paths.js';
+import { templateDir, resolveHeadPath } from './paths.js';
 
 export function renderTemplate(name, data) {
   return template.render(fs.readFileSync(path.join(templateDir, name), 'utf8'), data);
@@ -71,10 +71,11 @@ export function buildHistoryCard({ gid, uid, groupName, member, history, remarks
     const left = Math.max(0, Math.min(617, Math.round((t - first) / Math.max(1, now - first) * 617)));
     const width = Math.max(2, Math.min(617 - left, Math.round((next - t) / Math.max(1, now - first) * 617)));
     const role = r.role || 'member', title = r.title || '', badgeText = `LV${r.level ?? '?'}${title ? ` ${title}` : role === 'owner' ? ' 群主' : role === 'admin' ? ' 管理员' : ''}`;
+    const resolvedPath = resolveHeadPath(uid, r.headtime, gid);
     messages.push({
       isSystemMessage: false,
-      avatar: fs.existsSync(headPath(gid, uid, r.headtime)) ?
-        `file://${headPath(gid, uid, r.headtime)}` :
+      avatar: resolvedPath ?
+        `file://${resolvedPath}` :
         `https://q1.qlogo.cn/g?b=qq&s=0&nk=${uid}`,
       nickname: r.card || r.nickname || String(uid),
       badgeText,

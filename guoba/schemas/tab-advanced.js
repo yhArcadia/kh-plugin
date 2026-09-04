@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:25:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-03 18:47:08
+ * @LastEditTime: 2026-09-05 00:56:10
  * @FilePath: /kh-plugin/guoba/schemas/tab-advanced.js
  * @Description: 进阶配置页面
  * 
@@ -26,7 +26,7 @@ export default [
     label: labels.autoUpdateGroups,
     component: 'GSelectGroup',
     componentProps: { placeholder: '请选择要启用自动更新的群' },
-    bottomHelpMessage: '插件会在上方Cron指定的时间，自动更新这些群的全部群员的信息'
+    bottomHelpMessage: '插件会在上方Cron指定的时间，自动更新这些群的全部群员的信息。一般而言，不需要配置这项，因为默认的实时监听，就会捕获所有的【有效身份】。而启用自动更新则有可能引入【无效身份】。所谓【有效身份】指的是群友以这个身份再群里发过言而得以被群友观察到该身份。而假设群友更换到A头像之后没有发言，随后又换到了B头像，那么记录下A头像对于群友识别他来说是没有意义的，可以理解为【无效头像】。'
   },
 
   
