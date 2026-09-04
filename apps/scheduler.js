@@ -11,6 +11,7 @@
 import { BaseApp } from '../components/base-app.js';
 import { config, memberUpdater } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
+import { isGroupAllowed } from '../utils/group-policy.js';
 
 export class KhScheduler extends BaseApp {
     constructor() {
@@ -37,14 +38,7 @@ export class KhScheduler extends BaseApp {
                 break;
             }
 
-            let isGroupAllowed = true;
-            if (config.groupWhitelist && config.groupWhitelist.length > 0) {
-                isGroupAllowed = config.groupWhitelist.includes(Number(gid));
-            } else {
-                isGroupAllowed = !(config.groupBlacklist || []).includes(Number(gid));
-            }
-
-            if (!isGroupAllowed) {
+            if (!isGroupAllowed(gid, config)) {
                 log.w(`群 ${gid} 在黑名单或未在白名单中，跳过定时更新。`);
                 continue;
             }

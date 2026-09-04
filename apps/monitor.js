@@ -6,6 +6,7 @@ import {
     isOperationRunning
 } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
+import { isGroupAllowed } from '../utils/group-policy.js';
 
 const MONITOR_LISTENER_KEY = Symbol.for('kh-plugin.monitor.message-group-listener');
 
@@ -67,15 +68,10 @@ export class Monitor extends BaseApp {
         const uid = Number(e.user_id);
 
         // 黑白名单过滤
-        let isGroupAllowed = true;
-        if (config.groupWhitelist && config.groupWhitelist.length > 0) {
-            isGroupAllowed = config.groupWhitelist.includes(gid);
-        } else {
-            isGroupAllowed = !(config.groupBlacklist || []).includes(gid);
-        }
+        const isGroupAllowedNow = isGroupAllowed(gid, config);
 
         // 结合用户黑名单
-        if (!isGroupAllowed || (config.userBlacklist || []).includes(uid)) {
+        if (!isGroupAllowedNow || (config.userBlacklist || []).includes(uid)) {
             return false;
         }
 

@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-03 22:59:07
+ * @LastEditTime: 2026-09-03 23:09:38
  * @FilePath: /kh-plugin/apps/profile.js
  * @Description: 成员基础信息及头像查询
  * 
@@ -15,7 +15,7 @@ import puppeteer from '../../../lib/puppeteer/puppeteer.js';
 import cfg from '../../../lib/config/config.js';
 import { templateDir } from '../components/paths.js';
 import { formatDuration, getLevelIcons } from '../utils/format.js';
-import { isDivingGroup } from '../utils/group-policy.js';
+import { isDivingGroup, isGroupAllowed } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
 import { config, headDir, memberUpdater } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
@@ -177,16 +177,11 @@ export class KhProfile extends BaseApp {
         }
 
         // 黑白名单
-        let isGroupAllowed = true;
-        if (config.groupWhitelist && config.groupWhitelist.length > 0) {
-            isGroupAllowed = config.groupWhitelist.includes(Number(e.group_id));
-        } else {
-            isGroupAllowed = !(config.groupBlacklist || []).includes(Number(e.group_id));
-        }
+        const isGroupAllowedNow = isGroupAllowed(e.group_id, config);
         const isUserBlacklisted = (config.userBlacklist || []).includes(Number(targetUid));
 
         // 新数据入库
-        if (isGroupAllowed && !isUserBlacklisted && member) {
+        if (isGroupAllowedNow && !isUserBlacklisted && member) {
             await memberUpdater.processMemberUpdate(member, e.group_id, e.group_name);
         }
 

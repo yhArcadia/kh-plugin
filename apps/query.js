@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import moment from 'moment';
-import { isDivingGroup } from '../utils/group-policy.js';
+import { isDivingGroup, isGroupAllowed } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
 import { config, memberUpdater } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
@@ -92,18 +92,13 @@ export class KhQuery extends BaseApp {
             // 当前群的用户信息，去发起API请求
             if (groupId === e.group_id) {
                 // 黑白名单过滤
-                let isGroupAllowed = true;
-                if (config.groupWhitelist && config.groupWhitelist.length > 0) {
-                    isGroupAllowed = config.groupWhitelist.includes(Number(groupId));
-                } else {
-                    isGroupAllowed = !(config.groupBlacklist || []).includes(Number(groupId));
-                }
+                const isGroupAllowedNow = isGroupAllowed(groupId, config);
 
                 // 用户黑名单
                 const isUserBlacklisted = (config.userBlacklist || []).includes(Number(e.at));
 
                 // 只有群被允许，且用户不在黑名单，才拉取数据
-                if (isGroupAllowed && !isUserBlacklisted) {
+                if (isGroupAllowedNow && !isUserBlacklisted) {
                     try {
                         // member = await e.bot.pickGroup(groupId).pickMember(e.at).getInfo(true);
                         member = await e.group.pickMember(e.at).getInfo(true);
