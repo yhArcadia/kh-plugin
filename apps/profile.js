@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-03 23:09:38
+ * @LastEditTime: 2026-09-04 14:34:05
  * @FilePath: /kh-plugin/apps/profile.js
  * @Description: 成员基础信息及头像查询
  * 
@@ -11,7 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import moment from 'moment';
-import puppeteer from '../../../lib/puppeteer/puppeteer.js';
+import puppeteer from '../components/puppeteer.js';
 import cfg from '../../../lib/config/config.js';
 import { templateDir } from '../components/paths.js';
 import { formatDuration, getLevelIcons } from '../utils/format.js';

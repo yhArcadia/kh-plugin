@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-03 22:58:03
+ * @LastEditTime: 2026-09-04 14:34:30
  * @FilePath: /kh-plugin/render/history-renderer.js
  * @Description: 历史身份渲染组件
  * 
@@ -12,7 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import template from 'art-template';
 import moment from 'moment';
-import puppeteer from '../../../lib/puppeteer/puppeteer.js';
+import puppeteer from '../components/puppeteer.js';
 import { headsDir, templateDir } from '../components/paths.js';
 import { escapeHtml } from '../utils/html.js';
 import { getPluginVersion } from '../components/version.js';

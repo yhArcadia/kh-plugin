@@ -19,7 +19,7 @@ export function renderTemplate(name, data) {
 }
 
 export async function screenshot(name, saveId, data, tplFile = path.join(templateDir, `${name}.html`)) {
-  const puppeteer = (await import('../../../lib/puppeteer/puppeteer.js')).default;
+  const puppeteer = (await import('./puppeteer.js')).default;
   return puppeteer.screenshot(`who_are_you_${name}`, { tplFile, saveId, ...data });
 }
 
