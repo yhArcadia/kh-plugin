@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:15:20
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-03 18:38:13
+ * @LastEditTime: 2026-09-05 21:29:04
  * @FilePath: /kh-plugin/components/base-app.js
  * @Description: 
  * 
@@ -12,6 +12,7 @@ import { rankRender } from '../render/rank-renderer.js';
 import { renderHistory } from '../render/history-renderer.js';
 import { config, getBot, schedulerState } from './runtime.js';
 import { Scheduler } from './scheduler.js';
+import { log } from '../utils/logger.js';
 
 export class BaseApp extends plugin {
   constructor({ name, dsc, rule, priority = 5000, startScheduler = false }) {
@@ -25,13 +26,13 @@ export class BaseApp extends plugin {
     this.config = config;
     this.Bot = getBot();
     if (!this.Bot) {
-      logger.info(`[${name}] 构造时未获取到全局 Bot，将在5秒后重试...`);
+      log.i(`[${name}] 构造时未获取到全局 Bot，将在5秒后重试...`);
       setTimeout(() => {
         this.Bot = getBot();
         if (this.Bot)
-          logger.info(`[${name}] 已延迟获取到 Bot 实例。`);
+          log.i(`[${name}] 已延迟获取到 Bot 实例。`);
         else
-          logger.info(`[${name}] 延迟获取 Bot 失败。`);
+          log.i(`[${name}] 延迟获取 Bot 失败。`);
       }, 5000);
     }
     if (startScheduler) this.startScheduler();
@@ -78,8 +79,7 @@ export class BaseApp extends plugin {
       renderLimit,
       showTimeline,
       redis,
-      config: this.config,
-      logger
+      config: this.config
     });
   }
 
@@ -93,14 +93,15 @@ export class BaseApp extends plugin {
     if (process.env.WHO_ARE_YOU_DISABLE_SCHEDULER === '1') return;
     if (state.scheduler) {
       state.scheduler.run = operation => this.scheduleUpdateCore(operation);
-      state.scheduler.log = logger;
+      state.scheduler.log = log;
       return;
     }
     state.scheduler = new Scheduler({
       config: this.config,
       redis,
       run: operation => this.scheduleUpdateCore(operation),
-      log: logger
+      log,
+      label: '群员信息更新'
     });
     state.scheduler.start();
   }

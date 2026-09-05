@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-04 23:43:49
+ * @LastEditTime: 2026-09-06 00:41:06
  * @FilePath: /kh-plugin/components/paths.js
  * @Description: 
  * 
@@ -12,6 +12,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { encodeSafeUid } from '../utils/uid-encoder.js';
+import { log } from '../utils/logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,18 +50,18 @@ export function ensureOrphanDirs(dateStr) {
   return dir;
 }
 
-export function headPath(uid, headtime, gid) {
-  const safeUid = encodeSafeUid(uid);
-  const newPath = path.join(headsDir, `${safeUid}_${headtime}.jpg`);
-  if (fs.existsSync(newPath) || gid == null) return newPath;
+// export function headPath(uid, headtime, gid) {
+//   const safeUid = encodeSafeUid(uid);
+//   const newPath = path.join(headsDir, `${safeUid}_${headtime}.jpg`);
+//   if (fs.existsSync(newPath) || gid == null) return newPath;
 
-  const oldPath = path.join(headsDir, `${gid}_${uid}_${headtime}.jpg`);
-  if (fs.existsSync(oldPath)) {
-    try { fs.linkSync(oldPath, newPath); } catch {}
-    return oldPath;
-  }
-  return newPath;
-}
+//   const oldPath = path.join(headsDir, `${gid}_${uid}_${headtime}.jpg`);
+//   if (fs.existsSync(oldPath)) {
+//     try { fs.linkSync(oldPath, newPath); } catch {}
+//     return oldPath;
+//   }
+//   return newPath;
+// }
 
 export function resolveHeadPath(uid, headtime, gid) {
   const safeUid = encodeSafeUid(uid);
@@ -70,7 +71,10 @@ export function resolveHeadPath(uid, headtime, gid) {
   if (gid != null) {
     const oldPath = path.join(headsDir, `${gid}_${uid}_${headtime}.jpg`);
     if (fs.existsSync(oldPath)) {
-      try { fs.linkSync(oldPath, newPath); } catch {}
+      try {
+        fs.linkSync(oldPath, newPath);
+        log.i(`硬链接创建: ${path.basename(oldPath)} -> ${path.basename(newPath)}`);
+      } catch {}
       return oldPath;
     }
   }

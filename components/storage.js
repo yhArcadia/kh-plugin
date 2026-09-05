@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:56
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-14 23:15:44
+ * @LastEditTime: 2026-09-05 22:55:50
  * @FilePath: /kh-plugin/components/storage.js
  * @Description: 存取
  * 
@@ -14,7 +14,7 @@ export function remarkKey(config, gid, uid) { return `${config.redisPrefix}:rema
 const historySuffix = /^\d+:\d+$/;
 
 
-export async function scanKeys(redis, pattern, { count = 250, maxKeys = 10000 } = {}) {
+export async function scanKeys(redis, pattern, { count = 250, maxKeys = 10000, callback } = {}) {
   const out = [];
   let cursor = '0';
   do {
@@ -28,8 +28,12 @@ export async function scanKeys(redis, pattern, { count = 250, maxKeys = 10000 } 
     const keys = Array.isArray(reply) ? reply[1] : reply?.keys;
     cursor = String(next ?? '0');
     for (const key of keys || []) {
-      out.push(key);
-      if (out.length >= maxKeys) return out;
+      if (callback) {
+        await callback(key);
+      } else {
+        out.push(key);
+        if (out.length >= maxKeys) return out;
+      }
     }
   } while (cursor !== '0');
   return out;

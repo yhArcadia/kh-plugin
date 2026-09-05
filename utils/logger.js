@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-09 19:36:23
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-22 17:22:02
+ * @LastEditTime: 2026-09-05 21:06:31
  * @FilePath: /kh-plugin/utils/logger.js
  * @Description: 覆写logger，添加插件专属前缀。
  * 
@@ -28,5 +28,10 @@ export const log = {
     i: (...args) => write('info', ...args),
     w: (...args) => write('warn', ...args),
     e: (...args) => write('error', ...args),
-    m: (...args) => write('mark', ...args)
+    m: (...args) => write('mark', ...args),
+    debug: (...args) => write('debug', ...args),
+    info: (...args) => write('info', ...args),
+    warn: (...args) => write('warn', ...args),
+    error: (...args) => write('error', ...args),
+    mark: (...args) => write('mark', ...args)
 };

@@ -2,16 +2,19 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-12 16:46:15
+ * @LastEditTime: 2026-09-06 00:35:06
  * @FilePath: /kh-plugin/apps/scheduler.js
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
 import { BaseApp } from '../components/base-app.js';
-import { config, memberUpdater } from '../components/runtime.js';
+import { Scheduler } from '../components/scheduler.js';
+import { config, memberUpdater, schedulerState } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
 import { isGroupAllowed } from '../utils/group-policy.js';
+import { runOrphanScan } from '../services/orphan-scanner.js';
+import { headsDir } from '../components/paths.js';
 
 export class KhScheduler extends BaseApp {
     constructor() {
@@ -57,5 +60,36 @@ export class KhScheduler extends BaseApp {
         }
         log.i(`定时更新完成，共更新 ${totalCount} 条群员信息`);
 
+    }
+
+    async scheduleOrphanScan(operation = null) {
+        log.i('[闲置头像扫描] 定时任务触发');
+        await runOrphanScan({
+            redis,
+            config: this.config,
+            headsDir,
+            operation
+        });
+    }
+
+    startScheduler() {
+        super.startScheduler();
+        const state = schedulerState();
+        if (process.env.WHO_ARE_YOU_DISABLE_SCHEDULER === '1') return;
+        if (state.orphanScheduler) {
+            state.orphanScheduler.config = this.config;
+            state.orphanScheduler.run = (operation) => this.scheduleOrphanScan(operation);
+            state.orphanScheduler.log = log;
+            return;
+        }
+        state.orphanScheduler = new Scheduler({
+            config: this.config,
+            redis,
+            run: (operation) => this.scheduleOrphanScan(operation),
+            log,
+            scheduleKey: 'orphanScanSchedule',
+            label: '闲置头像扫描'
+        });
+        state.orphanScheduler.start();
     }
 }

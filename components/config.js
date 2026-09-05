@@ -1,3 +1,13 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:26:02
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-05 20:21:43
+ * @FilePath: /kh-plugin/components/config.js
+ * @Description: 配置文件管理
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import fs from 'node:fs';
 import path from 'node:path';
 import YAML from 'yaml';
@@ -57,6 +67,7 @@ export const defaultConfig = Object.freeze({
   reverseHistoryThreshold: 999,
   autoUpdateGroups: [],
   updateSchedule: '0 30 3 * * *',
+  orphanScanSchedule: '0 30 4 * * *',
   notifyGroups: [],
   maxNotifyRenderLength: 2,
   monitorCD: 600,
@@ -121,7 +132,7 @@ function normalize(raw = {}, fallbacks = defaultConfig) {
         ? normalizeLinkedGroups(value)
         : [...new Set(value.map(Number).filter(Number.isFinite))];
     }
-    if (field === 'updateSchedule') value = String(value || fallback).trim();
+    if (field === 'updateSchedule' || field === 'orphanScanSchedule') value = String(value || fallback).trim();
     if (field === 'notifyRules') value = normalizeNotifyRules(value);
     out[field] = value;
   }

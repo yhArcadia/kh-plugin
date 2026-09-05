@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:15:20
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-03 18:59:27
+ * @LastEditTime: 2026-09-05 17:45:01
  * @FilePath: /kh-plugin/components/runtime.js
  * @Description: 运行时状态
  * 
@@ -37,6 +37,10 @@ export function refreshConfig() {
   if (state?.scheduler) {
     state.scheduler.config = _config;
     state.scheduler.reschedule();
+  }
+  if (state?.orphanScheduler) {
+    state.orphanScheduler.config = _config;
+    state.orphanScheduler.reschedule();
   }
   return _config;
 }

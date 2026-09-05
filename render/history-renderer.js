@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-04 23:45:23
+ * @LastEditTime: 2026-09-05 21:28:56
  * @FilePath: /kh-plugin/render/history-renderer.js
  * @Description: 历史身份渲染组件
  * 
@@ -19,7 +19,7 @@ import { getPluginVersion } from '../components/version.js';
 import cfg from '../../../lib/config/config.js';
 import { log } from '../utils/logger.js';
 
-export async function renderHistory({ e, groupId, gname, member, inquirer, fullHistory, renderLimit = 0, showTimeline = true, redis, config, logger }) {
+export async function renderHistory({ e, groupId, gname, member, inquirer, fullHistory, renderLimit = 0, showTimeline = true, redis, config }) {
 
     let processedHistory = [];
     const history = (renderLimit > 0) ? fullHistory.slice(-renderLimit) : fullHistory;
@@ -109,7 +109,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
                     log.w(`渲染时读取文件失败: ${headPicPath}`, err)
                 }
             } else {
-                log.w(`渲染时文件丢失: ${headPicPath}`);
+                log.w(`渲染时文件丢失: 用户 ${targetUid} 头像 headtime=${record.headtime} (gid=${groupId}) 未找到`);
             }
         }
 
