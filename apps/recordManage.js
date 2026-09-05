@@ -2,16 +2,14 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 00:54:56
+ * @LastEditTime: 2026-09-05 17:39:01
  * @FilePath: /kh-plugin/apps/recordManage.js
  * @Description: 群员记录管理
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
-import fs from 'node:fs';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
-import { resolveHeadPath } from '../components/paths.js';
 import { config } from '../components/runtime.js';
 import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 import { getHistoryDetailed } from '../components/storage.js';
@@ -89,7 +87,6 @@ export class KhRecordManage extends BaseApp {
             }
 
             const deletedRecordsInfo = []; // 成功删除的记录信息
-            const deletedHeadtimes = new Set(); // 被删除记录的头像
             const invalidIndices = []; // 无效的序号
 
             // 执行删除
@@ -98,9 +95,6 @@ export class KhRecordManage extends BaseApp {
                 if (recordIndex >= 0 && recordIndex < history.length) {
                     const deletedRecord = history.splice(recordIndex, 1)[0];
                     deletedRecordsInfo.push({ index: index, time: deletedRecord.recordTime });
-                    if (deletedRecord.headtime) {
-                        deletedHeadtimes.add(deletedRecord.headtime);
-                    }
                 } else {
                     // 序号无效
                     invalidIndices.push(index);
@@ -119,29 +113,6 @@ export class KhRecordManage extends BaseApp {
                 return true;
             }
             await redis.set(detail.key, JSON.stringify(history));
-
-            // 是否需要删除头像文件
-            let cleanedFiles = 0;
-            if (deletedHeadtimes.size > 0) {
-                for (const headtimeToDelete of deletedHeadtimes) {
-                    // 检查剩余记录中是否还有使用此头像的
-                    const isHeadtimeInUse = history.some(record => record.headtime === headtimeToDelete);
-                    if (!isHeadtimeInUse) {
-                        const picpath = resolveHeadPath(e.at, headtimeToDelete, e.group_id);
-                        try {
-                            if (picpath) {
-                                fs.unlinkSync(picpath);
-                                cleanedFiles++;
-                            }
-                        } catch (err) {
-                            log.e(`删除头像文件 ${picpath} 失败: ${err}`);
-                        }
-                    }
-                }
-                if (cleanedFiles > 0) {
-                    log.i(`批量删除记录，并清理了 ${cleanedFiles} 个不再使用的头像文件。`);
-                }
-            }
 
             // 回复结果
             const deletedIndicesStr = deletedRecordsInfo
