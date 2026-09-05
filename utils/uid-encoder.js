@@ -16,7 +16,7 @@ export function encodeSafeUid(uid) {
     const encoded = encodeURIComponent(String(uid));
     if (encoded.length <= MAX_FILENAME_LENGTH) return encoded;
 
-    const hash = crypto.createHash('sha256').update(encoded).digest('hex').slice(0, 16);
+    const hash = crypto.createHash('md5').update(encoded).digest('hex').slice(0, 16);
     const prefix = encoded.slice(0, MAX_FILENAME_LENGTH - 17);
     return `${prefix}_${hash}`;
 }

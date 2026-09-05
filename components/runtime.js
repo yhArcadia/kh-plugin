@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:15:20
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 17:45:01
+ * @LastEditTime: 2026-09-06 01:11:56
  * @FilePath: /kh-plugin/components/runtime.js
  * @Description: 运行时状态
  * 
@@ -14,11 +14,12 @@ import { ensureRuntimePaths, headsDir } from './paths.js';
 import { loadConfig, reloadConfig, configPaths } from './config.js';
 import { scanKeys } from './storage.js';
 import { createMemberUpdater } from '../services/member-updater.js';
+import { log } from '../utils/logger.js';
 
 ensureRuntimePaths();
 
 let _config = loadConfig();
-let _memberUpdater = createMemberUpdater({ redis, config: _config, logger, headsDir });
+let _memberUpdater = createMemberUpdater({ redis, config: _config, headsDir });
 
 export const config = new Proxy({}, {
   get(_, prop) { return _config[prop]; },
@@ -32,7 +33,7 @@ export function getRawConfig() { return _config; }
 
 export function refreshConfig() {
   _config = reloadConfig();
-  _memberUpdater = createMemberUpdater({ redis, config: _config, logger, headsDir });
+  _memberUpdater = createMemberUpdater({ redis, config: _config, headsDir });
   const state = globalThis.__whoAreYouRuntime;
   if (state?.scheduler) {
     state.scheduler.config = _config;
@@ -60,9 +61,9 @@ if (!state._configWatcherSetup) {
     if (curr.mtimeMs !== prev.mtimeMs) {
       try {
         refreshConfig();
-        logger?.mark?.('[kh-plugin] 检测到 config.yaml 变更，配置已重载。');
+        log.m('检测到 config.yaml 变更，配置已重载。');
       } catch (err) {
-        logger?.warn?.(`[kh-plugin] 配置重载失败: ${err.message}`);
+        log.w(`配置重载失败: ${err.message}`);
       }
     }
   });

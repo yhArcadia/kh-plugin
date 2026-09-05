@@ -110,18 +110,18 @@ export function createMemberUpdater({ redis, config, headsDir }) {
 
                 if (currentMsg.includes('信息未变更，跳过')) {
                     if (currentIndex - lastLogedIndex >= loggerGap || currentIndex === totalMembers) {
-                        logger.info(`扫描群【${gname}】${barStr} > 正在扫描...`);
+                        log.i(`扫描群【${gname}】${barStr} > 正在扫描...`);
                         lastLogedIndex = currentIndex;
                     }
                 } else if (currentMsg.includes('头像体积相同，忽略该记录。')) {
                     if (currentIndex - lastLogedIndex >= loggerGap || currentIndex === totalMembers) {
-                        // logger.info(`扫描群【${gname}】${barStr} > ${currentMsg}`);
-                        logger.info(`扫描群【${gname}】${barStr} > 正在扫描...`);
+                        // log.i(`扫描群【${gname}】${barStr} > ${currentMsg}`);
+                        log.i(`扫描群【${gname}】${barStr} > 正在扫描...`);
                         lastLogedIndex = currentIndex;
                     }
                 }
                 else {
-                    logger.info(`扫描群【${gname}】${barStr} > ${currentMsg}`);
+                    log.i(`扫描群【${gname}】${barStr} > ${currentMsg}`);
                     lastLogedIndex = currentIndex;
                 }
 
