@@ -447,7 +447,7 @@ export class KhStatistics extends plugin {
         if (isDivingGroup(e, config)) return false;
 
         const lockKey = 'kh:lock:orphan-clean';
-        if (isOperationRunning(lockKey)) {
+        if (await isOperationRunning(lockKey)) {
             await e.reply('当前正在进行清理操作，请稍后再试。');
             return true;
         }

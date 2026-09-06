@@ -42,7 +42,7 @@ export class Scheduler {
     });
   }
 
-  stop() { if (this.job) this.job.cancel(); this.job = null; }
+  stop() { if (this.job) this.job.cancel(); this.job = null; this._starting = false; }
 
   reschedule() {
     if (this.job) this.stop();
