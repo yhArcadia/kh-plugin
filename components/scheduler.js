@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:57
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 16:25:12
+ * @LastEditTime: 2026-09-06 17:47:27
  * @FilePath: /kh-plugin/components/scheduler.js
  * @Description: 定时任务
  * 
@@ -35,8 +35,7 @@ export class Scheduler {
   stop() { if (this.job) this.job.cancel(); this.job = null; }
 
   reschedule() {
-    if (!this.job) return;
-    this.stop();
+    if (this.job) this.stop();
     this.start();
   }
 
