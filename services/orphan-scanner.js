@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-05 17:43:40
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 00:35:28
+ * @LastEditTime: 2026-09-06 16:56:40
  * @FilePath: /kh-plugin/services/orphan-scanner.js
  * @Description: 闲置头像扫描服务
  * 
@@ -101,7 +101,11 @@ export async function runOrphanScan({ redis, config, headsDir, operation = null 
         }
     }
 
-    const dateDir = ensureOrphanDirs(dateStr);
+    let dateDir = null;
+    const ensureDateDir = () => {
+        if (!dateDir) dateDir = ensureOrphanDirs(dateStr);
+        return dateDir;
+    };
     const keptOldFiles = [];
 
     for (const file of newFiles) {
@@ -117,7 +121,7 @@ export async function runOrphanScan({ redis, config, headsDir, operation = null 
         }
 
         try {
-            const dest = path.join(dateDir, file.name);
+            const dest = path.join(ensureDateDir(), file.name);
             fs.renameSync(file.fullPath, dest);
             stats.orphaned++;
             const size = fs.statSync(dest).size;
@@ -137,7 +141,7 @@ export async function runOrphanScan({ redis, config, headsDir, operation = null 
         }
 
         try {
-            const dest = path.join(dateDir, file.name);
+            const dest = path.join(ensureDateDir(), file.name);
             fs.renameSync(file.fullPath, dest);
             stats.orphaned++;
             const size = fs.statSync(dest).size;

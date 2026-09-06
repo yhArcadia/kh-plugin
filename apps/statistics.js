@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 16:28:46
+ * @LastEditTime: 2026-09-06 16:43:55
  * @FilePath: /kh-plugin/apps/statistics.js
  * @Description: 头像存储统计
  * 
@@ -21,7 +21,7 @@ import { log } from '../utils/logger.js';
 const OLD_FORMAT_RE = /^(\d+)_(.+)_(\d+)\.jpg$/i;
 const NEW_FORMAT_RE = /^(.+)_(\d+)\.jpg$/i;
 const STAT_CONCURRENCY = 48;
-const TOP_N_USERS = 20;
+const TOP_N_USERS = 50;
 
 function formatBytes(bytes) {
     if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
