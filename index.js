@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-03 19:40:23
+ * @LastEditTime: 2026-09-06 20:47:28
  * @FilePath: /kh-plugin/index.js
  * @Description: 插件入口
  * 
@@ -55,6 +55,7 @@ if (migration.status === 'migrated') {
 
   const successModules = [];
   const failedModules = [];
+  let initSchedulerFn = null;
 
   for (let index = 0; index < files.length; index++) {
     const file = files[index];
@@ -67,14 +68,26 @@ if (migration.status === 'migrated') {
       continue;
     }
     const exported = Object.values(result.value);
+    if (exported.find(v => typeof v === 'function' && v.name === 'initScheduler')) {
+      initSchedulerFn = exported.find(v => typeof v === 'function' && v.name === 'initScheduler');
+    }
     const App = exported.find(value => typeof value === 'function' && value.prototype instanceof plugin);
     if (!App) {
+      if (initSchedulerFn) continue;
       failedModules.push(file);
       log.e(`apps/${file} 未导出有效的 plugin 类，已跳过。`);
       continue;
     }
     apps[name] = App;
     successModules.push(name);
+  }
+
+  if (initSchedulerFn) {
+    try {
+      initSchedulerFn();
+    } catch (err) {
+      log.e(`初始化定时任务失败: ${err.message}`);
+    }
   }
 
   const elapsed = Date.now() - startTime;
