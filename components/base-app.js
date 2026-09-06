@@ -94,6 +94,7 @@ export class BaseApp extends plugin {
     if (state.scheduler) {
       state.scheduler.run = operation => this.scheduleUpdateCore(operation);
       state.scheduler.log = log;
+      state.scheduler.reschedule();
       return;
     }
     state.scheduler = new Scheduler({

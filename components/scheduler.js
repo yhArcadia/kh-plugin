@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:57
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 01:20:19
+ * @LastEditTime: 2026-09-06 16:25:12
  * @FilePath: /kh-plugin/components/scheduler.js
  * @Description: 定时任务
  * 
@@ -27,8 +27,8 @@ export class Scheduler {
     if (this.job || process.env.WHO_ARE_YOU_DISABLE_SCHEDULER === '1') return;
     import('node-schedule').then(({ default: schedule }) => {
       if (this.job) return;
-      this.job = schedule.scheduleJob(this.config[this.scheduleKey], () => this.execute().catch(err => this.log.w(`[kh-plugin] 定时任务设置失败: ${err.message}`)));
-      this.log.m(`[kh-plugin] ${this.label}已设置: ${this.config[this.scheduleKey]}`);
+      this.job = schedule.scheduleJob(this.config[this.scheduleKey], () => this.execute().catch(err => this.log.w(`定时任务设置失败: ${err.message}`)));
+      this.log.m(`${this.label}已设置: ${this.config[this.scheduleKey]}`);
     }).catch(err => this.log.w(`无法加载 node-schedule: ${err.message}`));
   }
 

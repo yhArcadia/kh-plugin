@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 00:35:06
+ * @LastEditTime: 2026-09-06 16:34:17
  * @FilePath: /kh-plugin/apps/scheduler.js
  * @Description: 
  * 
@@ -80,6 +80,7 @@ export class KhScheduler extends BaseApp {
             state.orphanScheduler.config = this.config;
             state.orphanScheduler.run = (operation) => this.scheduleOrphanScan(operation);
             state.orphanScheduler.log = log;
+            state.orphanScheduler.reschedule();
             return;
         }
         state.orphanScheduler = new Scheduler({
