@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 17:39:27
+ * @LastEditTime: 2026-09-06 22:05:05
  * @FilePath: /kh-plugin/apps/profile.js
  * @Description: 成员基础信息及头像查询
  * 
@@ -29,7 +29,6 @@ export class KhProfile extends BaseApp {
             name: 'kh插件-成员基础信息查询',
             dsc: 'kh插件 成员基础信息查询',
             priority: 499,
-            startScheduler: false,
             rule: [
                 {
                     reg: '^#?查询?信息(\\s*\\d+)?$',

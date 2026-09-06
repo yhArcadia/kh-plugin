@@ -1,3 +1,13 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-28 22:07:05
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-06 22:10:05
+ * @FilePath: /kh-plugin/apps/guess-group-member.js
+ * @Description: 
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import { setMsgEmojiLike, recallMessage, mentionedUserId } from '../utils/message.js'
 import { isDivingGroup } from '../utils/group-policy.js'
 import { getSharp } from '../utils/sharp-loader.js'
@@ -132,7 +142,6 @@ export class GuessGroupMember extends plugin {
       dsc: 'kh插件 猜群友',
       event: 'message.group',
       priority: 5000,
-      startScheduler: false,
       rule: [
         {
           reg: '^#猜群友$',

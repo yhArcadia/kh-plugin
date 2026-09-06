@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 17:39:01
+ * @LastEditTime: 2026-09-06 22:05:08
  * @FilePath: /kh-plugin/apps/recordManage.js
  * @Description: 群员记录管理
  * 
@@ -21,7 +21,6 @@ export class KhRecordManage extends BaseApp {
             name: 'kh插件-群员记录管理',
             dsc: 'kh插件 删除记录管理',
             priority: 5000,
-            startScheduler: false,
             rule: [
                 {
                     reg: '^#?删除记录([\\d,，]+)',

@@ -22,7 +22,6 @@ export class Debug extends BaseApp {
             name: 'kh插件-调试工具',
             dsc: 'kh插件 调试工具',
             priority: 5000,
-            startScheduler: false,
             rule: [
                 {
                     reg: '^#records?$',

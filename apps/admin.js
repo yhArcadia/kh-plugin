@@ -1,3 +1,13 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:26:02
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-06 22:09:27
+ * @FilePath: /kh-plugin/apps/admin.js
+ * @Description: 
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
 import { config, scanLegacyKeys } from '../components/runtime.js';
@@ -10,7 +20,6 @@ export class KhAdmin extends BaseApp {
             name: 'kh插件-管理',
             dsc: 'kh插件 记录管理',
             priority: 5000,
-            startScheduler: false,
             rule: [
                 {
                     reg: '^#?清理幽灵记录$', //针对低于1.13.0的旧版而保留的清理功能

@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-03 22:39:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 00:56:23
+ * @LastEditTime: 2026-09-06 22:05:10
  * @FilePath: /kh-plugin/apps/ranking.js
  * @Description: 群员排行
  * 
@@ -71,7 +71,7 @@ export class KhRanking extends BaseApp {
         super({
             name: 'kh插件-排行榜',
             dsc: 'kh插件 排行榜',
-            priority: 5000, startScheduler: false,
+            priority: 5000,
             rule: [
                 {
                     reg: '^#?(换头|马甲|专一|潜水|活跃|冒泡|加群)大王$|^#(老|小)资历$',

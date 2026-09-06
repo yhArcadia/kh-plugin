@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:15:20
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 21:29:04
+ * @LastEditTime: 2026-09-06 22:05:04
  * @FilePath: /kh-plugin/components/base-app.js
  * @Description: 
  * 
@@ -10,12 +10,11 @@
  */
 import { rankRender } from '../render/rank-renderer.js';
 import { renderHistory } from '../render/history-renderer.js';
-import { config, getBot, schedulerState } from './runtime.js';
-import { Scheduler } from './scheduler.js';
+import { config, getBot } from './runtime.js';
 import { log } from '../utils/logger.js';
 
 export class BaseApp extends plugin {
-  constructor({ name, dsc, rule, priority = 5000, startScheduler = false }) {
+  constructor({ name, dsc, rule, priority = 5000 }) {
     super({
       name,
       dsc,
@@ -35,7 +34,6 @@ export class BaseApp extends plugin {
           log.i(`[${name}] 延迟获取 Bot 失败。`);
       }, 5000);
     }
-    if (startScheduler) this.startScheduler();
   }
 
   async isOperationRunning() {
@@ -81,29 +79,5 @@ export class BaseApp extends plugin {
       redis,
       config: this.config
     });
-  }
-
-  /**
-   * 启动定时任务调度器
-   * WHO_ARE_YOU_DISABLE_SCHEDULER 为 '1' 则不启动
-   * 调度器已存在则更新运行函数，否则创建新的调度器
-   */
-  startScheduler() {
-    const state = schedulerState();
-    if (process.env.WHO_ARE_YOU_DISABLE_SCHEDULER === '1') return;
-    if (state.scheduler) {
-      state.scheduler.run = operation => this.scheduleUpdateCore(operation);
-      state.scheduler.log = log;
-      state.scheduler.reschedule();
-      return;
-    }
-    state.scheduler = new Scheduler({
-      config: this.config,
-      redis,
-      run: operation => this.scheduleUpdateCore(operation),
-      log,
-      label: '群员信息更新'
-    });
-    state.scheduler.start();
   }
 }

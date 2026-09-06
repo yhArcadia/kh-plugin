@@ -1,3 +1,13 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:26:02
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-06 22:10:17
+ * @FilePath: /kh-plugin/apps/query.js
+ * @Description: 
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import fs from 'node:fs';
 import path from 'node:path';
 import moment from 'moment';
@@ -14,7 +24,6 @@ export class KhQuery extends BaseApp {
             name: 'kh插件-群员历史身份（KH）',
             dsc: '查询群友身份与历史头像',
             priority: 5000,
-            startScheduler: false,
             rule: [
                 {
                     reg: '^#?(你|他)(几把|寄吧)?是?谁？?啊?？?',
@@ -160,7 +169,7 @@ export class KhQuery extends BaseApp {
         }
 
         //如果潜水群就不再发送消息了。
-        if (isDivingGroup(e, config, logger)) return true;
+        if (isDivingGroup(e, config)) return true;
 
         // 3. 组装与发送
         let tempMsgId = null;
