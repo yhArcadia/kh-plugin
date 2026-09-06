@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 00:54:08
+ * @LastEditTime: 2026-09-06 17:39:27
  * @FilePath: /kh-plugin/apps/profile.js
  * @Description: 成员基础信息及头像查询
  * 
@@ -233,10 +233,10 @@ export class KhProfile extends BaseApp {
         const durationSec = Math.max(0, Math.floor((nowMs - validHeadtime) / 1000));
         const durationStr = formatDuration(durationSec);
 
-        const avatarUrl = `https://q1.qlogo.cn/g?b=qq&s=0&nk=${targetUid}`;
-        const avatarPalette = await getAvatarPalette(avatarUrl);
-
         const currentHeadtime = latestRecord?.headtime;
+        const localAvatarPath = currentHeadtime ? resolveHeadPath(targetUid, currentHeadtime, e.group_id) : null;
+        const avatarUrl = localAvatarPath ? `file://${localAvatarPath}` : `https://q1.qlogo.cn/g?b=qq&s=0&nk=${targetUid}`;
+        const avatarPalette = localAvatarPath ? await getAvatarPalette(localAvatarPath) : await getAvatarPalette(avatarUrl);
         // 按头像时间戳去重
         const uniqueHeadtimes = [...new Set(history
             .map(record => record?.headtime)
