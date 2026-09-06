@@ -2,19 +2,21 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 16:43:55
+ * @LastEditTime: 2026-09-06 18:31:06
  * @FilePath: /kh-plugin/apps/statistics.js
  * @Description: 头像存储统计
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
 import fs from 'node:fs/promises';
+import fsSync from 'node:fs';
 import path from 'node:path';
 import { headsDir, orphansDir } from '../components/paths.js';
 import { encodeSafeUid, decodeSafeUid } from '../utils/uid-encoder.js';
 import { scanKeys } from '../components/storage.js';
-import { config } from '../components/runtime.js';
+import { config, isOperationRunning } from '../components/runtime.js';
 import { isDivingGroup } from '../utils/group-policy.js';
+import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 import { log } from '../utils/logger.js';
 
 
@@ -22,6 +24,7 @@ const OLD_FORMAT_RE = /^(\d+)_(.+)_(\d+)\.jpg$/i;
 const NEW_FORMAT_RE = /^(.+)_(\d+)\.jpg$/i;
 const STAT_CONCURRENCY = 48;
 const TOP_N_USERS = 50;
+const ORPHAN_PREVIEW_LIMIT = 50;
 
 function formatBytes(bytes) {
     if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
@@ -121,6 +124,14 @@ export class KhStatistics extends plugin {
                 {
                     reg: '^#?kh统计$',
                     fnc: 'showStatistics'
+                },
+                {
+                    reg: '^#?kh闲置头像$',
+                    fnc: 'showOrphanAvatars'
+                },
+                {
+                    reg: '^#?kh清理闲置(头像)?$',
+                    fnc: 'cleanOrphanAvatars'
                 }
             ]
         });
@@ -351,7 +362,7 @@ export class KhStatistics extends plugin {
                 orphanStats.earliestDate = dates[0];
                 orphanStats.latestDate = dates[dates.length - 1];
             }
-        } catch { /* orphans dir may not exist yet */ }
+        } catch { /* orphans目录可能不存在 */ }
 
         return {
             activeFiles: uniqueFiles.size,
@@ -361,5 +372,242 @@ export class KhStatistics extends plugin {
             topUsers,
             orphanStats
         };
+    }
+
+    async showOrphanAvatars(e) {
+        if (!e.isMaster) return false;
+        if (isDivingGroup(e, config)) return false;
+
+        try {
+            const orphanFiles = [];
+            const orphanEntries = await fs.readdir(orphansDir, { withFileTypes: true });
+            const dateDirs = orphanEntries.filter(e => e.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(e.name));
+
+            for (const dir of dateDirs) {
+                try {
+                    const subEntries = await fs.readdir(path.join(orphansDir, dir.name), { withFileTypes: true });
+                    const jpgFiles = subEntries.filter(e => e.isFile() && e.name.endsWith('.jpg'));
+                    for (const f of jpgFiles) {
+                        orphanFiles.push({
+                            dateDir: dir.name,
+                            filename: f.name,
+                            fullPath: path.join(orphansDir, dir.name, f.name)
+                        });
+                    }
+                } catch { /* 跳过不可读目录 */ }
+            }
+
+            if (orphanFiles.length === 0) {
+                await e.reply('当前没有闲置头像文件。');
+                return true;
+            }
+
+            orphanFiles.sort((a, b) => {
+                if (a.dateDir !== b.dateDir) return a.dateDir.localeCompare(b.dateDir);
+                return a.filename.localeCompare(b.filename);
+            });
+
+            const total = orphanFiles.length;
+            const shown = orphanFiles.slice(0, ORPHAN_PREVIEW_LIMIT);
+            const hidden = total - shown.length;
+
+            if (e.isGroup) {
+                const forwardMsgData = [];
+                forwardMsgData.push({
+                    message: `闲置头像共 ${total} 个文件，以下展示前 ${shown.length} 张。`,
+                    nickname: e.bot?.nickname || 'KH 闲置头像',
+                    user_id: e.bot?.uin || 0
+                });
+                for (const file of shown) {
+                    forwardMsgData.push({
+                        message: [
+                            segment.image(file.fullPath),
+                            `日期: ${file.dateDir} | ${file.filename}`
+                        ],
+                        nickname: e.bot?.nickname || 'KH 闲置头像',
+                        user_id: e.bot?.uin || 0
+                    });
+                }
+                if (hidden > 0) {
+                    forwardMsgData.push({
+                        message: `还有 ${hidden} 张未展示，输入 #kh清理闲置头像 可清除。`,
+                        nickname: e.bot?.nickname || 'KH 闲置头像',
+                        user_id: e.bot?.uin || 0
+                    });
+                }
+                const forwardMsg = await e.group.makeForwardMsg(forwardMsgData);
+                await e.reply(forwardMsg);
+            } else {
+                let msg = '闲置头像文件列表\n';
+                msg += '===========================\n';
+                msg += `总计：${total} 个文件\n\n`;
+                for (const file of shown) {
+                    msg += `  ${file.dateDir} | ${file.filename}\n`;
+                }
+                if (hidden > 0) {
+                    msg += `\n还有 ${hidden} 个文件未展示。`;
+                }
+                await e.reply(msg);
+            }
+        } catch (error) {
+            log.e('展示闲置头像失败', error);
+            await e.reply('获取闲置头像时发生错误，请查看控制台日志。');
+        }
+        return true;
+    }
+
+    async cleanOrphanAvatars(e) {
+        if (!e.isMaster) return false;
+        if (isDivingGroup(e, config)) return false;
+
+        const lockKey = 'kh:lock:orphan-clean';
+        if (isOperationRunning(lockKey)) {
+            await e.reply('当前正在进行清理操作，请稍后再试。');
+            return true;
+        }
+
+        const lock = await acquireOperationLock(redis, lockKey, 300, 'orphan-clean');
+        if (!lock) {
+            await e.reply('获取操作锁失败，请稍后再试。');
+            return true;
+        }
+
+        const stopRenewer = startLockRenewer(lock, 10_000, async () => {
+            log.e('闲置头像清理操作锁丢失，操作已中断');
+        });
+
+        let tempMsgId = null;
+        try {
+            if (e.isGroup) {
+                const res = await e.reply('正在清理闲置头像……');
+                if (res?.message_id) tempMsgId = res.message_id;
+            }
+
+            const prefix = `${config.redisPrefix}:`;
+            const refMap = new Map();
+            await scanKeys(redis, `${prefix}*`, {
+                count: 500,
+                callback: async (key) => {
+                    const suffix = key.slice(prefix.length);
+                    const parts = suffix.split(':');
+                    if (parts.length !== 2) return;
+                    const rawUid = parts[1];
+                    const safeUid = encodeSafeUid(rawUid);
+                    try {
+                        const raw = await redis.get(key);
+                        if (!raw) return;
+                        const history = JSON.parse(raw);
+                        if (!Array.isArray(history)) return;
+                        for (const record of history) {
+                            if (record.headtime) {
+                                refMap.set(`${safeUid}:${record.headtime}`, rawUid);
+                            }
+                        }
+                    } catch { /* skip */ }
+                }
+            });
+
+            if (!await lock.owns()) {
+                await e.reply('操作锁已丢失，取消清理。');
+                return true;
+            }
+
+            let restoredCount = 0;
+            let deletedCount = 0;
+            let deletedSize = 0;
+            const emptyDirs = [];
+
+            const orphanEntries = await fs.readdir(orphansDir, { withFileTypes: true });
+            const dateDirs = orphanEntries.filter(e => e.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(e.name));
+
+            for (const dir of dateDirs) {
+                const dirPath = path.join(orphansDir, dir.name);
+                let dirHasFiles = false;
+                try {
+                    const subEntries = await fs.readdir(dirPath, { withFileTypes: true });
+                    const jpgFiles = subEntries.filter(e => e.isFile() && e.name.endsWith('.jpg'));
+
+                    for (const f of jpgFiles) {
+                        const filePath = path.join(dirPath, f.name);
+                        const normalized = normalizeFileEntry(f.name);
+                        if (!normalized) {
+                            try {
+                                const st = fsSync.statSync(filePath);
+                                deletedSize += st.size;
+                                fsSync.unlinkSync(filePath);
+                            } catch { }
+                            deletedCount++;
+                            continue;
+                        }
+
+                        const refKey = `${normalized.safeUid}:${normalized.headtime}`;
+                        if (refMap.has(refKey)) {
+                            const targetPath = path.join(headsDir, f.name);
+                            try {
+                                fsSync.renameSync(filePath, targetPath);
+                                restoredCount++;
+                                log.i(`[orphan-clean] 恢复文件: ${f.name}`);
+                            } catch (moveErr) {
+                                log.e(`[orphan-clean] 恢复文件失败: ${f.name}`, moveErr);
+                                dirHasFiles = true;
+                            }
+                        } else {
+                            try {
+                                const st = fsSync.statSync(filePath);
+                                deletedSize += st.size;
+                                fsSync.unlinkSync(filePath);
+                                deletedCount++;
+                            } catch { }
+                        }
+                    }
+
+                    if (!dirHasFiles) {
+                        try {
+                            const remaining = await fs.readdir(dirPath);
+                            if (remaining.length === 0) {
+                                emptyDirs.push(dirPath);
+                            }
+                        } catch { }
+                    }
+                } catch { /* 跳过不可读目录 */ }
+            }
+
+            for (const dirPath of emptyDirs) {
+                try {
+                    fsSync.rmdirSync(dirPath);
+                } catch (rmdirErr) {
+                    log.e(`[orphan-clean] 删除空目录失败: ${dirPath}`, rmdirErr);
+                }
+            }
+
+            let msg = '闲置头像清理完成\n';
+            msg += '===========================\n';
+            if (restoredCount > 0) {
+                msg += `恢复：${restoredCount} 个文件（已被重新引用）\n`;
+            }
+            msg += `删除：${deletedCount} 个文件\n`;
+            msg += `释放：${formatBytes(deletedSize)}`;
+
+            await e.reply(msg);
+
+            if (tempMsgId && e.isGroup) {
+                try {
+                    await e.group.recallMsg(tempMsgId);
+                } catch (recallErr) {
+                    log.e(`撤回提示消息失败: ${recallErr.message}`);
+                }
+            }
+        } catch (error) {
+            log.e('清理闲置头像失败', error);
+            await e.reply('清理闲置头像时发生错误，请查看控制台日志。');
+        } finally {
+            stopRenewer();
+            try {
+                await lock.release();
+            } catch (releaseErr) {
+                log.e('[orphan-clean] 释放锁失败', releaseErr);
+            }
+        }
+        return true;
     }
 }
