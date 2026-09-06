@@ -73,6 +73,8 @@ export class KhScheduler extends BaseApp {
     }
 
     startScheduler() {
+        if (this._schedulerStarted) return;
+        this._schedulerStarted = true;
         super.startScheduler();
         const state = schedulerState();
         if (process.env.WHO_ARE_YOU_DISABLE_SCHEDULER === '1') return;

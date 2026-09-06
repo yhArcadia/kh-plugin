@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 18:31:06
+ * @LastEditTime: 2026-09-06 19:06:43
  * @FilePath: /kh-plugin/apps/statistics.js
  * @Description: 头像存储统计
  * 
@@ -215,23 +215,25 @@ export class KhStatistics extends plugin {
                 msg += '  输入 #kh闲置头像 查看 · #kh清理闲置 清除\n';
             }
 
-            if (e.isGroup) {
-                const forwardMsg = await e.group.makeForwardMsg([{
+            const forwardMsg = await (e.isGroup
+                ? e.group.makeForwardMsg([{
                     message: msg,
                     nickname: e.bot?.nickname || "KH 存储统计",
                     user_id: e.bot?.uin || 0
-                }]);
-                await e.reply(forwardMsg);
+                }])
+                : Bot.makeForwardMsg([{
+                    message: msg,
+                    nickname: e.bot?.nickname || "KH 存储统计",
+                    user_id: e.bot?.uin || 0
+                }]));
+            await e.reply(forwardMsg);
 
-                if (tempMsgId) {
-                    try {
-                        await e.group.recallMsg(tempMsgId);
-                    } catch (recallErr) {
-                        log.e(`撤回提示消息失败: ${recallErr.message}`);
-                    }
+            if (tempMsgId && e.isGroup) {
+                try {
+                    await e.group.recallMsg(tempMsgId);
+                } catch (recallErr) {
+                    log.e(`撤回提示消息失败: ${recallErr.message}`);
                 }
-            } else {
-                await e.reply(msg);
             }
         } catch (error) {
             log.e('统计 KH 头像存储失败', error);
@@ -408,47 +410,31 @@ export class KhStatistics extends plugin {
             });
 
             const total = orphanFiles.length;
-            const shown = orphanFiles.slice(0, ORPHAN_PREVIEW_LIMIT);
-            const hidden = total - shown.length;
+            const makeForward = e.isGroup
+                ? (data) => e.group.makeForwardMsg(data)
+                : (data) => Bot.makeForwardMsg(data);
 
-            if (e.isGroup) {
-                const forwardMsgData = [];
+            const botInfo = {
+                nickname: e.bot?.nickname || 'KH 闲置头像',
+                user_id: e.bot?.uin || 0
+            };
+
+            const forwardMsgData = [];
+            forwardMsgData.push({
+                message: `闲置头像共 ${total} 个文件。输入 #kh清理闲置头像 可清除。`,
+                ...botInfo
+            });
+            for (const file of orphanFiles) {
                 forwardMsgData.push({
-                    message: `闲置头像共 ${total} 个文件，以下展示前 ${shown.length} 张。`,
-                    nickname: e.bot?.nickname || 'KH 闲置头像',
-                    user_id: e.bot?.uin || 0
+                    message: [
+                        segment.image(file.fullPath),
+                        `归档日期: ${file.dateDir} | ${file.filename}`
+                    ],
+                    ...botInfo
                 });
-                for (const file of shown) {
-                    forwardMsgData.push({
-                        message: [
-                            segment.image(file.fullPath),
-                            `日期: ${file.dateDir} | ${file.filename}`
-                        ],
-                        nickname: e.bot?.nickname || 'KH 闲置头像',
-                        user_id: e.bot?.uin || 0
-                    });
-                }
-                if (hidden > 0) {
-                    forwardMsgData.push({
-                        message: `还有 ${hidden} 张未展示，输入 #kh清理闲置头像 可清除。`,
-                        nickname: e.bot?.nickname || 'KH 闲置头像',
-                        user_id: e.bot?.uin || 0
-                    });
-                }
-                const forwardMsg = await e.group.makeForwardMsg(forwardMsgData);
-                await e.reply(forwardMsg);
-            } else {
-                let msg = '闲置头像文件列表\n';
-                msg += '===========================\n';
-                msg += `总计：${total} 个文件\n\n`;
-                for (const file of shown) {
-                    msg += `  ${file.dateDir} | ${file.filename}\n`;
-                }
-                if (hidden > 0) {
-                    msg += `\n还有 ${hidden} 个文件未展示。`;
-                }
-                await e.reply(msg);
             }
+            const forwardMsg = await makeForward(forwardMsgData);
+            await e.reply(forwardMsg);
         } catch (error) {
             log.e('展示闲置头像失败', error);
             await e.reply('获取闲置头像时发生错误，请查看控制台日志。');

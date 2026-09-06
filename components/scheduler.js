@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:57
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 17:47:27
+ * @LastEditTime: 2026-09-06 20:24:27
  * @FilePath: /kh-plugin/components/scheduler.js
  * @Description: 定时任务
  * 
@@ -24,12 +24,22 @@ export class Scheduler {
   }
 
   start() {
-    if (this.job || process.env.WHO_ARE_YOU_DISABLE_SCHEDULER === '1') return;
+    if (this._starting || this.job || process.env.WHO_ARE_YOU_DISABLE_SCHEDULER === '1') return;
+    const cron = this.config[this.scheduleKey];
+    if (!cron || typeof cron !== 'string' || cron.trim().split(/\s+/).length < 5) {
+      this.log.w(`${this.label} cron 表达式无效: ${cron}，已跳过`);
+      return;
+    }
+    this._starting = true;
     import('node-schedule').then(({ default: schedule }) => {
-      if (this.job) return;
-      this.job = schedule.scheduleJob(this.config[this.scheduleKey], () => this.execute().catch(err => this.log.w(`定时任务设置失败: ${err.message}`)));
-      this.log.m(`${this.label}已设置: ${this.config[this.scheduleKey]}`);
-    }).catch(err => this.log.w(`无法加载 node-schedule: ${err.message}`));
+      if (this.job) { this._starting = false; return; }
+      this.job = schedule.scheduleJob(cron.trim(), () => this.execute().catch(err => this.log.w(`定时任务执行失败: ${err.message}`)));
+      this._starting = false;
+      this.log.m(`${this.label}已设置: ${cron.trim()}`);
+    }).catch(err => {
+      this._starting = false;
+      this.log.w(`无法加载 node-schedule: ${err.message}`);
+    });
   }
 
   stop() { if (this.job) this.job.cancel(); this.job = null; }

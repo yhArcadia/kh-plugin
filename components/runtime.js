@@ -90,7 +90,8 @@ export function setBot(bot) {
   return state.bot;
 }
 
-export async function isOperationRunning() {
+export async function isOperationRunning(key) {
+  if (key) return Boolean(await redis.exists(key));
   return Boolean(await redis.exists(`${_config.redisPrefix}${_config.lockKeyOperation}`));
 }
 
