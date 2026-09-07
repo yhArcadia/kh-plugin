@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 00:57:17
+ * @LastEditTime: 2026-09-08 00:00:15
  * @FilePath: /kh-plugin/services/member-updater.js
  * @Description: 群员记录更新
  * 
@@ -18,7 +18,7 @@ import { getProgressBar } from '../utils/format.js';
 import { log } from '../utils/logger.js';
 import { getGroupName } from '../utils/group-name.js';
 import { parseHistory } from '../components/storage.js';
-import { encodeSafeUid } from '../utils/uid-encoder.js';
+import { encodeSafeUid, encodeRedisUid } from '../utils/uid-encoder.js';
 
 export function createMemberUpdater({ redis, config, headsDir }) {
     const recordLocks = globalThis.__whoAreYouMemberRecordLocks ||= new Map();
@@ -174,7 +174,7 @@ export function createMemberUpdater({ redis, config, headsDir }) {
             const displayName = member.card || member.nickname || uid;
             let statusMsg = '';
 
-            const redisKey = `${config.redisPrefix}:${gid}:${uid}`;
+            const redisKey = `${config.redisPrefix}:${gid}:${encodeRedisUid(uid)}`;
             const historyJson = await redis.get(redisKey);
             const parsedHistory = parseHistory(historyJson);
             let history = parsedHistory.history;

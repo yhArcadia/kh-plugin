@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-05 17:43:40
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 16:56:40
+ * @LastEditTime: 2026-09-08 00:04:55
  * @FilePath: /kh-plugin/services/orphan-scanner.js
  * @Description: 闲置头像扫描服务
  * 
@@ -11,7 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { scanKeys } from '../components/storage.js';
-import { encodeSafeUid, decodeSafeUid } from '../utils/uid-encoder.js';
+import { encodeSafeUid, decodeSafeUid, decodeRedisUid } from '../utils/uid-encoder.js';
 import { ensureOrphanDirs } from '../components/paths.js';
 import { log } from '../utils/logger.js';
 
@@ -47,7 +47,7 @@ export async function runOrphanScan({ redis, config, headsDir, operation = null 
                 const history = JSON.parse(raw);
                 if (!Array.isArray(history)) return;
 
-                const uid = parts[1];
+                const uid = decodeRedisUid(parts[1]);
 
                 for (const record of history) {
                     if (record.headtime) {

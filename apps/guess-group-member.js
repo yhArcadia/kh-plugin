@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-28 22:07:05
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 22:10:05
+ * @LastEditTime: 2026-09-08 00:04:21
  * @FilePath: /kh-plugin/apps/guess-group-member.js
  * @Description: 
  * 
@@ -13,6 +13,7 @@ import { isDivingGroup } from '../utils/group-policy.js'
 import { getSharp } from '../utils/sharp-loader.js'
 import { downloadAvatar } from '../utils/resolve-images.js'
 import { config } from '../components/runtime.js'
+import { decodeRedisUid } from '../utils/uid-encoder.js'
 import { log } from '../utils/logger.js'
 import { renderCrop, renderReveal, cropBounds, randomCropCenter } from '../render/guess-group-member-renderer.js'
 
@@ -32,7 +33,7 @@ async function recentSpeakers(groupId, selfId, memberSet) {
     try {
       const history = JSON.parse(await redis.get(key) || '[]')
       const record = history.at(-1)
-      const userId = String(record?.user_id || key.slice(prefix.length))
+      const userId = String(record?.user_id || decodeRedisUid(key.slice(prefix.length)))
       if (!record?.last_sent_time || record.is_robot || userId === String(selfId || ''))
         continue
       if (memberSet && !memberSet.has(userId))

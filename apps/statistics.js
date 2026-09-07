@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 19:06:43
+ * @LastEditTime: 2026-09-08 00:08:15
  * @FilePath: /kh-plugin/apps/statistics.js
  * @Description: 头像存储统计
  * 
@@ -12,7 +12,7 @@ import fs from 'node:fs/promises';
 import fsSync from 'node:fs';
 import path from 'node:path';
 import { headsDir, orphansDir } from '../components/paths.js';
-import { encodeSafeUid, decodeSafeUid } from '../utils/uid-encoder.js';
+import { encodeSafeUid, decodeSafeUid, decodeRedisUid } from '../utils/uid-encoder.js';
 import { scanKeys } from '../components/storage.js';
 import { config, isOperationRunning } from '../components/runtime.js';
 import { isDivingGroup } from '../utils/group-policy.js';
@@ -255,7 +255,7 @@ export class KhStatistics extends plugin {
                 const parts = suffix.split(':');
                 if (parts.length !== 2) return;
                 const gid = parts[0];
-                const rawUid = parts[1];
+                const rawUid = decodeRedisUid(parts[1]);
                 const safeUid = encodeSafeUid(rawUid);
 
                 try {
@@ -477,7 +477,7 @@ export class KhStatistics extends plugin {
                     const suffix = key.slice(prefix.length);
                     const parts = suffix.split(':');
                     if (parts.length !== 2) return;
-                    const rawUid = parts[1];
+                    const rawUid = decodeRedisUid(parts[1]);
                     const safeUid = encodeSafeUid(rawUid);
                     try {
                         const raw = await redis.get(key);

@@ -1,17 +1,30 @@
 /*
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
- * @Date: 2026-08-06 19:58:56
+ * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 22:55:50
+ * @LastEditTime: 2026-09-08 00:50:10
  * @FilePath: /kh-plugin/components/storage.js
  * @Description: 存取
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
 
-export function historyKey(config, gid, uid) { return `${config.redisPrefix}:${gid}:${uid}`; }
-export function remarkKey(config, gid, uid) { return `${config.redisPrefix}:remark:${gid}:${uid}`; }
-const historySuffix = /^\d+:\d+$/;
+
+import { encodeRedisUid } from '../utils/uid-encoder.js';
+
+export function historyKey(config, gid, uid) { return `${config.redisPrefix}:${gid}:${encodeRedisUid(uid)}`; }
+export function remarkKey(config, gid, uid) { return `${config.redisPrefix}:remark:${gid}:${encodeRedisUid(uid)}`; }
+const historySuffix = /^\d+:[^:]+$/;
+
+export function parseHistoryKey(key, prefix) {
+    const suffix = key.slice(prefix.length);
+    const colonIdx = suffix.indexOf(':');
+    if (colonIdx === -1) return null;
+    return {
+        gid: suffix.slice(0, colonIdx),
+        encodedUid: suffix.slice(colonIdx + 1)
+    };
+}
 
 
 export async function scanKeys(redis, pattern, { count = 250, maxKeys = 10000, callback } = {}) {

@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 21:28:56
+ * @LastEditTime: 2026-09-08 00:10:16
  * @FilePath: /kh-plugin/render/history-renderer.js
  * @Description: 历史身份渲染组件
  * 
@@ -14,6 +14,7 @@ import template from 'art-template';
 import moment from 'moment';
 import puppeteer from '../components/puppeteer.js';
 import { templateDir, resolveHeadPath } from '../components/paths.js';
+import { encodeRedisUid } from '../utils/uid-encoder.js';
 import { escapeHtml } from '../utils/html.js';
 import { getPluginVersion } from '../components/version.js';
 import cfg from '../../../lib/config/config.js';
@@ -217,7 +218,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
 
     // 七、备注
     // const remarkKey = `${config.redisPrefix}:remark:${groupId}:${e.at}`;
-    const remarkKey = `${config.redisPrefix}:remark:${groupId}:${targetUid}`;
+    const remarkKey = `${config.redisPrefix}:remark:${groupId}:${encodeRedisUid(targetUid)}`;
     const remarkData = await redis.get(remarkKey);
 
     if (remarkData) {

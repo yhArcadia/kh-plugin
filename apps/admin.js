@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 22:09:27
+ * @LastEditTime: 2026-09-08 00:01:19
  * @FilePath: /kh-plugin/apps/admin.js
  * @Description: 
  * 
@@ -63,7 +63,7 @@ export class KhAdmin extends BaseApp {
                 }
                 const prefix = `${config.redisPrefix}:`;
                 const suffix = key.slice(prefix.length); // 截取掉前缀，剩下 群号:QQ号
-                if (!/^\d+:\d+$/.test(suffix)) continue;
+                if (!/^\d+:[^:]+$/.test(suffix)) continue;
 
                 const historyJson = await redis.get(key);
                 if (!historyJson) continue;

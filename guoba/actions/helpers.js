@@ -2,12 +2,13 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:54:45
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-01 19:57:56
+ * @LastEditTime: 2026-09-08 00:50:31
  * @FilePath: /kh-plugin/guoba/actions/helpers.js
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
+
 export function resultOk(Result, data, message = '操作成功') {
     return Result?.ok ? Result.ok(data, message) : { ok: true, data, message };
 }
@@ -23,8 +24,8 @@ export function redisClient() {
 
 export function parseKey(key, prefix) {
     const rest = key.slice(`${prefix}:`.length).split(':');
-    if (rest.length !== 2 || !/^\d+$/.test(rest[0]) || !/^\d+$/.test(rest[1])) return null;
-    return { groupId: Number(rest[0]), userId: Number(rest[1]) };
+    if (rest.length !== 2 || !/^\d+$/.test(rest[0]) || !/^[^:]+$/.test(rest[1])) return null;
+    return { groupId: Number(rest[0]), userId: rest[1] };
 }
 
 export async function normalizeActionArgs(args, keys) {

@@ -1,8 +1,8 @@
 /*
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
- * @Date: 2026-08-12 18:26:02
+ * @Date: 2026-09-06 20:19:16
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 00:53:04
+ * @LastEditTime: 2026-09-08 00:49:36
  * @FilePath: /kh-plugin/apps/debug.js
  * @Description: 调试工具
  * 
@@ -14,6 +14,7 @@ import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
 import { resolveHeadPath } from '../components/paths.js';
 import { config } from '../components/runtime.js';
+import { encodeRedisUid } from '../utils/uid-encoder.js';
 import { log } from '../utils/logger.js';
 
 export class Debug extends BaseApp {
@@ -47,7 +48,7 @@ export class Debug extends BaseApp {
             if (match) targetUid = parseInt(match[0], 10);
         }
 
-        const redisKey = `${config.redisPrefix}:${e.group_id}:${targetUid}`;
+        const redisKey = `${config.redisPrefix}:${e.group_id}:${encodeRedisUid(targetUid)}`;
         const historyJson = await redis.get(redisKey);
 
         if (!historyJson) {

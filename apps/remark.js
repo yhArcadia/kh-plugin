@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-20 16:16:16
+ * @LastEditTime: 2026-09-08 00:09:42
  * @FilePath: /kh-plugin/apps/remark.js
  * @Description: 群员备注管理
  * 
@@ -11,6 +11,7 @@
 
 import { BaseApp } from '../components/base-app.js';
 import { config } from '../components/runtime.js';
+import { encodeRedisUid } from '../utils/uid-encoder.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { log } from '../utils/logger.js';
 
@@ -50,7 +51,7 @@ export class KhRemark extends BaseApp {
             return true;
         }
 
-        const redisKey = `${config.redisPrefix}:remark:${e.group_id}:${e.at}`;
+        const redisKey = `${config.redisPrefix}:remark:${e.group_id}:${encodeRedisUid(e.at)}`;
 
         let remarkList = [];
         const currentData = await redis.get(redisKey);
@@ -87,7 +88,7 @@ export class KhRemark extends BaseApp {
 
         const indexStr = textWithoutCmd.match(/^(\d+)$/);
 
-        const redisKey = `${config.redisPrefix}:remark:${e.group_id}:${e.at}`;
+        const redisKey = `${config.redisPrefix}:remark:${e.group_id}:${encodeRedisUid(e.at)}`;
 
         // 如果没有指定数字，则视为“清空所有备注”
         if (!indexStr) {

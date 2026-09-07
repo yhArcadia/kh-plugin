@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-03 22:39:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 22:05:10
+ * @LastEditTime: 2026-09-08 00:03:36
  * @FilePath: /kh-plugin/apps/ranking.js
  * @Description: 群员排行
  * 
@@ -13,6 +13,7 @@ import { formatDuration } from '../utils/format.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
 import { resolveHeadPath } from '../components/paths.js';
+import { encodeRedisUid } from '../utils/uid-encoder.js';
 import {
     config,
     scanLegacyKeys
@@ -192,15 +193,15 @@ export class KhRanking extends BaseApp {
                 joinedHistoryUserSets.set(groupId, new Set(
                     groupKeys
                         .map(key => key.slice(groupPrefix.length))
-                        .filter(uid => /^\d+$/.test(uid))
+                        .filter(uid => /^[^:]+$/.test(uid))
                         .map(Number)
                 ));
             }
         }
         const prefix = `${config.redisPrefix}:${e.group_id}:`;
         const userKeys = rankType === 'join' && currentMemberMap instanceof Map
-            ? [...currentMemberMap.keys()].map(uid => `${prefix}${uid}`)
-            : keys.filter(k => /^\d+$/.test(k.slice(prefix.length)));
+            ? [...currentMemberMap.keys()].map(uid => `${prefix}${encodeRedisUid(uid)}`)
+            : keys.filter(k => /^[^:]+$/.test(k.slice(prefix.length)));
 
         if (userKeys.length === 0) {
             await e.reply("本群暂无任何身份记录。");

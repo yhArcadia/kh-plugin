@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 22:10:17
+ * @LastEditTime: 2026-09-08 00:08:42
  * @FilePath: /kh-plugin/apps/query.js
  * @Description: 
  * 
@@ -16,6 +16,7 @@ import { BaseApp } from '../components/base-app.js';
 import { config, memberUpdater } from '../components/runtime.js';
 import { getHistoryDetailed } from '../components/storage.js';
 import { getGroupName } from '../utils/group-name.js';
+import { encodeRedisUid } from '../utils/uid-encoder.js';
 import { log } from '../utils/logger.js';
 
 export class KhQuery extends BaseApp {
@@ -82,7 +83,7 @@ export class KhQuery extends BaseApp {
             let gname = getGroupName(groupId, e.bot);
 
             if (groupId !== e.group_id) {
-                const inquirerKey = `${config.redisPrefix}:${groupId}:${e.user_id}`;
+                const inquirerKey = `${config.redisPrefix}:${groupId}:${encodeRedisUid(e.user_id)}`;
                 const hasInquirerHistory = await redis.exists(inquirerKey);
                 if (!hasInquirerHistory && !e.isMaster) {
                     continue;

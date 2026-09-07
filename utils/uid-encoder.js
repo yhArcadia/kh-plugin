@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-04 22:45:46
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 00:57:30
+ * @LastEditTime: 2026-09-08 00:50:52
  * @FilePath: /kh-plugin/utils/uid-encoder.js
  * @Description: ID编码
  * 
@@ -22,7 +22,15 @@ export function encodeSafeUid(uid) {
 }
 
 export function encodeRedisUid(uid) {
-    return String(uid).replace(/:/g, '_');
+    return encodeURIComponent(String(uid));
+}
+
+export function decodeRedisUid(encoded) {
+    try {
+        return decodeURIComponent(encoded);
+    } catch {
+        return encoded;
+    }
 }
 
 export function decodeSafeUid(safeUid) {
