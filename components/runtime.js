@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:15:20
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 01:11:56
+ * @LastEditTime: 2026-09-08 21:36:47
  * @FilePath: /kh-plugin/components/runtime.js
  * @Description: 运行时状态
  * 
@@ -93,6 +93,15 @@ export function setBot(bot) {
 export async function isOperationRunning(key) {
   if (key) return Boolean(await redis.exists(key));
   return Boolean(await redis.exists(`${_config.redisPrefix}${_config.lockKeyOperation}`));
+}
+
+export async function clearStaleOperationLock() {
+  const lockKey = `${_config.redisPrefix}${_config.lockKeyOperation}`;
+  const existed = await redis.exists(lockKey);
+  if (existed) {
+    await redis.del(lockKey);
+    log.i(`已清除残留的操作锁 ${lockKey}，可正常发起新的更新任务。`);
+  }
 }
 
 export function schedulerState() {

@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 20:47:28
+ * @LastEditTime: 2026-09-08 21:58:23
  * @FilePath: /kh-plugin/index.js
  * @Description: 插件入口
  * 
@@ -16,6 +16,7 @@ import { ensureLegacyPluginFilesBackedUp } from './components/legacy-cleanup.js'
 import { migratePluginDirectory } from './components/plugin-rename-migration.js';
 import { log } from './utils/logger.js';
 import { boxLine, printBox, wrapModuleNames } from './utils/boxization.js';
+import { clearStaleOperationLock } from './components/runtime.js';
 
 log.i("开始载入")
 const apps = {};
@@ -49,9 +50,16 @@ if (migration.status === 'migrated') {
   const files = fs.readdirSync(appsDir)
     .filter(file => file.endsWith('.js'))
     .sort();
-  const results = await Promise.allSettled(
-    files.map(file => import(pathToFileURL(path.join(appsDir, file)).href))
-  );
+  const results = [];
+  for (const file of files) {
+    const t0 = Date.now();
+    try {
+      const mod = await import(pathToFileURL(path.join(appsDir, file)).href);
+      results.push({ status: 'fulfilled', value: { file, mod, elapsed: Date.now() - t0 } });
+    } catch (err) {
+      results.push({ status: 'rejected', reason: err, file });
+    }
+  }
 
   const successModules = [];
   const failedModules = [];
@@ -67,7 +75,8 @@ if (migration.status === 'migrated') {
       logger.error(result.reason);
       continue;
     }
-    const exported = Object.values(result.value);
+    const { mod, elapsed } = result.value;
+    const exported = Object.values(mod);
     if (exported.find(v => typeof v === 'function' && v.name === 'initScheduler')) {
       initSchedulerFn = exported.find(v => typeof v === 'function' && v.name === 'initScheduler');
     }
@@ -79,8 +88,11 @@ if (migration.status === 'migrated') {
       continue;
     }
     apps[name] = App;
-    successModules.push(name);
+    successModules.push({ name, elapsed });
   }
+
+  // 清除重启前残留的操作锁，避免阻塞新任务
+  await clearStaleOperationLock();
 
   if (initSchedulerFn) {
     try {
@@ -93,11 +105,18 @@ if (migration.status === 'migrated') {
   const elapsed = Date.now() - startTime;
   const boxLines = [];
 
-  boxLines.push(boxLine(`载入完成！`));
+  // boxLines.push(boxLine(`载入完成！`));
+  boxLines.push(boxLine(`载入完成，耗时: ${elapsed}ms`));
 
   if (successModules.length > 0) {
     boxLines.push(boxLine(`成功载入 ${successModules.length} 个模块：`));
-    boxLines.push(...wrapModuleNames(successModules));
+    const maxNameLen = Math.max(...successModules.map(m => m.name.length));
+    for (const { name, elapsed } of successModules) {
+      boxLines.push(boxLine(
+        // `  ${name.padEnd(maxNameLen)}  ${String(elapsed).padStart(4)}ms`
+        `  ${name.padEnd(maxNameLen)}`
+    ));
+    }
   } else {
     boxLines.push(boxLine('成功载入 0 个模块'));
   }
