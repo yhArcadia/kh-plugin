@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-05 17:43:40
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 00:04:55
+ * @LastEditTime: 2026-09-08 16:57:52
  * @FilePath: /kh-plugin/services/orphan-scanner.js
  * @Description: 闲置头像扫描服务
  * 
@@ -157,7 +157,10 @@ export async function runOrphanScan({ redis, config, headsDir, operation = null 
         const safeUid = encodeSafeUid(file.uid);
         const newPath = path.join(headsDir, `${safeUid}_${file.headtime}.jpg`);
 
-        if (!fs.existsSync(newPath)) continue;
+        if (!fs.existsSync(newPath)) {
+                log.i(`[闲置头像扫描] 保留旧格式文件: ${file.name} (新格式 ${path.basename(newPath)} 不存在)`);
+                continue;
+            }
 
         try {
             const oldStat = fs.statSync(file.fullPath);

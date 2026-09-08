@@ -1,8 +1,8 @@
 /*
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
- * @Date: 2026-08-12 18:26:02
+ * @Date: 2026-08-22 22:40:07
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 16:34:21
+ * @LastEditTime: 2026-09-08 16:58:55
  * @FilePath: /kh-plugin/apps/statistics.js
  * @Description: 头像存储统计
  * 
@@ -289,7 +289,8 @@ export class KhStatistics extends plugin {
             try {
                 const stat = await fs.stat(path.join(headsDir, entry.name));
                 return { ...normalized, size: stat.size };
-            } catch {
+            } catch (err) {
+                log.d(`统计跳过无法读取的头像文件: ${entry.name}: ${err.message}`);
                 return null;
             }
         });
@@ -356,16 +357,22 @@ export class KhStatistics extends plugin {
                         try {
                             const st = await fs.stat(path.join(orphansDir, dir.name, f.name));
                             orphanStats.totalSize += st.size;
-                        } catch { }
+                        } catch (err) {
+                            log.d(`统计孤儿头像跳过: ${dir.name}/${f.name}: ${err.message}`);
+                        }
                     }
-                } catch { }
+                } catch (err) {
+                    log.d(`统计跳过不可读孤儿目录: ${dir.name}: ${err.message}`);
+                }
             }
             dates.sort();
             if (dates.length > 0) {
                 orphanStats.earliestDate = dates[0];
                 orphanStats.latestDate = dates[dates.length - 1];
             }
-        } catch { /* orphans目录可能不存在 */ }
+        } catch (err) {
+            log.d(`统计孤儿头像: orphans目录访问失败: ${err.message}`);
+        }
 
         return {
             activeFiles: uniqueFiles.size,
@@ -397,7 +404,9 @@ export class KhStatistics extends plugin {
                             fullPath: path.join(orphansDir, dir.name, f.name)
                         });
                     }
-                } catch { /* 跳过不可读目录 */ }
+                } catch (err) {
+                    log.d(`展示闲置头像跳过不可读目录: ${dir.name}: ${err.message}`);
+                }
             }
 
             if (orphanFiles.length === 0) {
@@ -516,7 +525,10 @@ export class KhStatistics extends plugin {
                                 const st = fsSync.statSync(filePath);
                                 deletedSize += st.size;
                                 fsSync.unlinkSync(filePath);
-                            } catch { }
+                            } catch (err) {
+                                log.d(`[orphan-clean] 删除文件失败: ${f.name}: ${err.message}`);
+                                dirHasFiles = true;
+                            }
                             deletedCount++;
                             continue;
                         }
@@ -538,7 +550,10 @@ export class KhStatistics extends plugin {
                                 deletedSize += st.size;
                                 fsSync.unlinkSync(filePath);
                                 deletedCount++;
-                            } catch { }
+                            } catch (err) {
+                                log.d(`[orphan-clean] 删除文件失败: ${f.name}: ${err.message}`);
+                                dirHasFiles = true;
+                            }
                         }
                     }
 
@@ -548,9 +563,13 @@ export class KhStatistics extends plugin {
                             if (remaining.length === 0) {
                                 emptyDirs.push(dirPath);
                             }
-                        } catch { }
+                        } catch (err) {
+                            log.d(`[orphan-clean] 检查目录内容失败: ${dir.name}: ${err.message}`);
+                        }
                     }
-                } catch { /* 跳过不可读目录 */ }
+                } catch (err) {
+                    log.d(`[orphan-clean] 跳过不可读目录: ${dir.name}: ${err.message}`);
+                }
             }
 
             for (const dirPath of emptyDirs) {

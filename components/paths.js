@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 16:30:18
+ * @LastEditTime: 2026-09-08 16:59:35
  * @FilePath: /kh-plugin/components/paths.js
  * @Description: 
  * 
@@ -61,7 +61,9 @@ export function resolveHeadPath(uid, headtime, gid) {
       try {
         fs.linkSync(oldPath, newPath);
         log.i(`硬链接创建: ${path.basename(oldPath)} -> ${path.basename(newPath)}`);
-      } catch {}
+      } catch (err) {
+        log.d(`硬链接创建失败: ${path.basename(oldPath)} -> ${path.basename(newPath)}: ${err.message}`);
+      }
       return oldPath;
     }
   }

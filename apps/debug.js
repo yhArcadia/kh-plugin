@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-06 20:19:16
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 00:49:36
+ * @LastEditTime: 2026-09-08 16:58:28
  * @FilePath: /kh-plugin/apps/debug.js
  * @Description: 调试工具
  * 
@@ -14,7 +14,7 @@ import { isDivingGroup } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
 import { resolveHeadPath } from '../components/paths.js';
 import { config } from '../components/runtime.js';
-import { encodeRedisUid } from '../utils/uid-encoder.js';
+import { encodeSafeUid, encodeRedisUid } from '../utils/uid-encoder.js';
 import { log } from '../utils/logger.js';
 
 export class Debug extends BaseApp {
@@ -106,7 +106,6 @@ export class Debug extends BaseApp {
             for (const headtime of uniqueHeadtimes) {
                 const headPicPath = resolveHeadPath(targetUid, headtime, e.group_id);
                 const relativePath = headPicPath ? path.relative(process.cwd(), headPicPath).replace(/\\/g, '/') : '';
-                const fileName = headPicPath ? path.basename(headPicPath) : '';
 
                 if (headPicPath) {
                     const timeStr = moment(parseInt(headtime)).format('YYYY-MM-DD HH:mm:ss');
@@ -120,9 +119,11 @@ export class Debug extends BaseApp {
                         user_id: e.bot?.uin || 0
                     });
                 } else {
-                    // 缓存丢失
+                    const timeStr = moment(parseInt(headtime)).format('YYYY-MM-DD HH:mm:ss');
+                    const safeUid = encodeSafeUid(targetUid);
+                    const expectedFileName = `${safeUid}_${headtime}.jpg`;
                     forwardMsgData.push({
-                        message: `头像文件：${relativePath}\n该图片文件在磁盘本地缓存中未找到或已被清理。`,
+                        message: `头像文件：${expectedFileName}（对应时间 ${timeStr}）\n该图片文件在磁盘本地缓存中未找到或已被清理。`,
                         nickname: e.bot?.nickname || " ",
                         user_id: e.bot?.uin || 0
                     });
