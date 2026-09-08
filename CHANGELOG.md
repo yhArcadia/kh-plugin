@@ -2,13 +2,17 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 17:36:08
+ * @LastEditTime: 2026-09-08 19:38:28
  * @FilePath: /kh-plugin/CHANGELOG.md
  * @Description: 更新日志
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
 -->
 # Changelog
+
+# 2.1.1
+
+* 修复：框架缓存数据导致**批量**更新群员信息（定时更新、手动`#更新群员信息`）时录入缓存的旧昵称or群名片，配合实时检测，产生**一新一旧重复交替**的冗余记录。
 
 # 2.1.0
 
