@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 19:03:11
+ * @LastEditTime: 2026-09-08 19:26:10
  * @FilePath: /kh-plugin/services/member-updater.js
  * @Description: 群员记录更新
  * 
@@ -222,13 +222,16 @@ export function createMemberUpdater({ redis, config, headsDir }) {
             const cardCacheSuspect = latestRecord?.card !== (member.card || '');
             const nicknameCacheSuspect = latestRecord?.nickname !== (member.nickname || '');
 
-            // 如有疑似变更，用 getInfo(true) 拉取最新数据做二次确认，排除缓存数据
-            if ((cardCacheSuspect || nicknameCacheSuspect) && latestRecord && typeof member.getInfo === 'function') {
+            // 如有疑似变更，通过 Bot 实例拉取最新数据做二次确认，排除 getMemberMap() 缓存脏数据
+            if ((cardCacheSuspect || nicknameCacheSuspect) && latestRecord) {
                 try {
-                    const confirmed = await member.getInfo(true);
-                    if (confirmed) {
-                        log.i(`用户 ${uid} 群名片/昵称疑似变更，通过getInfo(true)二次确认，getMemberMap()的card=[${member.card}] 最新新card=[${confirmed.card}] getMemberMap()的nickname=[${member.nickname}] 最新nickname=[${confirmed.nickname}]`);
-                        member = confirmed;
+                    const bot = globalThis.Bot;
+                    if (bot && gid) {
+                        const confirmed = await bot.pickGroup(gid).pickMember(uid).getInfo(true);
+                        if (confirmed) {
+                            log.i(`用户 ${uid} 群名片/昵称疑似变更，做二次确认，缓存card=[${member.card}] 实际最新card=[${confirmed.card}] 缓存nickname=[${member.nickname}] shiji最新nickname=[${confirmed.nickname}]`);
+                            member = confirmed;
+                        }
                     }
                 } catch (e) {
                     log.i(`用户 ${uid} 二次确认 getInfo 失败，降级使用缓存数据: ${e.message}`);
