@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 00:00:15
+ * @LastEditTime: 2026-09-08 19:03:11
  * @FilePath: /kh-plugin/services/member-updater.js
  * @Description: 群员记录更新
  * 
@@ -217,6 +217,24 @@ export function createMemberUpdater({ redis, config, headsDir }) {
             }
 
             // 变更检测
+
+            // 群名片和昵称可能受 getMemberMap() 缓存影响，先用缓存数据做粗检测
+            const cardCacheSuspect = latestRecord?.card !== (member.card || '');
+            const nicknameCacheSuspect = latestRecord?.nickname !== (member.nickname || '');
+
+            // 如有疑似变更，用 getInfo(true) 拉取最新数据做二次确认，排除缓存数据
+            if ((cardCacheSuspect || nicknameCacheSuspect) && latestRecord && typeof member.getInfo === 'function') {
+                try {
+                    const confirmed = await member.getInfo(true);
+                    if (confirmed) {
+                        log.i(`用户 ${uid} 群名片/昵称疑似变更，通过getInfo(true)二次确认，getMemberMap()的card=[${member.card}] 最新新card=[${confirmed.card}] getMemberMap()的nickname=[${member.nickname}] 最新nickname=[${confirmed.nickname}]`);
+                        member = confirmed;
+                    }
+                } catch (e) {
+                    log.i(`用户 ${uid} 二次确认 getInfo 失败，降级使用缓存数据: ${e.message}`);
+                }
+            }
+
             let changes = [];
             const nicknameChanged = latestRecord?.nickname !== (member.nickname || '');
             if (nicknameChanged && latestRecord) changes.push('昵称');
