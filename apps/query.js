@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 16:30:40
+ * @LastEditTime: 2026-09-08 18:20:37
  * @FilePath: /kh-plugin/apps/query.js
  * @Description: 
  * 
@@ -179,17 +179,21 @@ export class KhQuery extends BaseApp {
                 await e.reply("null~");
             }
             return true;
-        } else if (recordsInEachGroup.length > 1) {
-            const res = await e.reply("让我康康...");
-            if (res && res.message_id) {
-                tempMsgId = res.message_id;
-                recallTimer = setTimeout(async () => {
-                    try {
-                        if (e.group) await e.group.recallMsg(tempMsgId);
-                    } catch (err) {
-                        log.e(`撤回提示消息失败: ${err.message}`);
-                    }
-                }, 15000);
+        } else {
+            const totalRecords = recordsInEachGroup.reduce((sum, g) => sum + g.history.length, 0);
+            if (recordsInEachGroup.length > 1 || totalRecords > 5) {
+                const text = recordsInEachGroup.length <= 1 ? "稍等……" : "让我康康...";
+                const res = await e.reply(text);
+                if (res && res.message_id) {
+                    tempMsgId = res.message_id;
+                    recallTimer = setTimeout(async () => {
+                        try {
+                            if (e.group) await e.group.recallMsg(tempMsgId);
+                        } catch (err) {
+                            log.e(`撤回提示消息失败: ${err.message}`);
+                        }
+                    }, 15000);
+                }
             }
         }
 
