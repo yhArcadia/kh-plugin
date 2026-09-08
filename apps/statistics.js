@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-22 22:40:07
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 16:58:55
+ * @LastEditTime: 2026-09-08 17:20:51
  * @FilePath: /kh-plugin/apps/statistics.js
  * @Description: 头像存储统计
  * 
@@ -17,6 +17,7 @@ import { scanKeys } from '../components/storage.js';
 import { config } from '../components/runtime.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { log } from '../utils/logger.js';
+import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 
 
 const OLD_FORMAT_RE = /^(\d+)_(.+)_(\d+)\.jpg$/i;
@@ -469,6 +470,20 @@ export class KhStatistics extends plugin {
             await e.reply('当前正在进行清理操作，请稍后再试。');
             return true;
         }
+
+        const lockKey = `${config.redisPrefix}${config.lockKeyOperation}`;
+        const lock = await acquireOperationLock(redis, lockKey, config.lockTTL, 'orphan-clean');
+        if (!lock) {
+            await e.reply('当前已有其他操作正在进行中，请稍后再试。');
+            return true;
+        }
+
+        let lostLock = false;
+        const stopRenewer = startLockRenewer(lock, 30_000, () => {
+            lostLock = true;
+            log.w('[orphan-clean] 操作锁已失去所有权，将停止清理。');
+        });
+
         orphanCleaning = true;
 
         let tempMsgId = null;
@@ -479,7 +494,7 @@ export class KhStatistics extends plugin {
             }
 
             const prefix = `${config.redisPrefix}:`;
-            const refMap = new Map();
+            const refMap = new Set();
             await scanKeys(redis, `${prefix}*`, {
                 count: 500,
                 callback: async (key) => {
@@ -495,7 +510,7 @@ export class KhStatistics extends plugin {
                         if (!Array.isArray(history)) return;
                         for (const record of history) {
                             if (record.headtime) {
-                                refMap.set(`${safeUid}:${record.headtime}`, rawUid);
+                                refMap.add(`${safeUid}:${record.headtime}`);
                             }
                         }
                     } catch { /* skip */ }
@@ -511,6 +526,10 @@ export class KhStatistics extends plugin {
             const dateDirs = orphanEntries.filter(e => e.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(e.name));
 
             for (const dir of dateDirs) {
+                if (lostLock) {
+                    log.w('[orphan-clean] 操作锁已失去所有权，中止清理。');
+                    break;
+                }
                 const dirPath = path.join(orphansDir, dir.name);
                 let dirHasFiles = false;
                 try {
@@ -518,6 +537,11 @@ export class KhStatistics extends plugin {
                     const jpgFiles = subEntries.filter(e => e.isFile() && e.name.endsWith('.jpg'));
 
                     for (const f of jpgFiles) {
+                        if (lostLock) {
+                            log.w('[orphan-clean] 操作锁已失去所有权，中止当前目录处理。');
+                            dirHasFiles = true;
+                            break;
+                        }
                         const filePath = path.join(dirPath, f.name);
                         const normalized = normalizeFileEntry(f.name);
                         if (!normalized) {
@@ -525,11 +549,11 @@ export class KhStatistics extends plugin {
                                 const st = fsSync.statSync(filePath);
                                 deletedSize += st.size;
                                 fsSync.unlinkSync(filePath);
+                                deletedCount++;
                             } catch (err) {
                                 log.d(`[orphan-clean] 删除文件失败: ${f.name}: ${err.message}`);
                                 dirHasFiles = true;
                             }
-                            deletedCount++;
                             continue;
                         }
 
@@ -547,8 +571,8 @@ export class KhStatistics extends plugin {
                         } else {
                             try {
                                 const st = fsSync.statSync(filePath);
-                                deletedSize += st.size;
                                 fsSync.unlinkSync(filePath);
+                                deletedSize += st.size;
                                 deletedCount++;
                             } catch (err) {
                                 log.d(`[orphan-clean] 删除文件失败: ${f.name}: ${err.message}`);
@@ -601,6 +625,8 @@ export class KhStatistics extends plugin {
             log.e('清理闲置头像失败', error);
             await e.reply('清理闲置头像时发生错误，请查看控制台日志。');
         } finally {
+            stopRenewer();
+            await lock.release().catch(err => log.w(`[orphan-clean] 锁释放失败: ${err.message}`));
             orphanCleaning = false;
         }
         return true;
