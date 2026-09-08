@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 00:41:06
+ * @LastEditTime: 2026-09-08 16:30:18
  * @FilePath: /kh-plugin/components/paths.js
  * @Description: 
  * 
@@ -49,19 +49,6 @@ export function ensureOrphanDirs(dateStr) {
   fs.mkdirSync(dir, { recursive: true });
   return dir;
 }
-
-// export function headPath(uid, headtime, gid) {
-//   const safeUid = encodeSafeUid(uid);
-//   const newPath = path.join(headsDir, `${safeUid}_${headtime}.jpg`);
-//   if (fs.existsSync(newPath) || gid == null) return newPath;
-
-//   const oldPath = path.join(headsDir, `${gid}_${uid}_${headtime}.jpg`);
-//   if (fs.existsSync(oldPath)) {
-//     try { fs.linkSync(oldPath, newPath); } catch {}
-//     return oldPath;
-//   }
-//   return newPath;
-// }
 
 export function resolveHeadPath(uid, headtime, gid) {
   const safeUid = encodeSafeUid(uid);

@@ -2,15 +2,12 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 00:08:42
+ * @LastEditTime: 2026-09-08 16:30:40
  * @FilePath: /kh-plugin/apps/query.js
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
-import fs from 'node:fs';
-import path from 'node:path';
-import moment from 'moment';
 import { isDivingGroup, isGroupAllowed } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
 import { config, memberUpdater } from '../components/runtime.js';

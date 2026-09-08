@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 20:21:43
+ * @LastEditTime: 2026-09-08 16:28:52
  * @FilePath: /kh-plugin/components/config.js
  * @Description: 配置文件管理
  * 
@@ -71,7 +71,7 @@ export const defaultConfig = Object.freeze({
   notifyGroups: [],
   maxNotifyRenderLength: 2,
   monitorCD: 600,
-  rankLimit: 20,
+  rankLimit: 50,
   groupWhitelist: [],
   groupBlacklist: [],
   userBlacklist: [],

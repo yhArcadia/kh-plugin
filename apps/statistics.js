@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 00:08:15
+ * @LastEditTime: 2026-09-08 16:34:21
  * @FilePath: /kh-plugin/apps/statistics.js
  * @Description: 头像存储统计
  * 
@@ -14,9 +14,8 @@ import path from 'node:path';
 import { headsDir, orphansDir } from '../components/paths.js';
 import { encodeSafeUid, decodeSafeUid, decodeRedisUid } from '../utils/uid-encoder.js';
 import { scanKeys } from '../components/storage.js';
-import { config, isOperationRunning } from '../components/runtime.js';
+import { config } from '../components/runtime.js';
 import { isDivingGroup } from '../utils/group-policy.js';
-import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 import { log } from '../utils/logger.js';
 
 
@@ -25,6 +24,8 @@ const NEW_FORMAT_RE = /^(.+)_(\d+)\.jpg$/i;
 const STAT_CONCURRENCY = 48;
 const TOP_N_USERS = 50;
 const ORPHAN_PREVIEW_LIMIT = 50;
+
+let orphanCleaning = false;
 
 function formatBytes(bytes) {
     if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
@@ -420,16 +421,25 @@ export class KhStatistics extends plugin {
             };
 
             const forwardMsgData = [];
+            const displayFiles = orphanFiles.slice(0, ORPHAN_PREVIEW_LIMIT);
+            const remaining = total - displayFiles.length;
+
             forwardMsgData.push({
-                message: `闲置头像共 ${total} 个文件。输入 #kh清理闲置头像 可清除。`,
+                message: `闲置头像共 ${total} 个${remaining > 0 ? `（仅展示前 ${ORPHAN_PREVIEW_LIMIT} 个）` : ''}。输入 #kh清理闲置头像 清除全部 ${total} 个闲置头像。`,
                 ...botInfo
             });
-            for (const file of orphanFiles) {
+            for (const file of displayFiles) {
                 forwardMsgData.push({
                     message: [
                         segment.image(file.fullPath),
                         `归档日期: ${file.dateDir} | ${file.filename}`
                     ],
+                    ...botInfo
+                });
+            }
+            if (remaining > 0) {
+                forwardMsgData.push({
+                    message: `还有 ${remaining} 张未展示。`,
                     ...botInfo
                 });
             }
@@ -446,21 +456,11 @@ export class KhStatistics extends plugin {
         if (!e.isMaster) return false;
         if (isDivingGroup(e, config)) return false;
 
-        const lockKey = 'kh:lock:orphan-clean';
-        if (await isOperationRunning(lockKey)) {
+        if (orphanCleaning) {
             await e.reply('当前正在进行清理操作，请稍后再试。');
             return true;
         }
-
-        const lock = await acquireOperationLock(redis, lockKey, 300, 'orphan-clean');
-        if (!lock) {
-            await e.reply('获取操作锁失败，请稍后再试。');
-            return true;
-        }
-
-        const stopRenewer = startLockRenewer(lock, 10_000, async () => {
-            log.e('闲置头像清理操作锁丢失，操作已中断');
-        });
+        orphanCleaning = true;
 
         let tempMsgId = null;
         try {
@@ -492,11 +492,6 @@ export class KhStatistics extends plugin {
                     } catch { /* skip */ }
                 }
             });
-
-            if (!await lock.owns()) {
-                await e.reply('操作锁已丢失，取消清理。');
-                return true;
-            }
 
             let restoredCount = 0;
             let deletedCount = 0;
@@ -587,12 +582,7 @@ export class KhStatistics extends plugin {
             log.e('清理闲置头像失败', error);
             await e.reply('清理闲置头像时发生错误，请查看控制台日志。');
         } finally {
-            stopRenewer();
-            try {
-                await lock.release();
-            } catch (releaseErr) {
-                log.e('[orphan-clean] 释放锁失败', releaseErr);
-            }
+            orphanCleaning = false;
         }
         return true;
     }
