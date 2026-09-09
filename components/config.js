@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 16:28:52
+ * @LastEditTime: 2026-09-09 15:16:57
  * @FilePath: /kh-plugin/components/config.js
  * @Description: 配置文件管理
  * 
@@ -66,8 +66,8 @@ export const defaultConfig = Object.freeze({
   maxRenderLength: 10,
   reverseHistoryThreshold: 999,
   autoUpdateGroups: [],
-  updateSchedule: '0 30 3 * * *',
-  orphanScanSchedule: '0 30 4 * * *',
+  updateSchedule: '30 3 * * *',
+  orphanScanSchedule: '30 4 * * *',
   notifyGroups: [],
   maxNotifyRenderLength: 2,
   monitorCD: 600,
@@ -141,7 +141,20 @@ function normalize(raw = {}, fallbacks = defaultConfig) {
 
 function equalValue(left, right) { return JSON.stringify(left) === JSON.stringify(right); }
 function writeUserOverrides(overrides) {
-  const body = Object.keys(overrides).length ? YAML.stringify(overrides, null, { lineWidth: 0 }) : '';
+  if (!Object.keys(overrides).length) {
+    fs.writeFileSync(userConfigPath, header, 'utf8');
+    return;
+  }
+  const doc = new YAML.Document(overrides);
+  for (const key of ['updateSchedule', 'orphanScanSchedule']) {
+    if (doc.has(key)) {
+      const node = doc.get(key, true);
+      if (node instanceof YAML.Scalar && node.value && typeof node.value === 'string' && node.value.includes('*')) {
+        node.type = 'QUOTE_SINGLE';
+      }
+    }
+  }
+  const body = doc.toString({ lineWidth: 0 });
   const cleaned = body.replace(/^(\s+)"(\d+)":/gm, '$1$2:');
   fs.writeFileSync(userConfigPath, `${header}${cleaned}`, 'utf8');
 }

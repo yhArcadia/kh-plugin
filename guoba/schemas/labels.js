@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:24:34
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-01 19:42:30
+ * @LastEditTime: 2026-09-08 23:57:37
  * @FilePath: /kh-plugin/guoba/schemas/labels.js
  * @Description: 
  * 
@@ -22,5 +22,6 @@ export default {
   groupBlacklist: '群黑名单',
   userBlacklist: '用户黑名单',
   divingGroups: '潜水群',
-  reverseHistoryThreshold: '身份卡片倒序显示'
+  reverseHistoryThreshold: '身份卡片倒序显示',
+  orphanScanSchedule: '闲置头像扫描 Cron'
 };

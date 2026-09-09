@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 01:16:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-03 18:46:55
+ * @LastEditTime: 2026-09-09 15:17:23
  * @FilePath: /kh-plugin/guoba/config-handler.js
  * @Description: 配置数据转换：UI - YAML
  * 
@@ -28,6 +28,18 @@ function toGroupNames(lg) {
   return lg.map(g => ({ groupNames: g.groupIds }));
 }
 
+function toEasyCron(cron) {
+  if (typeof cron !== 'string' || !cron.trim()) return cron;
+  const fields = cron.trim().split(/\s+/);
+  if (fields.length === 6) return fields.slice(1).join(' ');
+  return cron;
+}
+
+function normalizeCron(cron) {
+  if (typeof cron !== 'string' || !cron.trim()) return cron;
+  return cron.trim().replace(/\?/g, '*');
+}
+
 export function getConfigData() {
   const cfg = loadUserConfig();
   const def = cfg.notifyRules?.default || {};
@@ -37,6 +49,8 @@ export function getConfigData() {
   }));
   return {
     ...cfg,
+    updateSchedule: toEasyCron(cfg.updateSchedule),
+    orphanScanSchedule: toEasyCron(cfg.orphanScanSchedule),
     linkedGroups: addDisplay(toGroupNames(linkedGroupsToGuoba(cfg.linkedGroups))),
     notifyDefaultAvatar: def.avatar,
     notifyDefaultNickname: def.nickname,
@@ -48,6 +62,8 @@ export function getConfigData() {
 }
 
 export async function setConfigData(data) {
+  data.updateSchedule = normalizeCron(data.updateSchedule);
+  data.orphanScanSchedule = normalizeCron(data.orphanScanSchedule);
   data.notifyRulesDefault = {
     avatar: data.notifyDefaultAvatar,
     nickname: data.notifyDefaultNickname,

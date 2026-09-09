@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:25:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-05 00:56:10
+ * @LastEditTime: 2026-09-09 15:18:41
  * @FilePath: /kh-plugin/guoba/schemas/tab-advanced.js
  * @Description: 进阶配置页面
  * 
@@ -18,8 +18,12 @@ export default [
   {
     field: 'updateSchedule',
     label: labels.updateSchedule,
-    component: 'Input',
-    bottomHelpMessage: '定时更新 Cron 表达式，例如 0 30 3 * * * 表示每天凌晨 03:30执行一次。'
+    component: 'EasyCron',
+    componentProps: {
+      placeholder: '选择 Cron 表达式',
+      hideSecond: true,
+    },
+    bottomHelpMessage: '定时更新计划，默认每天凌晨03:30执行一次。'
   },
   {
     field: 'autoUpdateGroups',
@@ -55,4 +59,16 @@ export default [
     bottomHelpMessage: '什么时候需要配置互通组：对于同一组织体系下的多个群，其群员会有一定重复。如当"我们"都重复加了某组织的1群和2群，此时"你"在这两个群的身份都对"我"可见，那么在查询"你"的身份时，Bot同时提供"你"在另一个群的身份则有助于"我"了解"你"是谁。\n各组可交叉。'
   },
 
+
+  { component: 'Divider', label: '闲置头像扫描' },
+  {
+    field: 'orphanScanSchedule',
+    label: labels.orphanScanSchedule,
+    component: 'EasyCron',
+    componentProps: {
+      placeholder: '选择 Cron 表达式',
+      hideSecond: true,
+    },
+    bottomHelpMessage: '闲置头像扫描计划，默认每天凌晨04:30执行一次。'
+  },
 ];
