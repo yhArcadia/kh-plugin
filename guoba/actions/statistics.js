@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:55:01
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-01 20:01:53
+ * @LastEditTime: 2026-09-11 23:56:07
  * @FilePath: /kh-plugin/guoba/actions/statistics.js
  * @Description: 统计群成员数量、记录数量、最新记录时间等信息
  * 
@@ -12,6 +12,7 @@ import { loadConfig, configPaths } from '../../components/config.js';
 import { scanHistoryKeys, getHistory } from '../../components/storage.js';
 import { statsCache } from '../config-handler.js';
 import { redisClient, parseKey, normalizeActionArgs } from './helpers.js';
+import { getGroupName } from '../../utils/group-name.js';
 
 const STATS_CACHE_TTL_MS = 30_000;
 
@@ -25,7 +26,7 @@ export async function statistics(input = {}) {
     null,
     {
       count: 250,
-      maxKeys: Math.min(20000, Math.max(1, Number(maxKeys) || 5000))
+      maxKeys: Math.min(200000, Math.max(1, Number(maxKeys) || 50000))
     });
   const groups = new Map();
   let recordCount = 0;
@@ -40,6 +41,25 @@ export async function statistics(input = {}) {
     const latest = history.at(-1)?.recordTime || '';
     if (latest > item.latestRecordTime) item.latestRecordTime = latest;
     groups.set(parsed.groupId, item);
+  }
+  // 从 Bot 缓存获取群名和实际人数
+  const bot = globalThis.Bot;
+  for (const [gid, group] of groups) {
+    group.groupName = String(gid);
+    group.avatar = '';
+    group.actualMemberCount = 0;
+    if (bot) {
+      try {
+        const gl = bot.gl?.get(Number(gid)) || bot.gl?.get(String(gid));
+        if (gl) {
+          group.groupName = gl.group_name || gl.name || String(gid);
+          group.actualMemberCount = gl.member_count || gl.member_num || 0;
+        }
+      } catch {}
+      try {
+        group.avatar = `https://p.qlogo.cn/gh/${gid}/${gid}/100`;
+      } catch {}
+    }
   }
   const result = {
     capped: keys.length >= maxKeys,

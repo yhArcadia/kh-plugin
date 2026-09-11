@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-10 18:22:04
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-11 19:15:17
+ * @LastEditTime: 2026-09-12 00:24:47
  * @FilePath: /kh-plugin/guoba/dashboard/server.js
  * @Description: 
  * 
@@ -12,6 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { resolveHeadPath } from '../../components/paths.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -56,28 +57,51 @@ export function initDashboard() {
     return;
   }
 
-  console.log('[kh-plugin] 正在注册仪表盘路由...');
-
   const dashboardDir = __dirname;
 
   // 静态文件路由
   function serveFile(res, filename, mime) {
     const fp = path.join(dashboardDir, filename);
-    console.log('[kh-plugin] serveFile:', filename, '->', fp, fs.existsSync(fp) ? 'EXISTS' : 'MISSING');
     try {
       const content = fs.readFileSync(fp);
       res.setHeader('Content-Type', mime);
       res.setHeader('Cache-Control', 'public, max-age=3600');
       res.end(content);
-      console.log('[kh-plugin] serveFile:', filename, 'OK,', content.length, 'bytes');
-    } catch (e) {
-      console.log('[kh-plugin] serveFile:', filename, 'ERROR:', e.message);
+    } catch {
       res.statusCode = 404;
       res.end('Not Found');
     }
   }
   app.get('/kh-plugin/dashboard/style.css', (req, res) => serveFile(res, 'style.css', 'text/css; charset=utf-8'));
   app.get('/kh-plugin/dashboard/app.js',   (req, res) => serveFile(res, 'app.js',   'application/javascript; charset=utf-8'));
+  app.get('/kh-plugin/dashboard/icon.png', (req, res) => {
+    const fp = path.join(path.dirname(__dirname), '..', 'resources', 'img', 'icon.png');
+    try {
+      const content = fs.readFileSync(fp);
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Cache-Control', 'public, max-age=604800');
+      res.end(content);
+    } catch {
+      res.statusCode = 404;
+      res.end('Not Found');
+    }
+  });
+
+  app.get('/kh-plugin/dashboard/avatar', (req, res) => {
+    const { uid, headtime, gid } = req.query;
+    if (!uid || !headtime) { res.statusCode = 400; res.end('Missing params'); return; }
+    const fp = resolveHeadPath(uid, headtime, gid || undefined);
+    if (!fp) { res.statusCode = 404; res.end('Not Found'); return; }
+    try {
+      const content = fs.readFileSync(fp);
+      res.setHeader('Content-Type', 'image/jpeg');
+      res.setHeader('Cache-Control', 'public, max-age=604800');
+      res.end(content);
+    } catch {
+      res.statusCode = 404;
+      res.end('Not Found');
+    }
+  });
 
   // HTML 页面路由（注入锅巴挂载前缀）
   app.get('/kh-plugin/dashboard', serveIndex);

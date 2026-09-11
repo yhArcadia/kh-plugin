@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-10 18:24:17
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-11 19:14:59
+ * @LastEditTime: 2026-09-12 00:26:37
  * @FilePath: /kh-plugin/guoba/dashboard/index.html
  * @Description: 
  * 
@@ -14,6 +14,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>kh-plugin 数据看板</title>
+<link rel="icon" href="/kh-plugin/dashboard/icon.png" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 <link rel="stylesheet" href="/kh-plugin/dashboard/style.css">
 </head>
@@ -48,8 +49,9 @@
           <table>
             <thead>
               <tr>
-                <th data-sort="groupId" style="width:140px">群号 <span class="sort-icon">⇅</span></th>
-                <th data-sort="members" style="width:100px">成员数 <span class="sort-icon">⇅</span></th>
+                <th style="width:48px"></th>
+                <th>群</th>
+                <th data-sort="actualMemberCount" style="width:100px">成员数 <span class="sort-icon">⇅</span></th>
                 <th data-sort="records" style="width:100px">记录数 <span class="sort-icon">⇅</span></th>
                 <th data-sort="latestRecordTime" style="width:160px">最新记录 <span class="sort-icon">⇅</span></th>
               </tr>
@@ -72,7 +74,7 @@
           <table>
             <thead>
               <tr>
-                <th style="width:120px">QQ</th>
+                <th style="width:48px"></th>
                 <th>昵称 / 群名片</th>
                 <th style="width:80px">记录数</th>
                 <th style="width:160px">最近记录</th>
@@ -119,6 +121,11 @@
     </div>
     <div class="modal-body" id="historyModalBody"></div>
   </div>
+</div>
+
+<div class="img-viewer-overlay hidden" id="imgViewer" onclick="closeImageViewer()">
+  <span class="img-viewer-close" onclick="closeImageViewer()">✕</span>
+  <img id="imgViewerImg" src="" alt="" />
 </div>
 
 <script>

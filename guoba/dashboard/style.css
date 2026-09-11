@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-11 18:34:32
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-11 19:15:34
+ * @LastEditTime: 2026-09-12 00:31:22
  * @FilePath: /kh-plugin/guoba/dashboard/style.css
  * @Description: 
  * 
@@ -32,7 +32,7 @@ a{color:var(--primary);text-decoration:none}
 .panel-body{padding:20px}
 .panel-body.no-padding{padding:0}
 .table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
 th,td{padding:10px 14px;text-align:left;font-size:14px;border-bottom:1px solid var(--border)}
 th{background:var(--bg-hover);color:var(--text-secondary);font-weight:500;white-space:nowrap;cursor:pointer;user-select:none;position:sticky;top:0;z-index:1}
 th:hover{color:var(--text)}
@@ -92,3 +92,15 @@ td.mono{font-family:"SF Mono","Cascadia Code",Consolas,monospace;font-size:13px}
 .error-state{text-align:center;padding:60px 20px}
 .error-state h2{font-size:18px;margin-bottom:8px;color:var(--text-secondary)}
 .error-state p{color:var(--text-muted);font-size:14px;margin-bottom:16px}
+
+.avatar-img{cursor:pointer;transition:opacity .15s}
+.avatar-img:hover{opacity:.85}
+.timeline-avatar{cursor:pointer;transition:opacity .15s}
+.timeline-avatar:hover{opacity:.85}
+
+.img-viewer-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;animation:fadeIn .15s ease}
+.img-viewer-overlay img{max-width:90vw;max-height:90vh;object-fit:contain;box-shadow:0 4px 40px rgba(0,0,0,.5);border-radius:4px}
+.img-viewer-close{position:absolute;top:16px;right:20px;color:#fff;font-size:28px;cursor:pointer;opacity:.7;transition:opacity .15s;line-height:1}
+.img-viewer-close:hover{opacity:1}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}

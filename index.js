@@ -130,7 +130,7 @@ if (migration.status === 'migrated') {
 
   boxLines.push(boxLine('欢迎加群交流＆反馈：134086404'));
 
-  import('./guoba/dashboard-server.js').then(m => m.initDashboard()).catch(e => log.w('看板初始化失败:', e.message));
+  import('./guoba/dashboard/server.js').then(m => m.initDashboard()).catch(e => log.w('看板初始化失败:', e.message));
 
   printBox(boxLines);
 }

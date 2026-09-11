@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-11 18:38:07
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-11 19:14:17
+ * @LastEditTime: 2026-09-12 00:26:46
  * @FilePath: /kh-plugin/guoba/dashboard/app.js
  * @Description: 
  * 
@@ -38,27 +38,21 @@ function findToken() {
     return v && typeof v === 'string' && v.length > 20;
   }
 
-  console.log('[kh-dashboard] findToken: scanning localStorage keys...');
   const allKeys = [];
   for (const storage of [localStorage, sessionStorage]) {
     for (let i = 0; i < storage.length; i++) {
       const k = storage.key(i);
       allKeys.push(k);
-      console.log('[kh-dashboard] key[' + i + ']:', k);
     }
   }
-  console.log('[kh-dashboard] findToken: total keys found:', allKeys.length);
 
   for (const storage of [localStorage, sessionStorage]) {
     for (let i = 0; i < storage.length; i++) {
       const key = storage.key(i);
       if (key && key.endsWith('__TOKEN__')) {
-        console.log('[kh-dashboard] findToken: matched __TOKEN__ key:', key);
         const encrypted = storage.getItem(key);
         if (encrypted) {
-          console.log('[kh-dashboard] findToken: encrypted value length:', encrypted.length, 'preview:', encrypted.slice(0, 30));
           const data = decryptAES(encrypted);
-          console.log('[kh-dashboard] findToken: decrypted data:', JSON.stringify(data).slice(0, 200));
           if (data?.value && isValidToken(data.value)) return data.value;
           if (isValidToken(data)) return data;
         }
@@ -72,23 +66,18 @@ function findToken() {
     for (let i = 0; i < storage.length; i++) {
       const key = storage.key(i);
       if (key && key.endsWith(cacheSuffixes[idx])) {
-        console.log('[kh-dashboard] findToken: matched cache key:', key);
         const encrypted = storage.getItem(key);
         if (encrypted) {
           const cache = decryptAES(encrypted);
-          console.log('[kh-dashboard] findToken: cache keys:', cache ? Object.keys(cache) : 'NULL');
           const valueObj = cache?.value;
-          console.log('[kh-dashboard] findToken: valueObj keys:', valueObj ? Object.keys(valueObj) : 'NULL');
           const tokenEntry = valueObj?.TOKEN__;
           const token = tokenEntry?.value;
-          console.log('[kh-dashboard] findToken: tokenEntry:', tokenEntry, 'token preview:', token ? token.slice(0, 20) : 'NULL');
           if (isValidToken(token)) return token;
         }
       }
     }
   }
 
-  console.log('[kh-dashboard] findToken: no token found, returning null');
   return null;
 }
 
@@ -99,7 +88,6 @@ async function apiCall(action, body) {
   }
   const url = `${API_BASE}/api/plugin/do/kh-plugin/action`;
   const payload = { action, args: body || {} };
-  console.log('[kh-dashboard] apiCall:', action, 'token:', token ? token.slice(0, 20) + '...' : 'null');
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 15000);
   const fetchOpts = {
@@ -113,7 +101,6 @@ async function apiCall(action, body) {
   };
   const res = await fetch(url, fetchOpts);
   clearTimeout(timer);
-  console.log('[kh-dashboard] apiCall response status:', res.status);
   if (res.status === 401) {
     token = findToken();
     if (token) {
@@ -121,14 +108,12 @@ async function apiCall(action, body) {
       const retry = await fetch(url, fetchOpts);
       if (retry.status === 401) throw new Error('AUTH_FAILED');
       const retryJson = await retry.json();
-      console.log('[kh-dashboard] retry json:', JSON.stringify(retryJson).slice(0, 200));
       if (retryJson.code !== 0) throw new Error(retryJson.message || '请求失败');
       return retryJson.result;
     }
     throw new Error('AUTH_FAILED');
   }
   const json = await res.json();
-  console.log('[kh-dashboard] apiCall json:', JSON.stringify(json).slice(0, 300));
   if (json.code !== 0) throw new Error(json.message || '请求失败');
   return json.result;
 }
@@ -204,9 +189,10 @@ function renderGroupTable(groups) {
   document.getElementById('groupEmpty').classList.add('hidden');
 
   tbody.innerHTML = groups.map(g => `
-    <tr onclick="selectGroup(${g.groupId})" data-gid="${g.groupId}">
-      <td class="mono">${g.groupId}</td>
-      <td>${g.members}</td>
+    <tr onclick="selectGroup(${g.groupId}, '${(g.groupName || '').replace(/'/g, "\\'")}')" data-gid="${g.groupId}">
+      <td>${g.avatar ? `<img class="avatar-img" src="${g.avatar}" alt="" loading="lazy" onerror="this.style.display='none'" style="width:36px;height:36px">` : ''}</td>
+      <td>${g.groupName || String(g.groupId)}</td>
+      <td>${g.actualMemberCount || g.members}</td>
       <td>${g.records}</td>
       <td>${formatTime(g.latestRecordTime)}</td>
     </tr>
@@ -229,7 +215,7 @@ async function loadOverview() {
   document.getElementById('groupLoading').classList.remove('hidden');
   document.getElementById('groupEmpty').classList.add('hidden');
   try {
-    const data = await apiCall('statistics', { maxKeys: 5000 });
+    const data = await apiCall('statistics', { maxKeys: 50000 });
     groupsData = data.groups || [];
     renderOverview(data);
     sortGroups();
@@ -272,11 +258,11 @@ async function loadBlacklist() {
   }
 }
 
-async function selectGroup(gid) {
+async function selectGroup(gid, gname) {
   currentMemberGid = gid;
   currentMemberPage = 1;
   document.getElementById('memberPanel').classList.remove('hidden');
-  document.getElementById('memberPanelTitle').textContent = gid;
+  document.getElementById('memberPanelTitle').textContent = gname || gid;
   document.getElementById('memberPanel').scrollIntoView({ behavior: 'smooth' });
 
   document.querySelectorAll('#groupTableBody tr').forEach(tr => {
@@ -308,14 +294,23 @@ async function loadMembers() {
     if (data.items.length === 0) {
       document.getElementById('memberEmpty').classList.remove('hidden');
     } else {
-      document.getElementById('memberTableBody').innerHTML = data.items.map(m => `
-        <tr onclick="showMemberHistory(${currentMemberGid}, ${m.userId}, '${(m.card || m.nickname || '').replace(/'/g, "\\'")}')" style="cursor:pointer">
-          <td class="mono">${m.userId}</td>
-          <td>${m.card || m.nickname || '-'}${m.card && m.nickname && m.card !== m.nickname ? '<br><span style="color:var(--text-muted);font-size:12px">' + m.nickname + '</span>' : ''}</td>
+      document.getElementById('memberTableBody').innerHTML = data.items.map(m => {
+        const avatarUrl = `https://q1.qlogo.cn/g?b=qq&s=100&nk=${m.userId}`;
+        const displayName = m.card || m.nickname || String(m.userId);
+        const subName = (m.card && m.nickname && m.card !== m.nickname) ? m.nickname : '';
+        const escapedDisplay = displayName.replace(/'/g, "\\'");
+        return `
+        <tr onclick="showMemberHistory(${currentMemberGid}, '${String(m.userId).replace(/'/g, "\\'")}', '${escapedDisplay}')" style="cursor:pointer">
+          <td><img class="avatar-img" src="${avatarUrl}" alt="" loading="lazy" onerror="this.style.display='none'" onclick="openImageViewer(event);event.stopPropagation()"></td>
+          <td>
+            <span>${displayName}</span>
+            <span style="color:var(--text-muted);font-size:12px;margin-left:8px">${m.userId}</span>
+            ${subName ? `<br><span style="color:var(--text-muted);font-size:12px">${subName}</span>` : ''}
+          </td>
           <td>${m.records}</td>
           <td>${formatTime(m.recordTime)}</td>
         </tr>
-      `).join('');
+      `}).join('');
     }
 
     const totalPages = Math.ceil(data.totalMembers / MEMBER_PAGE_SIZE) || 1;
@@ -351,7 +346,8 @@ async function showMemberHistory(gid, uid, displayName) {
     }
 
     body.innerHTML = '<div class="timeline">' + records.map((r, i) => {
-      const avatarUrl = `https://q1.qlogo.cn/g?b=qq&s=100&nk=${uid}`;
+      const avatarNk = r.user_id || uid;
+      const avatarUrl = r.localAvatarUrl || `https://q1.qlogo.cn/g?b=qq&s=100&nk=${avatarNk}`;
       return `
         <div class="timeline-item">
           <div class="timeline-dot"></div>
@@ -381,10 +377,8 @@ function closeHistoryModal() {
 }
 
 async function refresh() {
-  console.log('[kh-dashboard] refresh() start, v=20260911');
   hideError();
   token = findToken();
-  console.log('[kh-dashboard] findToken result:', token ? token.slice(0, 30) + '...' : 'NULL');
   if (!token) {
     showError('🔐 未检测到登录状态', '请先在浏览器中打开锅巴后台并登录，然后刷新本页面。');
     return;
@@ -396,10 +390,7 @@ async function refresh() {
   btn.disabled = true;
   try {
     await Promise.all([loadOverview(), loadBlacklist()]);
-    console.log('[kh-dashboard] refresh() done');
-  } catch(e) {
-    console.error('[kh-dashboard] refresh() error:', e.message);
-  }
+  } catch(e) {}
   btn.textContent = '🔄 刷新';
   btn.disabled = false;
 }
@@ -421,9 +412,29 @@ document.querySelectorAll('th[data-sort]').forEach(th => {
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
+    closeImageViewer();
     closeHistoryModal();
     closeMemberPanel();
   }
+});
+
+function openImageViewer(e) {
+  e.stopPropagation();
+  let src = e.target.src || '';
+  if (!src) return;
+  src = src.replace(/([?&])s=\d+(&|$)/, '$1s=0$2');
+  document.getElementById('imgViewerImg').src = src;
+  document.getElementById('imgViewer').classList.remove('hidden');
+}
+
+function closeImageViewer() {
+  document.getElementById('imgViewer').classList.add('hidden');
+  document.getElementById('imgViewerImg').src = '';
+}
+
+document.addEventListener('click', e => {
+  const img = e.target.closest('.timeline-avatar');
+  if (img) openImageViewer(e);
 });
 
 refresh();

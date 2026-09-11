@@ -62,6 +62,9 @@ export async function memberHistory(input = {}) {
     userId: uid,
     totalRecords: history.length,
     truncated: history.length > limit,
-    records: history.slice(-limit)
+    records: history.slice(-limit).map(r => ({
+      ...r,
+      localAvatarUrl: r.headtime ? `/kh-plugin/dashboard/avatar?uid=${r.user_id || uid}&headtime=${r.headtime}&gid=${gid}` : null
+    }))
   };
 }
