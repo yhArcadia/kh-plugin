@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-11 18:34:32
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-12 00:31:22
+ * @LastEditTime: 2026-09-12 00:50:16
  * @FilePath: /kh-plugin/guoba/dashboard/style.css
  * @Description: 
  * 
@@ -81,6 +81,11 @@ td.mono{font-family:"SF Mono","Cascadia Code",Consolas,monospace;font-size:13px}
 .tab:hover{color:var(--text)}
 .tab.active{color:var(--primary);border-bottom-color:var(--primary)}
 .hidden{display:none!important}
+.search-bar{display:flex;gap:10px;margin-bottom:20px}
+.search-input{flex:1;padding:10px 16px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--text);font-size:14px;outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--primary)}
+.search-input::placeholder{color:var(--text-muted)}
+.btn-sm{padding:5px 12px;font-size:12px}
 .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;background:rgba(23,125,220,.1);color:var(--primary)}
 .gap-8{gap:8px}
 .mt-8{margin-top:8px}

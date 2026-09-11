@@ -415,6 +415,7 @@ document.addEventListener('keydown', e => {
     closeImageViewer();
     closeHistoryModal();
     closeMemberPanel();
+    closeSearchPanel();
   }
 });
 
@@ -436,5 +437,84 @@ document.addEventListener('click', e => {
   const img = e.target.closest('.timeline-avatar');
   if (img) openImageViewer(e);
 });
+
+let searchActive = false;
+
+document.getElementById('searchInput').addEventListener('input', () => {
+  filterGroups();
+});
+
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+
+function filterGroups() {
+  if (searchActive) return;
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (!q) { sortGroups(); return; }
+  const filtered = groupsData.filter(g =>
+    String(g.groupId).toLowerCase().includes(q) ||
+    (g.groupName || '').toLowerCase().includes(q)
+  );
+  renderGroupTable(filtered);
+}
+
+async function doSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (!q) return;
+
+  const panel = document.getElementById('searchPanel');
+  const tbody = document.getElementById('searchTableBody');
+  const empty = document.getElementById('searchEmpty');
+  const count = document.getElementById('searchResultCount');
+
+  searchActive = true;
+  panel.classList.remove('hidden');
+  tbody.innerHTML = '<tr><td colspan="5" class="loading">搜索中...</td></tr>';
+  empty.classList.add('hidden');
+
+  try {
+    const data = await apiCall('search', { query: q, limit: 30 });
+    const items = data.items || [];
+    count.textContent = `共 ${items.length} 条${data.capped ? '+' : ''}`;
+
+    if (items.length === 0) {
+      tbody.innerHTML = '';
+      empty.classList.remove('hidden');
+      return;
+    }
+
+    tbody.innerHTML = items.map(r => {
+      const userId = r.userId || '';
+      const nickname = r.nickname || '';
+      const card = r.card || '';
+      const displayName = card || nickname || userId;
+      const subName = (card && nickname && card !== nickname) ? nickname : '';
+      const groupId = r.groupId || '';
+      const escapedDisplay = displayName.replace(/'/g, "\\'");
+      return `
+        <tr onclick="showMemberHistory(${groupId}, '${String(userId).replace(/'/g, "\\'")}', '${escapedDisplay}')" style="cursor:pointer">
+          <td><img class="avatar-img" src="https://q1.qlogo.cn/g?b=qq&s=100&nk=${userId}" alt="" loading="lazy" onerror="this.style.display='none'" onclick="openImageViewer(event);event.stopPropagation()"></td>
+          <td>
+            <span>${displayName}</span>
+            <span style="color:var(--text-muted);font-size:12px;margin-left:8px">${userId}</span>
+            ${subName ? '<br><span style="color:var(--text-muted);font-size:12px">' + subName + '</span>' : ''}
+          </td>
+          <td>${r.groupName || groupId}</td>
+          <td>${r.records}</td>
+          <td>${formatTime(r.latestRecordTime)}</td>
+        </tr>
+      `;
+    }).join('');
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty">搜索失败: ${err.message}</td></tr>`;
+  }
+}
+
+function closeSearchPanel() {
+  searchActive = false;
+  document.getElementById('searchPanel').classList.add('hidden');
+  filterGroups();
+}
 
 refresh();

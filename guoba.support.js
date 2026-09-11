@@ -1,6 +1,16 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:26:02
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-12 00:45:04
+ * @FilePath: /kh-plugin/guoba.support.js
+ * @Description: 
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
 import { pluginRoot } from './components/paths.js';
 import { getConfigData, setConfigData } from './guoba/config-handler.js';
-import { statistics, members, memberHistory, blacklistPreview, runAction } from './guoba/actions/index.js';
+import { statistics, members, memberHistory, blacklistPreview, search, runAction } from './guoba/actions/index.js';
 import configuration_schemas from './guoba/schemas/schema.js';
 import path from 'path';
 
@@ -28,7 +38,8 @@ export function supportGuoba() {
         statistics: (args, ctx) => runAction(statistics, args, ctx),
         members: (args, ctx) => runAction(members, args, ctx),
         memberHistory: (args, ctx) => runAction(memberHistory, args, ctx),
-        blacklistPreview: (args, ctx) => runAction(blacklistPreview, args, ctx)
+        blacklistPreview: (args, ctx) => runAction(blacklistPreview, args, ctx),
+        search: (args, ctx) => runAction(search, args, ctx)
       }
     }
   };

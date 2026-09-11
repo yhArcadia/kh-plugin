@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-10 18:24:17
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-12 00:26:37
+ * @LastEditTime: 2026-09-12 00:40:34
  * @FilePath: /kh-plugin/guoba/dashboard/index.html
  * @Description: 
  * 
@@ -26,6 +26,11 @@
       <button class="btn" onclick="location.href='/guoba/'" title="返回锅巴后台">← 锅巴后台</button>
       <button class="btn btn-primary" id="refreshBtn" onclick="refresh()">🔄 刷新</button>
     </div>
+  </div>
+
+  <div class="search-bar" id="searchBar">
+    <input type="text" class="search-input" id="searchInput" placeholder="搜索群名 / 群号 / 昵称 / QQ号…" autocomplete="off">
+    <button class="btn btn-primary" onclick="doSearch()">🔍 搜索</button>
   </div>
 
   <div id="errorState" class="hidden">
@@ -108,6 +113,31 @@
           </table>
         </div>
         <div class="empty hidden" id="blacklistEmpty">暂无黑名单用户</div>
+      </div>
+    </div>
+
+    <div class="panel hidden" id="searchPanel">
+      <div class="panel-header">
+        <span>🔍 搜索结果</span>
+        <span style="font-size:13px;color:var(--text-muted)" id="searchResultCount"></span>
+        <button class="btn btn-sm" onclick="closeSearchPanel()" style="margin-left:auto">✕ 关闭</button>
+      </div>
+      <div class="panel-body no-padding">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:48px"></th>
+                <th>用户</th>
+                <th style="width:100px">所在群</th>
+                <th style="width:80px">记录数</th>
+                <th style="width:160px">最新记录</th>
+              </tr>
+            </thead>
+            <tbody id="searchTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty hidden" id="searchEmpty">未找到匹配结果</div>
       </div>
     </div>
   </div>
