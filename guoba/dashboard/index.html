@@ -1,0 +1,129 @@
+<!--
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-09-10 18:24:17
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-11 19:14:59
+ * @FilePath: /kh-plugin/guoba/dashboard/index.html
+ * @Description: 
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+-->
+<!DOCTYPE html>
+<html lang="zh-Hans" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kh-plugin 数据看板</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+<link rel="stylesheet" href="/kh-plugin/dashboard/style.css">
+</head>
+<body>
+<div class="container" id="app">
+  <div class="header">
+    <h1>🔥 kh-plugin 数据看板</h1>
+    <div class="header-actions">
+      <button class="btn" onclick="location.href='/guoba/'" title="返回锅巴后台">← 锅巴后台</button>
+      <button class="btn btn-primary" id="refreshBtn" onclick="refresh()">🔄 刷新</button>
+    </div>
+  </div>
+
+  <div id="errorState" class="hidden">
+    <div class="error-state">
+      <h2 id="errorTitle">⚠️ 连接失败</h2>
+      <p id="errorMsg">请确保已登录锅巴后台，然后刷新页面。</p>
+      <button class="btn btn-primary" onclick="refresh()">🔄 重试</button>
+    </div>
+  </div>
+
+  <div id="mainContent" class="hidden">
+    <div class="cards" id="overviewCards"></div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <span>📋 群数据明细</span>
+        <span style="font-size:13px;color:var(--text-muted)" id="groupCount"></span>
+      </div>
+      <div class="panel-body no-padding">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-sort="groupId" style="width:140px">群号 <span class="sort-icon">⇅</span></th>
+                <th data-sort="members" style="width:100px">成员数 <span class="sort-icon">⇅</span></th>
+                <th data-sort="records" style="width:100px">记录数 <span class="sort-icon">⇅</span></th>
+                <th data-sort="latestRecordTime" style="width:160px">最新记录 <span class="sort-icon">⇅</span></th>
+              </tr>
+            </thead>
+            <tbody id="groupTableBody"></tbody>
+          </table>
+        </div>
+        <div class="loading hidden" id="groupLoading"><span class="spinner"></span> 加载中...</div>
+        <div class="empty hidden" id="groupEmpty">暂无群数据</div>
+      </div>
+    </div>
+
+    <div class="panel hidden" id="memberPanel">
+      <div class="panel-header">
+        <span>👤 群成员详情 — <span id="memberPanelTitle"></span></span>
+        <button class="btn btn-sm" onclick="closeMemberPanel()">✕ 关闭</button>
+      </div>
+      <div class="panel-body no-padding">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:120px">QQ</th>
+                <th>昵称 / 群名片</th>
+                <th style="width:80px">记录数</th>
+                <th style="width:160px">最近记录</th>
+              </tr>
+            </thead>
+            <tbody id="memberTableBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="memberPagination"></div>
+        <div class="loading hidden" id="memberLoading"><span class="spinner"></span> 加载中...</div>
+        <div class="empty hidden" id="memberEmpty">该群暂无成员记录</div>
+      </div>
+    </div>
+
+    <div class="panel" id="blacklistPanel">
+      <div class="panel-header">
+        <span>🚫 黑名单预览</span>
+        <span style="font-size:13px;color:var(--text-muted)" id="blacklistCount"></span>
+      </div>
+      <div class="panel-body no-padding">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:60px"></th>
+                <th style="width:130px">QQ</th>
+                <th>昵称</th>
+              </tr>
+            </thead>
+            <tbody id="blacklistTableBody"></tbody>
+          </table>
+        </div>
+        <div class="empty hidden" id="blacklistEmpty">暂无黑名单用户</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="historyModal" onclick="if(event.target===this)closeHistoryModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="historyModalTitle">📜 成员历史记录</h3>
+      <button class="modal-close" onclick="closeHistoryModal()">✕</button>
+    </div>
+    <div class="modal-body" id="historyModalBody"></div>
+  </div>
+</div>
+
+<script>
+window.__GUOBA_MOUNT_PREFIX__ = '/guoba-plugin-mock-root';
+</script>
+<script src="/kh-plugin/dashboard/app.js"></script>
+</body>
+</html>

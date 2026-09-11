@@ -1,0 +1,94 @@
+/*
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-09-11 18:34:32
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-11 19:15:34
+ * @FilePath: /kh-plugin/guoba/dashboard/style.css
+ * @Description: 
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html[data-theme="dark"]{--bg:#141414;--bg-card:#1f1f1f;--bg-hover:#2a2a2a;--border:#303030;--text:#e8e8e8;--text-secondary:#a0a0a0;--text-muted:#666;--primary:#177ddc;--primary-hover:#1a8af0;--success:#49aa19;--warning:#d89614;--danger:#d32029;--shadow:0 2px 8px rgba(0,0,0,.3)}
+html{--bg:#f5f5f5;--bg-card:#fff;--bg-hover:#fafafa;--border:#f0f0f0;--text:#333;--text-secondary:#888;--text-muted:#bbb;--primary:#1677ff;--primary-hover:#4096ff;--success:#52c41a;--warning:#faad14;--danger:#ff4d4f;--shadow:0 2px 8px rgba(0,0,0,.08)}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans SC",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+a{color:var(--primary);text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:24px 16px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.header h1{font-size:22px;font-weight:600}
+.header-actions{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:14px;transition:all .2s;white-space:nowrap}
+.btn:hover{background:var(--bg-hover);border-color:var(--primary)}
+.btn-primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover)}
+.btn-sm{padding:4px 10px;font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:20px;box-shadow:var(--shadow)}
+.card-label{font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+.card-value{font-size:28px;font-weight:700;color:var(--text)}
+.card-sub{font-size:12px;color:var(--text-muted);margin-top:4px}
+.panel{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow);margin-bottom:20px}
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);font-weight:600;font-size:15px}
+.panel-body{padding:20px}
+.panel-body.no-padding{padding:0}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px 14px;text-align:left;font-size:14px;border-bottom:1px solid var(--border)}
+th{background:var(--bg-hover);color:var(--text-secondary);font-weight:500;white-space:nowrap;cursor:pointer;user-select:none;position:sticky;top:0;z-index:1}
+th:hover{color:var(--text)}
+th .sort-icon{margin-left:4px;font-size:11px;opacity:.4}
+th.sorted .sort-icon{opacity:1;color:var(--primary)}
+tbody tr{cursor:pointer;transition:background .15s}
+tbody tr:hover{background:var(--bg-hover)}
+tbody tr.active{background:rgba(23,125,220,.1)}
+td.mono{font-family:"SF Mono","Cascadia Code",Consolas,monospace;font-size:13px}
+.avatar-cell{display:flex;align-items:center;gap:8px}
+.avatar-img{width:32px;height:32px;border-radius:50%;object-fit:cover;background:var(--border);flex-shrink:0}
+.empty{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px}
+.pagination{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 0}
+.pagination .btn:disabled{opacity:.4;cursor:not-allowed}
+.pagination-info{font-size:13px;color:var(--text-secondary);min-width:100px;text-align:center}
+.loading{text-align:center;padding:30px;color:var(--text-muted)}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;width:100%;max-width:720px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.4)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.modal-header h3{font-size:16px;font-weight:600}
+.modal-close{background:none;border:none;color:var(--text-secondary);font-size:20px;cursor:pointer;line-height:1;padding:4px}
+.modal-close:hover{color:var(--text)}
+.modal-body{overflow-y:auto;padding:20px;flex:1}
+.timeline{position:relative;padding-left:40px}
+.timeline::before{content:'';position:absolute;left:14px;top:0;bottom:0;width:2px;background:var(--border)}
+.timeline-item{position:relative;margin-bottom:20px;padding-bottom:4px}
+.timeline-item:last-child{margin-bottom:0}
+.timeline-dot{position:absolute;left:-32px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--primary);border:2px solid var(--bg-card);z-index:1}
+.timeline-time{font-size:12px;color:var(--text-muted);margin-bottom:4px}
+.timeline-card{background:var(--bg-hover);border:1px solid var(--border);border-radius:6px;padding:12px;display:flex;gap:12px;align-items:flex-start}
+.timeline-avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--border)}
+.timeline-info{flex:1;min-width:0}
+.timeline-name{font-weight:600;font-size:14px;margin-bottom:4px}
+.timeline-detail{font-size:13px;color:var(--text-secondary);display:grid;grid-template-columns:auto 1fr;gap:2px 8px}
+.timeline-detail dt{color:var(--text-muted);white-space:nowrap}
+.timeline-detail dd{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:11px;font-weight:500}
+.badge-owner{background:rgba(255,123,1,.15);color:#ff7b01}
+.badge-admin{background:rgba(31,177,159,.15);color:#1fb19f}
+.badge-title{background:rgba(171,93,212,.15);color:#ab5dd4}
+.badge-member{background:rgba(136,136,136,.15);color:#888}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:0}
+.tab{padding:10px 20px;font-size:14px;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.hidden{display:none!important}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;background:rgba(23,125,220,.1);color:var(--primary)}
+.gap-8{gap:8px}
+.mt-8{margin-top:8px}
+.mt-16{margin-top:16px}
+.flex{display:flex}
+.flex-wrap{flex-wrap:wrap}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.error-state{text-align:center;padding:60px 20px}
+.error-state h2{font-size:18px;margin-bottom:8px;color:var(--text-secondary)}
+.error-state p{color:var(--text-muted);font-size:14px;margin-bottom:16px}

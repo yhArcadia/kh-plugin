@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 21:58:23
+ * @LastEditTime: 2026-09-11 19:18:15
  * @FilePath: /kh-plugin/index.js
  * @Description: 插件入口
  * 
@@ -129,6 +129,9 @@ if (migration.status === 'migrated') {
   }
 
   boxLines.push(boxLine('欢迎加群交流＆反馈：134086404'));
+
+  import('./guoba/dashboard-server.js').then(m => m.initDashboard()).catch(e => log.w('看板初始化失败:', e.message));
+
   printBox(boxLines);
 }
 
