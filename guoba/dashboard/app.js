@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-11 18:38:07
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-12 00:26:46
+ * @LastEditTime: 2026-09-12 15:20:32
  * @FilePath: /kh-plugin/guoba/dashboard/app.js
  * @Description: 
  * 
@@ -16,6 +16,9 @@ let sortField = 'records';
 let sortAsc = false;
 let currentMemberGid = null;
 let currentMemberPage = 1;
+let memberSortField = 'records';
+let memberSortAsc = false;
+let memberItems = [];
 const MEMBER_PAGE_SIZE = 30;
 
 function findToken() {
@@ -291,26 +294,12 @@ async function loadMembers() {
       pageSize: MEMBER_PAGE_SIZE
     });
 
-    if (data.items.length === 0) {
+    memberItems = data.items || [];
+
+    if (memberItems.length === 0) {
       document.getElementById('memberEmpty').classList.remove('hidden');
     } else {
-      document.getElementById('memberTableBody').innerHTML = data.items.map(m => {
-        const avatarUrl = `https://q1.qlogo.cn/g?b=qq&s=100&nk=${m.userId}`;
-        const displayName = m.card || m.nickname || String(m.userId);
-        const subName = (m.card && m.nickname && m.card !== m.nickname) ? m.nickname : '';
-        const escapedDisplay = displayName.replace(/'/g, "\\'");
-        return `
-        <tr onclick="showMemberHistory(${currentMemberGid}, '${String(m.userId).replace(/'/g, "\\'")}', '${escapedDisplay}')" style="cursor:pointer">
-          <td><img class="avatar-img" src="${avatarUrl}" alt="" loading="lazy" onerror="this.style.display='none'" onclick="openImageViewer(event);event.stopPropagation()"></td>
-          <td>
-            <span>${displayName}</span>
-            <span style="color:var(--text-muted);font-size:12px;margin-left:8px">${m.userId}</span>
-            ${subName ? `<br><span style="color:var(--text-muted);font-size:12px">${subName}</span>` : ''}
-          </td>
-          <td>${m.records}</td>
-          <td>${formatTime(m.recordTime)}</td>
-        </tr>
-      `}).join('');
+      sortMembers();
     }
 
     const totalPages = Math.ceil(data.totalMembers / MEMBER_PAGE_SIZE) || 1;
@@ -325,6 +314,47 @@ async function loadMembers() {
   } finally {
     document.getElementById('memberLoading').classList.add('hidden');
   }
+}
+
+function sortMembers() {
+  memberItems.sort((a, b) => {
+    let va, vb;
+    if (memberSortField === 'displayName') {
+      va = (a.card || a.nickname || String(a.userId)).toLowerCase();
+      vb = (b.card || b.nickname || String(b.userId)).toLowerCase();
+      return memberSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+    }
+    if (memberSortField === 'recordTime') {
+      va = a.recordTime || '0';
+      vb = b.recordTime || '0';
+      return memberSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+    }
+    va = a[memberSortField] || 0;
+    vb = b[memberSortField] || 0;
+    return memberSortAsc ? va - vb : vb - va;
+  });
+  renderMemberTable();
+}
+
+function renderMemberTable() {
+  document.getElementById('memberTableBody').innerHTML = memberItems.map(m => {
+    const avatarUrl = `https://q1.qlogo.cn/g?b=qq&s=100&nk=${m.userId}`;
+    const displayName = m.card || m.nickname || String(m.userId);
+    const subName = (m.card && m.nickname && m.card !== m.nickname) ? m.nickname : '';
+    const escapedDisplay = displayName.replace(/'/g, "\\'");
+    return `
+      <tr onclick="showMemberHistory(${currentMemberGid}, '${String(m.userId).replace(/'/g, "\\'")}', '${escapedDisplay}')" style="cursor:pointer">
+        <td><img class="avatar-img" src="${avatarUrl}" alt="" loading="lazy" onerror="this.style.display='none'" onclick="openImageViewer(event);event.stopPropagation()"></td>
+        <td>
+          <span>${displayName}</span>
+          <span style="color:var(--text-muted);font-size:12px;margin-left:8px">${m.userId}</span>
+          ${subName ? `<br><span style="color:var(--text-muted);font-size:12px">${subName}</span>` : ''}
+        </td>
+        <td>${m.records}</td>
+        <td>${formatTime(m.recordTime)}</td>
+      </tr>
+    `;
+  }).join('');
 }
 
 async function showMemberHistory(gid, uid, displayName) {
@@ -395,7 +425,7 @@ async function refresh() {
   btn.disabled = false;
 }
 
-document.querySelectorAll('th[data-sort]').forEach(th => {
+document.querySelectorAll('.panel:not(#memberPanel) th[data-sort]').forEach(th => {
   th.addEventListener('click', () => {
     const field = th.dataset.sort;
     if (sortField === field) {
@@ -404,9 +434,24 @@ document.querySelectorAll('th[data-sort]').forEach(th => {
       sortField = field;
       sortAsc = false;
     }
-    document.querySelectorAll('th').forEach(h => h.classList.remove('sorted'));
+    document.querySelectorAll('.panel:not(#memberPanel) th').forEach(h => h.classList.remove('sorted'));
     th.classList.add('sorted');
     sortGroups();
+  });
+});
+
+document.querySelectorAll('#memberPanel th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const field = th.dataset.sort;
+    if (memberSortField === field) {
+      memberSortAsc = !memberSortAsc;
+    } else {
+      memberSortField = field;
+      memberSortAsc = false;
+    }
+    document.querySelectorAll('#memberPanel th').forEach(h => h.classList.remove('sorted'));
+    th.classList.add('sorted');
+    sortMembers();
   });
 });
 
