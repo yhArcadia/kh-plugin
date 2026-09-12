@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-11 18:38:07
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-12 16:34:24
+ * @LastEditTime: 2026-09-12 17:23:51
  * @FilePath: /kh-plugin/guoba/dashboard/app.js
  * @Description: 
  * 
@@ -380,7 +380,7 @@ async function showMemberHistory(gid, uid, displayName) {
 
   try {
     const data = await apiCall('memberHistory', { groupId: gid, userId: uid, limit: 100 });
-    const records = data.records.reverse();
+    const records = data.records;
 
     if (records.length === 0) {
       body.innerHTML = '<div class="empty">暂无历史记录</div>';
@@ -486,11 +486,20 @@ document.querySelectorAll('#memberPanel th[data-sort]').forEach(th => {
 });
 
 function markSortedMemberHeader() {
-  document.querySelectorAll('#memberPanel th').forEach(h => h.classList.remove('sorted'));
+  document.querySelectorAll('#memberPanel th').forEach(h => {
+    h.classList.remove('sorted');
+    const icon = h.querySelector('.sort-icon');
+    if (icon) icon.textContent = '⇅';
+  });
   if (memberSortBy) {
+    const asc = memberSortBy === 'newbie' || memberSortBy === 'active' || memberSortBy === 'displayName';
     const highlight = memberSortBy === 'newbie' ? 'veteran' : (memberSortBy === 'active' ? 'diver' : memberSortBy);
     const th = document.querySelector(`#memberPanel th[data-sort="${highlight}"]`);
-    if (th) th.classList.add('sorted');
+    if (th) {
+      th.classList.add('sorted');
+      const icon = th.querySelector('.sort-icon');
+      if (icon) icon.textContent = asc ? '▲' : '▼';
+    }
   }
 }
 

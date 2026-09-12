@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-11 18:34:32
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-12 00:50:16
+ * @LastEditTime: 2026-09-12 16:41:12
  * @FilePath: /kh-plugin/guoba/dashboard/style.css
  * @Description: 
  * 
@@ -36,7 +36,7 @@ table{width:100%;border-collapse:collapse;table-layout:fixed}
 th,td{padding:10px 14px;text-align:left;font-size:14px;border-bottom:1px solid var(--border)}
 th{background:var(--bg-hover);color:var(--text-secondary);font-weight:500;white-space:nowrap;cursor:pointer;user-select:none;position:sticky;top:0;z-index:1}
 th:hover{color:var(--text)}
-th .sort-icon{margin-left:4px;font-size:11px;opacity:.4}
+th .sort-icon{margin-left:4px;font-size:11px;opacity:.6}
 th.sorted .sort-icon{opacity:1;color:var(--primary)}
 tbody tr{cursor:pointer;transition:background .15s}
 tbody tr:hover{background:var(--bg-hover)}
