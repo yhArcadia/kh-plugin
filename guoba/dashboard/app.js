@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-11 18:38:07
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-12 15:20:32
+ * @LastEditTime: 2026-09-12 16:34:24
  * @FilePath: /kh-plugin/guoba/dashboard/app.js
  * @Description: 
  * 
@@ -16,8 +16,7 @@ let sortField = 'records';
 let sortAsc = false;
 let currentMemberGid = null;
 let currentMemberPage = 1;
-let memberSortField = 'records';
-let memberSortAsc = false;
+let memberSortBy = null;
 let memberItems = [];
 const MEMBER_PAGE_SIZE = 30;
 
@@ -173,7 +172,7 @@ function renderOverview(data) {
     </div>
     <div class="card">
       <div class="card-label">⏱️ 缓存状态</div>
-      <div class="card-value" style="font-size:22px">${data.cached ? '♻️ 缓存' : '🆕 实时'}</div>
+      <div class="card-value" style="font-size:22px">${data.cached ? '缓存' : '实时'}</div>
       <div class="card-sub">${data.cached ? '30秒内已有缓存' : '本次为实时扫描'}</div>
     </div>
   `;
@@ -264,6 +263,8 @@ async function loadBlacklist() {
 async function selectGroup(gid, gname) {
   currentMemberGid = gid;
   currentMemberPage = 1;
+  memberSortBy = 'vest';
+  markSortedMemberHeader();
   document.getElementById('memberPanel').classList.remove('hidden');
   document.getElementById('memberPanelTitle').textContent = gname || gid;
   document.getElementById('memberPanel').scrollIntoView({ behavior: 'smooth' });
@@ -288,18 +289,25 @@ async function loadMembers() {
   document.getElementById('memberTableBody').innerHTML = '';
 
   try {
-    const data = await apiCall('members', {
-      groupId: currentMemberGid,
-      page: currentMemberPage,
-      pageSize: MEMBER_PAGE_SIZE
-    });
+    const body = { groupId: currentMemberGid, page: currentMemberPage, pageSize: MEMBER_PAGE_SIZE };
+    if (memberSortBy && memberSortBy !== 'displayName') body.sortBy = memberSortBy;
+
+    const data = await apiCall('members', body);
 
     memberItems = data.items || [];
+
+    if (memberSortBy === 'displayName') {
+      memberItems.sort((a, b) => {
+        const va = (a.card || a.nickname || String(a.userId)).toLowerCase();
+        const vb = (b.card || b.nickname || String(b.userId)).toLowerCase();
+        return va.localeCompare(vb);
+      });
+    }
 
     if (memberItems.length === 0) {
       document.getElementById('memberEmpty').classList.remove('hidden');
     } else {
-      sortMembers();
+      renderMemberTable();
     }
 
     const totalPages = Math.ceil(data.totalMembers / MEMBER_PAGE_SIZE) || 1;
@@ -316,42 +324,46 @@ async function loadMembers() {
   }
 }
 
-function sortMembers() {
-  memberItems.sort((a, b) => {
-    let va, vb;
-    if (memberSortField === 'displayName') {
-      va = (a.card || a.nickname || String(a.userId)).toLowerCase();
-      vb = (b.card || b.nickname || String(b.userId)).toLowerCase();
-      return memberSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
-    }
-    if (memberSortField === 'recordTime') {
-      va = a.recordTime || '0';
-      vb = b.recordTime || '0';
-      return memberSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
-    }
-    va = a[memberSortField] || 0;
-    vb = b[memberSortField] || 0;
-    return memberSortAsc ? va - vb : vb - va;
-  });
-  renderMemberTable();
-}
-
 function renderMemberTable() {
+  const hasScores = !!memberSortBy;
   document.getElementById('memberTableBody').innerHTML = memberItems.map(m => {
     const avatarUrl = `https://q1.qlogo.cn/g?b=qq&s=100&nk=${m.userId}`;
     const displayName = m.card || m.nickname || String(m.userId);
     const subName = (m.card && m.nickname && m.card !== m.nickname) ? m.nickname : '';
     const escapedDisplay = displayName.replace(/'/g, "\\'");
+
+    const fmtDuration = (sec) => {
+      if (sec == null) return '-';
+      const d = Math.floor(sec / 86400);
+      if (d > 0) return d + '天';
+      const h = Math.floor((sec % 86400) / 3600);
+      if (h > 0) return h + '时';
+      return Math.floor((sec % 3600) / 60) + '分';
+    };
+
+    const vestDisp = hasScores ? (m.vestScore != null ? m.vestScore + '次' : '-') : (m.records || '-');
+    const avatarDisp = hasScores ? (m.avatarScore != null ? m.avatarScore + '次' : '-') : '-';
+    const loyalDisp = hasScores ? fmtDuration(m.loyalScore) : '-';
+    const veteranDisp = hasScores ? fmtDuration(m.veteranScore) : '-';
+    const diverDisp = hasScores ? fmtDuration(m.diverScore) : '-';
+    const joinDisp = hasScores ? (m.joinScore != null ? m.joinScore + '群' : '-') : '-';
+
     return `
       <tr onclick="showMemberHistory(${currentMemberGid}, '${String(m.userId).replace(/'/g, "\\'")}', '${escapedDisplay}')" style="cursor:pointer">
         <td><img class="avatar-img" src="${avatarUrl}" alt="" loading="lazy" onerror="this.style.display='none'" onclick="openImageViewer(event);event.stopPropagation()"></td>
         <td>
           <span>${displayName}</span>
           <span style="color:var(--text-muted);font-size:12px;margin-left:8px">${m.userId}</span>
-          ${subName ? `<br><span style="color:var(--text-muted);font-size:12px">${subName}</span>` : ''}
+          ${subName ? '<br><span style="color:var(--text-muted);font-size:12px">' + subName + '</span>' : ''}
         </td>
-        <td>${m.records}</td>
+        <td>${vestDisp}</td>
         <td>${formatTime(m.recordTime)}</td>
+        <td>${avatarDisp}</td>
+        <td>${loyalDisp}</td>
+        <td>${veteranDisp}</td>
+        <td>${diverDisp}</td>
+        <td>${joinDisp}</td>
+        <td class="mono">${m.userId}</td>
       </tr>
     `;
   }).join('');
@@ -443,17 +455,44 @@ document.querySelectorAll('.panel:not(#memberPanel) th[data-sort]').forEach(th =
 document.querySelectorAll('#memberPanel th[data-sort]').forEach(th => {
   th.addEventListener('click', () => {
     const field = th.dataset.sort;
-    if (memberSortField === field) {
-      memberSortAsc = !memberSortAsc;
-    } else {
-      memberSortField = field;
-      memberSortAsc = false;
+    if (field === 'displayName') {
+      memberSortBy = memberSortBy === 'displayName' ? null : 'displayName';
+      markSortedMemberHeader();
+      if (memberSortBy === 'displayName') {
+        memberItems.sort((a, b) => {
+          const va = (a.card || a.nickname || String(a.userId)).toLowerCase();
+          const vb = (b.card || b.nickname || String(b.userId)).toLowerCase();
+          return va.localeCompare(vb);
+        });
+        renderMemberTable();
+      } else {
+        loadMembers();
+      }
+      return;
     }
-    document.querySelectorAll('#memberPanel th').forEach(h => h.classList.remove('sorted'));
-    th.classList.add('sorted');
-    sortMembers();
+    if (field === 'vest' || field === 'recordTime' || field === 'avatar' || field === 'loyal' || field === 'join' || field === 'qq') {
+      memberSortBy = memberSortBy === field ? null : field;
+    } else if (field === 'veteran') {
+      memberSortBy = memberSortBy === 'veteran' ? 'newbie' : (memberSortBy === 'newbie' ? null : 'veteran');
+    } else if (field === 'diver') {
+      memberSortBy = memberSortBy === 'diver' ? 'active' : (memberSortBy === 'active' ? null : 'diver');
+    } else {
+      memberSortBy = field;
+    }
+    currentMemberPage = 1;
+    markSortedMemberHeader();
+    loadMembers();
   });
 });
+
+function markSortedMemberHeader() {
+  document.querySelectorAll('#memberPanel th').forEach(h => h.classList.remove('sorted'));
+  if (memberSortBy) {
+    const highlight = memberSortBy === 'newbie' ? 'veteran' : (memberSortBy === 'active' ? 'diver' : memberSortBy);
+    const th = document.querySelector(`#memberPanel th[data-sort="${highlight}"]`);
+    if (th) th.classList.add('sorted');
+  }
+}
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {

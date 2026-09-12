@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-03 22:39:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 00:03:36
+ * @LastEditTime: 2026-09-12 16:32:38
  * @FilePath: /kh-plugin/apps/ranking.js
  * @Description: 群员排行
  * 
@@ -19,6 +19,15 @@ import {
     scanLegacyKeys
 } from '../components/runtime.js';
 import { log } from '../utils/logger.js';
+import { batchGetHistory } from '../components/storage.js';
+import {
+    computeVestScore,
+    computeAvatarScore,
+    computeLoyalScore,
+    computeVeteranScore,
+    computeSilenceScore,
+    computeQqScore
+} from '../components/rank-scores.js';
 
 function extractPromotedUids(e) {
     const segments = Array.isArray(e?.message) ? e.message : [];
@@ -52,19 +61,6 @@ function buildDisplayRankList(rankList, promotedUids, limit) {
         .slice(0, limit)
         .filter(item => !promotedSet.has(item.uid));
     return [...promoted, ...ordinary];
-}
-
-async function batchGetHistory(redis, keys, batchSize = 500) {
-    if (keys.length === 0) return new Map();
-    const result = new Map();
-    for (let i = 0; i < keys.length; i += batchSize) {
-        const batch = keys.slice(i, i + batchSize);
-        const values = await redis.mGet(batch);
-        for (let j = 0; j < batch.length; j++) {
-            result.set(batch[j], values[j]);
-        }
-    }
-    return result;
 }
 
 export class KhRanking extends BaseApp {
@@ -248,49 +244,36 @@ export class KhRanking extends BaseApp {
                 }
                 displayScore = `${score} 个群`;
             } else if (rankType === 'avatar') {
-                const uniqueHeads = new Set();
-                for (const r of history) {
-                    if (r.headtime && r.headtime !== 631152000000) {
-                        uniqueHeads.add(r.headtime);
-                    }
-                }
-                score = uniqueHeads.size;
+                score = computeAvatarScore(history);
                 displayScore = `${score} 次`;
             } else if (rankType === 'vest') {
-                score = history.length;
+                score = computeVestScore(history);
                 displayScore = `${score} 次`;
             } else if (rankType === 'loyal') {
-                let validHeadtime = null;
-                for (let i = history.length - 1; i >= 0; i--) {
-                    if (history[i].headtime && history[i].headtime !== 631152000000) {
-                        validHeadtime = history[i].headtime;
-                        break;
-                    }
-                }
-                if (validHeadtime) {
-                    // 秒数
-                    score = Math.max(0, Math.floor((nowMs - validHeadtime) / 1000));
-                    displayScore = formatDuration(score);
-                }
+                score = computeLoyalScore(history, nowMs);
+                if (score != null) displayScore = formatDuration(score);
             } else if (rankType === 'veteran' || rankType === 'newbie') {
                 if (isQQRank) {
-                    score = uid;
+                    score = computeQqScore(uid);
                     displayScore = uid.toString();
-                }
-                else if (latestRecord.join_time) {
-                    score = Math.max(0, nowSec - latestRecord.join_time);
-                    displayScore = formatDuration(score);
-                    if (!isQQRank && latestRecord.last_sent_time) {
-                        const totalDuration = Math.max(1, nowSec - latestRecord.join_time);
-                        silenceDuration = Math.max(0, nowSec - latestRecord.last_sent_time);
-                        silenceDisplay = formatDuration(silenceDuration);
-                        silenceRatio = Math.max(0, Math.min(1, silenceDuration / totalDuration));
+                } else {
+                    score = computeVeteranScore(latestRecord, nowSec);
+                    if (score != null) {
+                        displayScore = formatDuration(score);
+                        if (latestRecord.last_sent_time) {
+                            const totalDuration = Math.max(1, nowSec - latestRecord.join_time);
+                            silenceDuration = computeSilenceScore(latestRecord, nowSec);
+                            if (silenceDuration != null) {
+                                silenceDisplay = formatDuration(silenceDuration);
+                                silenceRatio = Math.max(0, Math.min(1, silenceDuration / totalDuration));
+                            }
+                        }
                     }
                 }
             } else if (rankType === 'diver' || rankType === 'active' || isQQRank) {
                 if (currentMemberMap && !currentMemberMap.has(uid)) continue; // 人已经不在群里，跳过
-                if (latestRecord.last_sent_time) {
-                    score = Math.max(0, nowSec - latestRecord.last_sent_time);
+                score = computeSilenceScore(latestRecord, nowSec);
+                if (score != null) {
                     displayScore = formatDuration(score);
                     if (rankType === 'active') {
                         displayScore = score <= 10 ? "刚刚" : displayScore + "前";

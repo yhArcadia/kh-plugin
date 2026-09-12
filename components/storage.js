@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 00:50:10
+ * @LastEditTime: 2026-09-12 15:56:09
  * @FilePath: /kh-plugin/components/storage.js
  * @Description: 存取
  * 
@@ -90,4 +90,17 @@ export async function getRemarks(redis, config, gid, uid) {
     const value = raw ? JSON.parse(raw) : [];
     return Array.isArray(value) ? value : [];
   } catch { return []; }
+}
+
+export async function batchGetHistory(redis, keys, batchSize = 500) {
+    if (keys.length === 0) return new Map();
+    const result = new Map();
+    for (let i = 0; i < keys.length; i += batchSize) {
+        const batch = keys.slice(i, i + batchSize);
+        const values = await redis.mGet(batch);
+        for (let j = 0; j < batch.length; j++) {
+            result.set(batch[j], values[j]);
+        }
+    }
+    return result;
 }
