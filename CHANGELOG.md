@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-14 21:05:04
+ * @LastEditTime: 2026-09-14 23:09:14
  * @FilePath: /kh-plugin/CHANGELOG.md
  * @Description: 更新日志
  * 
@@ -12,7 +12,7 @@
 
 # 2.1.3
 
-* 新特性：当kh的查询者和被查询者有本群以外的共同群，产出的图片中会有一条”你们有x个共同群“的提示。
+* 新特性：当kh的**查询者**和**被查询者**有本群以外的共同群，产出的图片中会有一条”**你们有x个共同群**“的提示（仅限已配置过的互通群范围内）。
 
 # 2.1.2
 
