@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 00:10:16
+ * @LastEditTime: 2026-09-14 20:49:47
  * @FilePath: /kh-plugin/render/history-renderer.js
  * @Description: 历史身份渲染组件
  * 
@@ -20,7 +20,22 @@ import { getPluginVersion } from '../components/version.js';
 import cfg from '../../../lib/config/config.js';
 import { log } from '../utils/logger.js';
 
-export async function renderHistory({ e, groupId, gname, member, inquirer, fullHistory, renderLimit = 0, showTimeline = true, redis, config }) {
+
+  /**
+   * 渲染历史记录图片
+   * @param {Event} e - 事件对象
+   * @param {string} groupId - 群号
+   * @param {string} gname - 群名称
+   * @param {Object} member - 成员信息
+   * @param {Object} inquirer - 查询者信息
+   * @param {Array} fullHistory - 完整历史记录
+   * @param {number} [renderLimit=0] - 渲染数量限制，0 表示不限制
+   * @param {boolean} [showTimeline=true] - 是否显示时间线
+   * @param {Object} redis - Redis客户端
+   * @param {Object} config - 配置对象
+   * @param {number} [commonGroupCount=1] - 共同群数量（含当前群）
+   */
+export async function renderHistory({ e, groupId, gname, member, inquirer, fullHistory, renderLimit = 0, showTimeline = true, redis, config, commonGroupCount = 1 }) {
 
     let processedHistory = [];
     const history = (renderLimit > 0) ? fullHistory.slice(-renderLimit) : fullHistory;
@@ -67,6 +82,14 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
         const lastSentTime = moment(member.last_sent_time * 1000);
         processedHistory.push({
             content: `最后发言于 ${lastSentTime.format('YYYY年MM月DD日HH点mm分')}`,
+            isSystemMessage: true
+        });
+    }
+
+    // "共同群" 提示（仅小写kh且有多个共同群时显示）
+    if (commonGroupCount > 1) {
+        processedHistory.push({
+            content: `你们有 ${commonGroupCount} 个共同群`,
             isSystemMessage: true
         });
     }

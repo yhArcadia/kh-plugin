@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:15:20
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 22:05:04
+ * @LastEditTime: 2026-09-14 20:18:38
  * @FilePath: /kh-plugin/components/base-app.js
  * @Description: 
  * 
@@ -64,9 +64,10 @@ export class BaseApp extends plugin {
    * @param {Array} fullHistory - 完整历史记录
    * @param {number} [renderLimit=0] - 渲染数量限制，0 表示不限制
    * @param {boolean} [showTimeline=true] - 是否显示时间线
+   * @param {number} [commonGroupCount=1] - 共同群数量（含当前群）
    * @returns {Promise} 渲染结果
    */
-  async imgRender(e, groupId, gname, member, inquirer, fullHistory, renderLimit = 0, showTimeline = true) {
+  async imgRender(e, groupId, gname, member, inquirer, fullHistory, renderLimit = 0, showTimeline = true, commonGroupCount = 1) {
     return renderHistory({
       e,
       groupId,
@@ -77,7 +78,8 @@ export class BaseApp extends plugin {
       renderLimit,
       showTimeline,
       redis,
-      config: this.config
+      config: this.config,
+      commonGroupCount
     });
   }
 }

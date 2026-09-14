@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 18:20:37
+ * @LastEditTime: 2026-09-14 20:48:57
  * @FilePath: /kh-plugin/apps/query.js
  * @Description: 
  * 
@@ -56,11 +56,30 @@ export class KhQuery extends BaseApp {
         let isUpperKH = e.msg.includes('KH');
 
         let targetGroupIds = [e.group_id];
-        // 只有大写KH才会获取全部共同群
-        if (isUpperKH && config.linkedGroups && Array.isArray(config.linkedGroups)) {
+        let commonGroupCount = 1;
+        if (config.linkedGroups && Array.isArray(config.linkedGroups)) {
             const matchedGroups = config.linkedGroups.filter(g => g.includes(e.group_id));
             if (matchedGroups.length > 0) {
-                targetGroupIds = [...new Set(matchedGroups.flat())];
+                const candidateGroups = [...new Set(matchedGroups.flat())].filter(g => g !== e.group_id);
+                let commonGroups = [e.group_id];
+
+                for (const gid of candidateGroups) {
+                    const inqKey = `${config.redisPrefix}:${gid}:${encodeRedisUid(e.user_id)}`;
+                    const tgtKey = `${config.redisPrefix}:${gid}:${encodeRedisUid(e.at)}`;
+                    const [inqExists, tgtExists] = await Promise.all([
+                        redis.exists(inqKey),
+                        redis.exists(tgtKey)
+                    ]);
+                    if (inqExists && tgtExists) {
+                        commonGroups.push(gid);
+                    }
+                }
+                log.i(`KH 匹配到共同群：${commonGroups.join(', ')}`);
+                if (isUpperKH) {
+                    targetGroupIds = commonGroups; //KH对应目标渲染群为所有互通群，令commonGroupCount保持为1
+                } else {
+                    commonGroupCount = commonGroups.length; //kh的目标群只为当前一个群，令commonGroupCount为共同数量
+                }
             }
         }
 
@@ -202,7 +221,7 @@ export class KhQuery extends BaseApp {
             const { groupId, gname, member, inquirer, history } = record;
             try {
                 let limit = isFullRender ? 0 : config.maxRenderLength;
-                let img = await this.imgRender(e, groupId, gname, member, inquirer, history, limit, true);
+                let img = await this.imgRender(e, groupId, gname, member, inquirer, history, limit, true, commonGroupCount);
                 if (img) {
                     forwardMsgData.push({
                         message: img,
