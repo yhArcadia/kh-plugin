@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-14 20:48:57
+ * @LastEditTime: 2026-09-14 21:05:28
  * @FilePath: /kh-plugin/apps/query.js
  * @Description: 
  * 
@@ -74,7 +74,6 @@ export class KhQuery extends BaseApp {
                         commonGroups.push(gid);
                     }
                 }
-                log.i(`KH 匹配到共同群：${commonGroups.join(', ')}`);
                 if (isUpperKH) {
                     targetGroupIds = commonGroups; //KH对应目标渲染群为所有互通群，令commonGroupCount保持为1
                 } else {
@@ -97,14 +96,6 @@ export class KhQuery extends BaseApp {
 
             // 获取群名
             let gname = getGroupName(groupId, e.bot);
-
-            if (groupId !== e.group_id) {
-                const inquirerKey = `${config.redisPrefix}:${groupId}:${encodeRedisUid(e.user_id)}`;
-                const hasInquirerHistory = await redis.exists(inquirerKey);
-                if (!hasInquirerHistory && !e.isMaster) {
-                    continue;
-                }
-            }
 
             // 先从本地读取记录
             const historyDetail = await getHistoryDetailed(redis, config, groupId, e.at);

@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-14 20:49:47
+ * @LastEditTime: 2026-09-14 21:04:06
  * @FilePath: /kh-plugin/render/history-renderer.js
  * @Description: 历史身份渲染组件
  * 
@@ -89,7 +89,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
     // "共同群" 提示（仅小写kh且有多个共同群时显示）
     if (commonGroupCount > 1) {
         processedHistory.push({
-            content: `你们有 ${commonGroupCount} 个共同群`,
+            content: `你们有 ${commonGroupCount} 个已知的共同群`,
             isSystemMessage: true
         });
     }
@@ -265,6 +265,13 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
             });
         }
     }
+
+    // if (commonGroupCount > 1) {
+    //     processedHistory.push({
+    //         content: `使用大写KH以查看你们的共同群记录`,
+    //         isSystemMessage: true
+    //     });
+    // }
 
     // 模板所需的主数据
     log.i(`群名称: ${gname}`);
