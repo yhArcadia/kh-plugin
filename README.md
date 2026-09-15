@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-02 16:30:50
+ * @LastEditTime: 2026-09-15 16:22:43
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -55,11 +55,11 @@
 
 在 **Yunzai 根目录** 下执行：
 ```
-git clone https://github.com/yhArcadia/kh-plugin ./plugins/kh-plugin
+git clone --depth=1 https://github.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 ```
 或
 ```
-git clone https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
+git clone --depth=1 https://gitee.com/yhArcadia/kh-plugin ./plugins/kh-plugin
 ```
 根据网络情况选择其一即可。
 

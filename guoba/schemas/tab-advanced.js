@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:25:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-09 15:18:41
+ * @LastEditTime: 2026-09-15 17:46:14
  * @FilePath: /kh-plugin/guoba/schemas/tab-advanced.js
  * @Description: 进阶配置页面
  * 
@@ -71,4 +71,20 @@ export default [
     },
     bottomHelpMessage: '闲置头像扫描计划，默认每天凌晨04:30执行一次。'
   },
+
+  { component: 'Divider', label: '退群通报' },
+  {
+    field: 'leaveNoticeAllGroups',
+    label: labels.leaveNoticeAllGroups,
+    component: 'Switch',
+    componentProps: { defaultValue: true },
+    bottomHelpMessage: '开启后对全群启用退群通报。关闭后仅在下方列表中配置的群启用。'
+  },
+  {
+    field: 'leaveNoticeGroups',
+    label: labels.leaveNoticeGroups,
+    component: 'GSelectGroup',
+    componentProps: { placeholder: '选择需要启用退群通报的群' }
+  },
+
 ];

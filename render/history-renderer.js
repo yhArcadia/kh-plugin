@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-14 21:04:06
+ * @LastEditTime: 2026-09-15 17:36:53
  * @FilePath: /kh-plugin/render/history-renderer.js
  * @Description: 历史身份渲染组件
  * 
@@ -61,7 +61,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
         });
     } else {
         processedHistory.push({
-            content: `这是该用户曾在本群留下的马甲记录`,
+            content: `该用户在本群的身份记录`,
             isSystemMessage: true
         });
     }
