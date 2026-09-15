@@ -113,7 +113,7 @@ userBlacklist: [
 
 # 【退群通知配置】
 # 是否全局启用退群通报（附带身份记录图片）。关闭后仅在下方列表中配置的群启用。
-leaveNoticeAllGroups: true
+leaveNoticeAllGroups: false
 # 退群通知群列表：仅在上方"全群启用"关闭时生效。
 leaveNoticeGroups: [
 #    114514,
