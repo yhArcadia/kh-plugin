@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-10 18:22:04
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-12 00:24:47
+ * @LastEditTime: 2026-09-15 22:41:40
  * @FilePath: /kh-plugin/guoba/dashboard/server.js
  * @Description: 
  * 
@@ -19,6 +19,9 @@ const __dirname = path.dirname(__filename);
 const DASHBOARD_INDEX = path.join(__dirname, 'index.html');
 
 let routeRegistered = false;
+let retryCount = 0;
+const MAX_RETRIES = 5;
+const RETRY_INTERVAL = 5000;
 
 async function serveIndex(req, res) {
   try {
@@ -50,10 +53,20 @@ async function getGuobaMountPrefix() {
 export function initDashboard() {
   if (routeRegistered) return;
 
-  const app = globalThis.Bot?.express;
-  if (!app || typeof app.get !== 'function') {
-    console.warn('[kh-plugin] Bot.express 不可用，看板路由注册延迟到 3 秒后重试...');
-    setTimeout(() => initDashboard(), 3000);
+  if (!globalThis.Bot?.express) {
+    console.warn('[kh-plugin] Bot.express 不可用，当前环境不支持独立看板路由，跳过注册。');
+    return;
+  }
+
+  const app = globalThis.Bot.express;
+  if (typeof app.get !== 'function') {
+    if (retryCount < MAX_RETRIES) {
+      retryCount++;
+      console.warn(`[kh-plugin] Bot.express 尚未就绪，${RETRY_INTERVAL / 1000} 秒后重试（${retryCount}/${MAX_RETRIES}）...`);
+      setTimeout(() => initDashboard(), RETRY_INTERVAL);
+    } else {
+      console.warn(`[kh-plugin] Bot.express 重试 ${MAX_RETRIES} 次后仍未就绪，放弃注册看板路由。`);
+    }
     return;
   }
 
