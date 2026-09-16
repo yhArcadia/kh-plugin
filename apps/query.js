@@ -2,12 +2,30 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-14 21:05:28
+ * @LastEditTime: 2026-09-16 22:37:13
  * @FilePath: /kh-plugin/apps/query.js
  * @Description: 
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
+
+//渲染精度动态限制: [记录数阈值, 最高渲染精度]从上到下依次匹配
+const RENDER_SCALE_LIMITS = [
+    [20, 300],   //  ≤20条: 最高300精度
+    [30, 200],
+    [50, 100],
+    [70, 80],
+    [100, 50],   // ≤100条: 最高50精度
+];
+const RENDER_SCALE_FALLBACK = RENDER_SCALE_LIMITS[RENDER_SCALE_LIMITS.length - 1][1];
+
+function capRenderScale(recordCount, userScale) {
+    for (const [threshold, maxScale] of RENDER_SCALE_LIMITS) {
+        if (recordCount <= threshold) return Math.min(userScale, maxScale);
+    }
+    return Math.min(userScale, RENDER_SCALE_FALLBACK);
+}
+
 import { isDivingGroup, isGroupAllowed } from '../utils/group-policy.js';
 import { BaseApp } from '../components/base-app.js';
 import { config, memberUpdater } from '../components/runtime.js';
@@ -212,7 +230,8 @@ export class KhQuery extends BaseApp {
             const { groupId, gname, member, inquirer, history } = record;
             try {
                 let limit = isFullRender ? 0 : config.maxRenderLength;
-                let img = await this.imgRender(e, groupId, gname, member, inquirer, history, limit, true, commonGroupCount);
+                const effectiveScale = capRenderScale(history.length, config.renderScale);
+                let img = await this.imgRender(e, groupId, gname, member, inquirer, history, limit, true, commonGroupCount, effectiveScale);
                 if (img) {
                     forwardMsgData.push({
                         message: img,

@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 20:51:47
+ * @LastEditTime: 2026-09-16 22:39:26
  * @FilePath: /kh-plugin/render/history-renderer.js
  * @Description: 历史身份渲染组件
  * 
@@ -36,7 +36,7 @@ import { log } from '../utils/logger.js';
    * @param {Object} config - 配置对象
    * @param {number} [commonGroupCount=1] - 共同群数量（含当前群）
    */
-export async function renderHistory({ e, groupId, gname, member, inquirer, fullHistory, renderLimit = 0, showTimeline = true, redis, config, commonGroupCount = 1 }) {
+export async function renderHistory({ e, groupId, gname, member, inquirer, fullHistory, renderLimit = 0, showTimeline = true, redis, config, commonGroupCount = 1, renderScale }) {
 
     let processedHistory = [];
     const history = (renderLimit > 0) ? fullHistory.slice(-renderLimit) : fullHistory;
@@ -280,7 +280,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
     const renderData = {
         history: processedHistory,
         groupName: gname || groupId.toString(),
-        bodyScale: bodyScale(config.renderScale),
+        bodyScale: bodyScale(renderScale !== undefined ? renderScale : config.renderScale),
         footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${khPluginVersion}`
     };
 
