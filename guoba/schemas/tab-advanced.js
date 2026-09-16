@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:25:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 23:20:04
+ * @LastEditTime: 2026-09-16 23:40:04
  * @FilePath: /kh-plugin/guoba/schemas/tab-advanced.js
  * @Description: 进阶配置页面
  * 
@@ -96,9 +96,9 @@ export default [
       min: 50,
       max: 300,
       step: 10,
-      placeholder: '默认精度120'
+      placeholder: ''
     },
-    bottomHelpMessage: '控制生成图片的清晰度。默认精度120。增大此值提高图片清晰度，但会增加耗时，建议不超过200。图片过大可能导致OOM，以及协议端发送失败。如果较长的记录出现发不出图的情况，请考虑降低精度。'
+    bottomHelpMessage: '控制生成图片的清晰度。增大此值提高图片清晰度，但会增加耗时，建议不超过200。图片过大可能导致OOM，以及协议端发送失败。如果较长的记录出现发不出图的情况，请考虑降低精度。'
   },
 
 ];
