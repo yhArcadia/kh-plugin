@@ -2,13 +2,16 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 16:38:53
+ * @LastEditTime: 2026-09-16 21:17:54
  * @FilePath: /kh-plugin/CHANGELOG.md
  * @Description: 更新日志
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
 -->
 # Changelog
+
+* 增加配置项：渲染精度。现在可按需增加渲染精度以提高图片清晰度、或降低精度换取速度。
+* 排行榜类指令新增了一个共享的10秒cd
 
 # 2.1.4
 

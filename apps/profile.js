@@ -22,6 +22,7 @@ import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
 import { getAvatarPalette } from '../utils/avatar-palette.js';
 import { getPluginVersion } from '../components/version.js';
+import { bodyScale } from '../components/render.js';
 
 export class KhProfile extends BaseApp {
     constructor() {
@@ -286,6 +287,7 @@ export class KhProfile extends BaseApp {
             startTimeStr,
             historyAvatarPositions,
             historyTrackHeight,
+            bodyScale: bodyScale(config.renderScale),
             ...avatarPalette,
             footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${khPluginVersion}`
         };

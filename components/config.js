@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-15 18:01:44
+ * @LastEditTime: 2026-09-16 21:15:15
  * @FilePath: /kh-plugin/components/config.js
  * @Description: 配置文件管理
  * 
@@ -74,6 +74,7 @@ export const defaultConfig = Object.freeze({
   maxNotifyRenderLength: 2,
   monitorCD: 600,
   rankLimit: 50,
+  renderScale: 120,
   groupWhitelist: [],
   groupBlacklist: [],
   userBlacklist: [],
@@ -85,7 +86,7 @@ export const defaultConfig = Object.freeze({
 });
 
 const configFields = Object.freeze(Object.keys(defaultConfig));
-const numericFields = new Set(['maxSaveLength', 'maxRenderLength', 'reverseHistoryThreshold', 'maxNotifyRenderLength', 'monitorCD', 'rankLimit']);
+const numericFields = new Set(['maxSaveLength', 'maxRenderLength', 'reverseHistoryThreshold', 'maxNotifyRenderLength', 'monitorCD', 'rankLimit', 'renderScale']);
 const arrayFields = new Set(['linkedGroups', 'autoUpdateGroups', 'notifyGroups', 'leaveNoticeGroups', 'groupWhitelist', 'groupBlacklist', 'userBlacklist', 'divingGroups']);
 const header = `# =======================================
 # 请将需要自定义的配置项从 default_config.yaml 复制到本文件并填写值。未在这里定义的配置将采用default_config.yaml的默认值。

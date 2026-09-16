@@ -1,3 +1,13 @@
+<!--
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:18:58
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-16 21:40:48
+ * @FilePath: /kh-plugin/resources/template/chat.html
+ * @Description: 
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+-->
 <!doctype html>
 <html lang="zh-CN">
   <head>
@@ -21,6 +31,7 @@
         margin: 0;
         padding: 0;
         -webkit-font-smoothing: antialiased;
+        transform-origin: 0 0;
       }
       .container {
         width: 800px; /* 截图宽度 */
@@ -204,7 +215,7 @@
       
     </style>
   </head>
-  <body>
+  <body style="{{bodyScale}}">
     <div class="container">
       <div class="header">{{groupName}}</div>
       <div class="chat-log">

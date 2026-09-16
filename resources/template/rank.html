@@ -1,3 +1,13 @@
+<!--
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-12 18:18:58
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-16 21:41:21
+ * @FilePath: /kh-plugin/resources/template/rank.html
+ * @Description: 
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+-->
 <!doctype html>
 <html lang="zh-CN">
   <head>
@@ -11,6 +21,7 @@
           padding: 15px;
           display: flex;
           justify-content: center;
+          transform-origin: 0 0;
       }
       .container {
           width: 800px;
@@ -170,7 +181,7 @@
       }
     </style>
   </head>
-  <body>
+  <body style="{{bodyScale}}">
     <div class="container">
       <div class="header">{{groupName}} {{title}}</div>
       {{each list item i}}

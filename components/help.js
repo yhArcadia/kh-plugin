@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-19 21:41:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-03 22:56:25
+ * @LastEditTime: 2026-09-16 20:53:27
  * @FilePath: /kh-plugin/components/help.js
  * @Description: 帮助文档渲染组件
  * 
@@ -10,8 +10,9 @@
  */
 import fs from 'node:fs';
 import { pluginRoot, helpMarkdown, helpTemplate } from './paths.js';
-import { screenshot, screenshotBuffer } from './render.js';
+import { screenshot, screenshotBuffer, bodyScale } from './render.js';
 import { escapeHtml, getPluginVersion } from './version.js';
+import { config } from './runtime.js';
 import cfg from '../../../lib/config/config.js';
 
 const MAX_SECTIONS = 12;
@@ -75,7 +76,7 @@ export async function renderHelpImageBuffer(data = helpCardData()) {
     const image = await screenshotBuffer(
         'help',
         'help-info',
-        { ...data, scale: 1.2, imgType: 'png' },
+        { ...data, bodyScale: bodyScale(config.renderScale), imgType: 'png' },
         helpTemplate
     );
     if (!Buffer.isBuffer(image) || image.length === 0) {
@@ -88,7 +89,7 @@ export async function renderHelpCard(data = helpCardData()) {
     const image = await screenshot(
         'help',
         'help-info',
-        { ...data, scale: 1.2, imgType: 'png' },
+        { ...data, bodyScale: bodyScale(config.renderScale), imgType: 'png' },
         helpTemplate
     );
     if (!image) throw new Error('Puppeteer 未返回帮助卡图片');

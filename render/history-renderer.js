@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-15 17:36:53
+ * @LastEditTime: 2026-09-16 20:51:47
  * @FilePath: /kh-plugin/render/history-renderer.js
  * @Description: 历史身份渲染组件
  * 
@@ -17,6 +17,7 @@ import { templateDir, resolveHeadPath } from '../components/paths.js';
 import { encodeRedisUid } from '../utils/uid-encoder.js';
 import { escapeHtml } from '../utils/html.js';
 import { getPluginVersion } from '../components/version.js';
+import { bodyScale } from '../components/render.js';
 import cfg from '../../../lib/config/config.js';
 import { log } from '../utils/logger.js';
 
@@ -279,6 +280,7 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
     const renderData = {
         history: processedHistory,
         groupName: gname || groupId.toString(),
+        bodyScale: bodyScale(config.renderScale),
         footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${khPluginVersion}`
     };
 

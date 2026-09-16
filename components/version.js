@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-09 15:45:25
+ * @LastEditTime: 2026-09-16 21:40:04
  * @FilePath: /kh-plugin/components/version.js
  * @Description: 插件版本信息渲染组件
  * 
@@ -12,7 +12,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pluginRoot, versionTemplate } from './paths.js';
 import cfg from '../../../lib/config/config.js';
-import { screenshot } from './render.js';
+import { screenshot, bodyScale } from './render.js';
+import { config } from './runtime.js';
 
 let _cachedPluginVersion = null;
 export function getPluginVersion() {
@@ -174,7 +175,7 @@ export function versionCardData(file = path.join(pluginRoot, 'CHANGELOG.md')) {
 }
 
 export async function renderVersionCard(data = versionCardData()) {
-  const image = await screenshot('version', 'version-info', { ...data, scale: 1.2, imgType: 'png' }, versionTemplate);
+  const image = await screenshot('version', 'version-info', { ...data, bodyScale: bodyScale(config.renderScale), imgType: 'png' }, versionTemplate);
   if (!image) throw new Error('Puppeteer 未返回版本卡图片');
   return image;
 }

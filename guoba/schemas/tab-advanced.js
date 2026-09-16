@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:25:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-15 17:46:14
+ * @LastEditTime: 2026-09-16 21:39:02
  * @FilePath: /kh-plugin/guoba/schemas/tab-advanced.js
  * @Description: 进阶配置页面
  * 
@@ -85,6 +85,20 @@ export default [
     label: labels.leaveNoticeGroups,
     component: 'GSelectGroup',
     componentProps: { placeholder: '选择需要启用退群通报的群' }
+  },
+
+  { component: 'Divider', label: '渲染精度' },
+  {
+    field: 'renderScale',
+    label: labels.renderScale,
+    component: 'InputNumber',
+    componentProps: {
+      min: 50,
+      max: 300,
+      step: 10,
+      placeholder: '默认精度120'
+    },
+    bottomHelpMessage: '控制生成图片的清晰度。默认精度120。增大此值提高图片清晰度，但会增加耗时，建议不超过200。图片过大可能导致OOM，以及协议端发送失败。'
   },
 
 ];

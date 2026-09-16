@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:56
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 17:59:21
+ * @LastEditTime: 2026-09-16 21:26:45
  * @FilePath: /kh-plugin/components/render.js
  * @Description: 渲染模板
  * 
@@ -13,6 +13,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import template from 'art-template';
 import { templateDir } from './paths.js';
+
+export function bodyScale(renderScale) {
+  const scale = Math.min(3, Math.max(0.5, (renderScale || 100) / 100)); //限最高3倍精度
+  return `transform:scale(${scale})`;
+}
 
 export function renderTemplate(name, data) {
   return template.render(fs.readFileSync(path.join(templateDir, name), 'utf8'), data);

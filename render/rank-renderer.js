@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-07 00:23:37
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-04 14:34:15
+ * @LastEditTime: 2026-09-16 20:51:03
  * @FilePath: /kh-plugin/render/rank-renderer.js
  * @Description: 排行榜渲染器
  * 
@@ -15,6 +15,7 @@ import template from 'art-template';
 import puppeteer from '../components/puppeteer.js';
 import { templateDir } from '../components/paths.js';
 import { getPluginVersion } from '../components/version.js';
+import { bodyScale } from '../components/render.js';
 import cfg from '../../../lib/config/config.js';
 
 export async function rankRender({ gid, gname, topN, rankType, rankTitle, config }) {
@@ -37,6 +38,7 @@ export async function rankRender({ gid, gname, topN, rankType, rankTitle, config
         limit: config.rankLimit,
         rankType: rankType,
         list: renderList,
+        bodyScale: bodyScale(config.renderScale),
         footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${getPluginVersion()}`
     };
 

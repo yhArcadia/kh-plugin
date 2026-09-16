@@ -1,3 +1,13 @@
+<!--
+ * @Author: 渔火Arcadia  https://github.com/yhArcadia
+ * @Date: 2026-08-17 19:28:15
+ * @LastEditors: 渔火Arcadia
+ * @LastEditTime: 2026-09-16 21:41:14
+ * @FilePath: /kh-plugin/resources/template/profile-avatar.html
+ * @Description: 
+ * 
+ * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
+-->
 <!doctype html>
 <html lang="zh-CN">
   <head>
@@ -13,6 +23,7 @@
         padding: 16px;
         display: flex;
         justify-content: center;
+        transform-origin: 0 0;
       }
       .container {
         width: 800px;
@@ -155,7 +166,7 @@
       }
     </style>
   </head>
-  <body>
+  <body style="{{bodyScale}}">
     <div class="container">
       <div class="header">{{displayTitle}}</div>
 
