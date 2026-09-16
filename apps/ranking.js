@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-03 22:39:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-12 16:32:38
+ * @LastEditTime: 2026-09-16 16:45:04
  * @FilePath: /kh-plugin/apps/ranking.js
  * @Description: 群员排行
  * 
@@ -28,6 +28,17 @@ import {
     computeSilenceScore,
     computeQqScore
 } from '../components/rank-scores.js';
+
+const rankCdMap = new Map();
+const RANK_CD_MS = 10_000;
+
+function checkAndSetRankCD(gid) {
+    const now = Date.now();
+    const expireAt = rankCdMap.get(gid);
+    if (expireAt && expireAt > now) return true;
+    rankCdMap.set(gid, now + RANK_CD_MS);
+    return false;
+}
 
 function extractPromotedUids(e) {
     const segments = Array.isArray(e?.message) ? e.message : [];
@@ -87,6 +98,11 @@ export class KhRanking extends BaseApp {
         if (isDivingGroup(e, config)) return false;
         if (!e.isGroup) {
             await e.reply("大王排行榜只能在群聊中使用哦！");
+            return true;
+        }
+
+        if (checkAndSetRankCD(e.group_id)) {
+            await e.reply("请10秒后再试~", true, { recallMsg: 10 });
             return true;
         }
 

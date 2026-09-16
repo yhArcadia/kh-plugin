@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-15 17:49:51
+ * @LastEditTime: 2026-09-16 16:38:53
  * @FilePath: /kh-plugin/CHANGELOG.md
  * @Description: 更新日志
  * 
@@ -12,7 +12,7 @@
 
 # 2.1.4
 
-* 新功能：**退群通报**。当检测到群友退群时，会在对应群通报提醒，并附带退群前的历史身份记录图片。可配置启用范围。
+* 新功能：**退群通报**。当检测到群友退群时，会在对应群通报提醒，并附带退群前的历史身份记录图片。 需要配置启用范围。
 
 # 2.1.3
 

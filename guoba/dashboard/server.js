@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-10 18:22:04
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-15 22:41:40
+ * @LastEditTime: 2026-09-16 00:13:10
  * @FilePath: /kh-plugin/guoba/dashboard/server.js
  * @Description: 
  * 
@@ -22,6 +22,18 @@ let routeRegistered = false;
 let retryCount = 0;
 const MAX_RETRIES = 5;
 const RETRY_INTERVAL = 5000;
+let mountPrefixCache = null;
+
+async function getGuobaMountPrefix() {
+  if (mountPrefixCache) return mountPrefixCache;
+  try {
+    const { _paths } = await import('#guoba.platform');
+    mountPrefixCache = _paths?.server?.realMountPrefix || '/guoba-plugin-mock-root';
+  } catch {
+    mountPrefixCache = '/guoba-plugin-mock-root';
+  }
+  return mountPrefixCache;
+}
 
 async function serveIndex(req, res) {
   try {
@@ -41,38 +53,9 @@ async function serveIndex(req, res) {
   }
 }
 
-async function getGuobaMountPrefix() {
-  try {
-    const { _paths } = await import('#guoba.platform');
-    return _paths?.server?.realMountPrefix || '/guoba-plugin-mock-root';
-  } catch {
-    return '/guoba-plugin-mock-root';
-  }
-}
-
-export function initDashboard() {
-  if (routeRegistered) return;
-
-  if (!globalThis.Bot?.express) {
-    console.warn('[kh-plugin] Bot.express 不可用，当前环境不支持独立看板路由，跳过注册。');
-    return;
-  }
-
-  const app = globalThis.Bot.express;
-  if (typeof app.get !== 'function') {
-    if (retryCount < MAX_RETRIES) {
-      retryCount++;
-      console.warn(`[kh-plugin] Bot.express 尚未就绪，${RETRY_INTERVAL / 1000} 秒后重试（${retryCount}/${MAX_RETRIES}）...`);
-      setTimeout(() => initDashboard(), RETRY_INTERVAL);
-    } else {
-      console.warn(`[kh-plugin] Bot.express 重试 ${MAX_RETRIES} 次后仍未就绪，放弃注册看板路由。`);
-    }
-    return;
-  }
-
+function registerRoutes(app) {
   const dashboardDir = __dirname;
 
-  // 静态文件路由
   function serveFile(res, filename, mime) {
     const fp = path.join(dashboardDir, filename);
     try {
@@ -85,6 +68,7 @@ export function initDashboard() {
       res.end('Not Found');
     }
   }
+
   app.get('/kh-plugin/dashboard/style.css', (req, res) => serveFile(res, 'style.css', 'text/css; charset=utf-8'));
   app.get('/kh-plugin/dashboard/app.js',   (req, res) => serveFile(res, 'app.js',   'application/javascript; charset=utf-8'));
   app.get('/kh-plugin/dashboard/icon.png', (req, res) => {
@@ -116,9 +100,71 @@ export function initDashboard() {
     }
   });
 
-  // HTML 页面路由（注入锅巴挂载前缀）
   app.get('/kh-plugin/dashboard', serveIndex);
+}
 
-  routeRegistered = true;
-  // console.log('[kh-plugin] 数据看板已就绪，访问地址: http://<host>:<port>/kh-plugin/dashboard');
+async function tryGetGuobaExpress() {
+  try {
+    const platform = await import('#guoba.platform');
+    const app = platform?._paths?.server?.app
+      || platform?._paths?.app
+      || platform?.app
+      || platform?.express;
+    if (app && typeof app.get === 'function') return app;
+  } catch {
+    // #guoba.platform 不可用，返回 null
+  }
+  return null;
+}
+
+async function tryResolveExpress() {
+  // TRSS-Yunzai 的 Bot.express
+  const botExpress = globalThis.Bot?.express;
+  if (botExpress && typeof botExpress.get === 'function') {
+    return { app: botExpress, source: 'Bot.express' };
+  }
+  if (botExpress) {
+  // Bot.express 存在但 get 还不是函数（Express 实例尚未初始化完成）
+    return { app: null, source: 'Bot.express', pending: true };
+  }
+
+  // 锅巴的 Express 实例（通过 #guoba.platform）
+  const guobaApp = await tryGetGuobaExpress();
+  if (guobaApp) {
+    return { app: guobaApp, source: 'guoba.platform' };
+  }
+
+  return { app: null, source: null };
+}
+
+async function doInit() {
+  if (routeRegistered) return;
+
+  const resolved = await tryResolveExpress();
+
+  if (resolved.app) {
+    registerRoutes(resolved.app);
+    routeRegistered = true;
+    return;
+  }
+
+  if (resolved.pending) {
+    if (retryCount < MAX_RETRIES) {
+      retryCount++;
+      console.warn(`[kh-plugin] Bot.express 尚未就绪，${RETRY_INTERVAL / 1000} 秒后重试（${retryCount}/${MAX_RETRIES}）...`);
+      setTimeout(() => doInit(), RETRY_INTERVAL);
+    } else {
+      console.warn(`[kh-plugin] Bot.express 重试 ${MAX_RETRIES} 次后仍未就绪，放弃注册看板路由。`);
+    }
+    return;
+  }
+
+  // 两个方案都不可用
+  console.warn('[kh-plugin] 当前环境不支持数据看板。');
+}
+
+export function initDashboard() {
+  doInit().catch(err => {
+    console.warn('[kh-plugin] 看板路由注册异常:', err.message);
+  });
 }
