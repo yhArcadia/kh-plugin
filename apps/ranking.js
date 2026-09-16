@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-03 22:39:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 23:10:26
+ * @LastEditTime: 2026-09-17 00:17:54
  * @FilePath: /kh-plugin/apps/ranking.js
  * @Description: 群员排行
  * 
@@ -110,6 +110,10 @@ export class KhRanking extends BaseApp {
                 {
                     reg: '^#?(最老|最短|最新|最小|最年轻|最长)(QQ|qq)$',
                     fnc: 'showRank'
+                },
+                {
+                    reg: '^#最亲群友$',
+                    fnc: 'showRank'
                 }
             ]
         });
@@ -167,6 +171,9 @@ export class KhRanking extends BaseApp {
             rankTitle = '最新号码';
             isAscending = false;
             isQQRank = true;
+        } else if (e.msg.includes("最亲群友")) {
+            rankType = 'intimate';
+            rankTitle = '最亲群友';
         }
 
         let tempMsgId = null;
@@ -179,17 +186,17 @@ export class KhRanking extends BaseApp {
         const matchedLinkedGroups = Array.isArray(config.linkedGroups)
             ? config.linkedGroups.filter(groupIds => groupIds.includes(currentGroupId))
             : [];
-        const joinedGroupIds = rankType === 'join'
+        const joinedGroupIds = (rankType === 'join' || rankType === 'intimate')
             ? [...new Set(matchedLinkedGroups.flat().map(Number).filter(Number.isSafeInteger))]
             : [currentGroupId];
 
-        if (rankType === 'join' && joinedGroupIds.length === 0) {
-            await e.reply("本群尚未配置互通群组，无法统计加群大王。");
+        if ((rankType === 'join' || rankType === 'intimate') && joinedGroupIds.length === 0) {
+            await e.reply(`本群尚未配置互通群组，无法统计${rankTitle}。`);
             return true;
         }
 
         let currentMemberMap = null;
-        if (rankType === 'diver' || rankType === 'active' || isQQRank || rankType === 'join') {
+        if (rankType === 'diver' || rankType === 'active' || isQQRank || rankType === 'join' || rankType === 'intimate') {
             try {
                 currentMemberMap = await e.group.getMemberMap();
             } catch (err) {
@@ -197,9 +204,9 @@ export class KhRanking extends BaseApp {
             }
         }
 
-        // 加群大王只判断qq,降低内存占用
+        // 加群大王/最亲群友 只判断qq,降低内存占用
         const joinedMemberSets = new Map();
-        if (rankType === 'join') {
+        if (rankType === 'join' || rankType === 'intimate') {
             for (const groupId of joinedGroupIds) {
                 if (groupId === currentGroupId) {
                     joinedMemberSets.set(groupId, currentMemberMap instanceof Map ? new Set(currentMemberMap.keys()) : null);
@@ -218,7 +225,7 @@ export class KhRanking extends BaseApp {
 
         const keys = await scanLegacyKeys(`${config.redisPrefix}:${e.group_id}:*`);
         const joinedHistoryUserSets = new Map();
-        if (rankType === 'join') {
+        if (rankType === 'join' || rankType === 'intimate') {
             for (const groupId of joinedGroupIds) {
                 const groupKeys = groupId === currentGroupId
                     ? keys
@@ -233,7 +240,7 @@ export class KhRanking extends BaseApp {
             }
         }
         const prefix = `${config.redisPrefix}:${e.group_id}:`;
-        const userKeys = rankType === 'join' && currentMemberMap instanceof Map
+        const userKeys = (rankType === 'join' || rankType === 'intimate') && currentMemberMap instanceof Map
             ? [...currentMemberMap.keys()].map(uid => `${prefix}${encodeRedisUid(uid)}`)
             : keys.filter(k => /^[^:]+$/.test(k.slice(prefix.length)));
 
@@ -249,6 +256,45 @@ export class KhRanking extends BaseApp {
         // 2. 预取所有用户的 Redis 数据
         const historyMap = await batchGetHistory(redis, userKeys);
 
+        // 最亲群友：先确定触发者在哪些互通组中，再构建每个群友的共同群计数
+        let commonGroupCount = null;
+        if (rankType === 'intimate') {
+            const triggerUid = Number(e.user_id);
+            const triggerGroups = new Set();
+            for (const groupId of joinedGroupIds) {
+                const memberSet = joinedMemberSets.get(groupId);
+                if (memberSet instanceof Set && memberSet.has(triggerUid)) {
+                    triggerGroups.add(groupId);
+                    continue;
+                }
+                if (joinedHistoryUserSets.get(groupId)?.has(triggerUid)) {
+                    triggerGroups.add(groupId);
+                }
+            }
+
+            commonGroupCount = new Map();
+            for (const groupId of triggerGroups) {
+                const memberSet = joinedMemberSets.get(groupId);
+                if (memberSet instanceof Set) {
+                    for (const uid of memberSet) {
+                        if (uid === triggerUid) continue;
+                        commonGroupCount.set(uid, (commonGroupCount.get(uid) || 0) + 1);
+                    }
+                }
+                const historySet = joinedHistoryUserSets.get(groupId);
+                if (historySet) {
+                    for (const uid of historySet) {
+                        if (uid === triggerUid) continue;
+                        // 只计入未被实时名单覆盖的用户，避免重复计数
+                        const ms = joinedMemberSets.get(groupId);
+                        if (!(ms instanceof Set && ms.has(uid))) {
+                            commonGroupCount.set(uid, (commonGroupCount.get(uid) || 0) + 1);
+                        }
+                    }
+                }
+            }
+        }
+
         // 3. 遍历并计算每个人的分数
         for (const key of userKeys) {
             const uid = parseInt(key.split(':').pop());
@@ -260,7 +306,7 @@ export class KhRanking extends BaseApp {
                 history = historyJson ? JSON.parse(historyJson) : [];
             } catch (err) { continue; }
 
-            if (rankType !== 'join' && history.length === 0) continue;
+            if (rankType !== 'join' && rankType !== 'intimate' && history.length === 0) continue;
             if ((rankType === 'avatar' || rankType === 'vest') && history.length <= 1) continue;
 
             let score = 0;
@@ -281,6 +327,12 @@ export class KhRanking extends BaseApp {
                     if (joinedHistoryUserSets.get(groupId)?.has(uid)) score++;
                 }
                 displayScore = `${score} 个群`;
+            } else if (rankType === 'intimate') {
+                if (currentMemberMap && !currentMemberMap.has(uid)) continue;
+                if (uid === Number(e.user_id)) continue;
+                score = commonGroupCount?.get(uid) || 0;
+                if (score <= 0) continue;
+                displayScore = `你们有${score}个共同群`;
             } else if (rankType === 'avatar') {
                 score = computeAvatarScore(history);
                 displayScore = `${score} 次`;
