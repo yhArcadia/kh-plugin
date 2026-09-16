@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 22:37:13
+ * @LastEditTime: 2026-09-16 23:06:56
  * @FilePath: /kh-plugin/apps/query.js
  * @Description: 
  * 
@@ -16,6 +16,7 @@ const RENDER_SCALE_LIMITS = [
     [50, 100],
     [70, 80],
     [100, 50],   // ≤100条: 最高50精度
+    //记录数超过上面最后一个的，采用最后一个对应精度
 ];
 const RENDER_SCALE_FALLBACK = RENDER_SCALE_LIMITS[RENDER_SCALE_LIMITS.length - 1][1];
 

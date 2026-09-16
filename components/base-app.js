@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:15:20
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 21:45:00
+ * @LastEditTime: 2026-09-16 23:02:03
  * @FilePath: /kh-plugin/components/base-app.js
  * @Description: 
  * 
@@ -50,8 +50,8 @@ export class BaseApp extends plugin {
    * @param {string} rankTitle - 排行标题
    * @returns {Promise} 渲染结果
    */
-  async rankRender(gid, gname, topN, rankType, rankTitle) {
-    return rankRender({ gid, gname, topN, rankType, rankTitle, config: this.config });
+  async rankRender(gid, gname, topN, rankType, rankTitle, renderScale) {
+    return rankRender({ gid, gname, topN, rankType, rankTitle, config: this.config, renderScale });
   }
 
   /**

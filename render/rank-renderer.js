@@ -18,7 +18,7 @@ import { getPluginVersion } from '../components/version.js';
 import { bodyScale } from '../components/render.js';
 import cfg from '../../../lib/config/config.js';
 
-export async function rankRender({ gid, gname, topN, rankType, rankTitle, config }) {
+export async function rankRender({ gid, gname, topN, rankType, rankTitle, config, renderScale }) {
 
     const maxScore = Math.max(...topN.map(i => i.score));
 
@@ -38,7 +38,7 @@ export async function rankRender({ gid, gname, topN, rankType, rankTitle, config
         limit: config.rankLimit,
         rankType: rankType,
         list: renderList,
-        bodyScale: bodyScale(config.renderScale),
+        bodyScale: bodyScale(renderScale !== undefined ? renderScale : config.renderScale),
         footer: `Created By ${cfg.package.name} v${cfg.package.version} & kh-plugin v${getPluginVersion()}`
     };
 

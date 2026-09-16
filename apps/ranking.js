@@ -2,12 +2,34 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-03 22:39:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 16:45:04
+ * @LastEditTime: 2026-09-16 23:10:26
  * @FilePath: /kh-plugin/apps/ranking.js
  * @Description: 群员排行
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
+
+//排行渲染精度动态限制: [记录数阈值, 最高渲染精度]从上到下依次匹配
+const RANK_SCALE_LIMITS = [
+    [50, 300], //50以内
+    [100, 200], //50-100
+    [150, 150], //100-150
+    [200, 100], //150-200
+    [250, 90],
+    [300, 80],
+    [350, 70], 
+    [400, 60], //350-400
+    [450, 50], //表示超过400条的
+];
+const RANK_SCALE_FALLBACK = RANK_SCALE_LIMITS[RANK_SCALE_LIMITS.length - 1][1];
+
+function capRankScale(recordCount, userScale) {
+    for (const [threshold, maxScale] of RANK_SCALE_LIMITS) {
+        if (recordCount <= threshold) return Math.min(userScale, maxScale);
+    }
+    return Math.min(userScale, RANK_SCALE_FALLBACK);
+}
+
 import fs from 'node:fs';
 import { formatDuration } from '../utils/format.js';
 import { isDivingGroup } from '../utils/group-policy.js';
@@ -343,7 +365,8 @@ export class KhRanking extends BaseApp {
         // 5. 渲染
         try {
             let gname = e.group_name || e.group_id.toString();
-            const img = await this.rankRender(e.group_id, gname, topN, rankType, rankTitle);
+            const effectiveScale = capRankScale(topN.length, config.renderScale);
+            const img = await this.rankRender(e.group_id, gname, topN, rankType, rankTitle, effectiveScale);
             if (img) {
                 await e.reply(img);
                 if (tempMsgId && e.group) {
