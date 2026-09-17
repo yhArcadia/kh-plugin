@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-03 22:39:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-17 00:17:54
+ * @LastEditTime: 2026-09-17 17:12:24
  * @FilePath: /kh-plugin/apps/ranking.js
  * @Description: 群员排行
  * 
@@ -176,12 +176,7 @@ export class KhRanking extends BaseApp {
             rankTitle = '最亲群友';
         }
 
-        let tempMsgId = null;
-        const res = await e.reply(`正在统计本群的${rankTitle}，请稍候...`);
-        if (res && res.message_id) {
-            tempMsgId = res.message_id;
-        }
-
+        // 检查互通组
         const currentGroupId = Number(e.group_id);
         const matchedLinkedGroups = Array.isArray(config.linkedGroups)
             ? config.linkedGroups.filter(groupIds => groupIds.includes(currentGroupId))
@@ -189,12 +184,19 @@ export class KhRanking extends BaseApp {
         const joinedGroupIds = (rankType === 'join' || rankType === 'intimate')
             ? [...new Set(matchedLinkedGroups.flat().map(Number).filter(Number.isSafeInteger))]
             : [currentGroupId];
-
         if ((rankType === 'join' || rankType === 'intimate') && joinedGroupIds.length === 0) {
             await e.reply(`本群尚未配置互通群组，无法统计${rankTitle}。`);
             return true;
         }
 
+        // 受理反馈
+        let tempMsgId = null;
+        const res = await e.reply(`正在统计本群的${rankTitle}，请稍候...`);
+        if (res && res.message_id) {
+            tempMsgId = res.message_id;
+        }
+
+        // 过滤已退群成员
         let currentMemberMap = null;
         if (rankType === 'diver' || rankType === 'active' || isQQRank || rankType === 'join' || rankType === 'intimate') {
             try {
