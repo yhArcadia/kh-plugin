@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-19 21:41:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 20:53:27
+ * @LastEditTime: 2026-09-17 16:18:38
  * @FilePath: /kh-plugin/components/help.js
  * @Description: 帮助文档渲染组件
  * 
@@ -72,11 +72,11 @@ export function helpCardData(file = helpMarkdown) {
     };
 }
 
-export async function renderHelpImageBuffer(data = helpCardData()) {
+export async function renderHelpImageBuffer(data = helpCardData(), scale) {
     const image = await screenshotBuffer(
         'help',
         'help-info',
-        { ...data, bodyScale: bodyScale(config.renderScale), imgType: 'png' },
+        { ...data, bodyScale: bodyScale(scale ? scale : config.renderScale), imgType: 'png' },
         helpTemplate
     );
     if (!Buffer.isBuffer(image) || image.length === 0) {
