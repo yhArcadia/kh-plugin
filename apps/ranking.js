@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-03 22:39:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-17 17:12:24
+ * @LastEditTime: 2026-09-17 17:17:11
  * @FilePath: /kh-plugin/apps/ranking.js
  * @Description: 群员排行
  * 
@@ -17,7 +17,7 @@ const RANK_SCALE_LIMITS = [
     [200, 100], //150-200
     [250, 90],
     [300, 80],
-    [350, 70], 
+    [350, 70],
     [400, 60], //350-400
     [450, 50], //表示超过400条的
 ];
@@ -185,7 +185,7 @@ export class KhRanking extends BaseApp {
             ? [...new Set(matchedLinkedGroups.flat().map(Number).filter(Number.isSafeInteger))]
             : [currentGroupId];
         if ((rankType === 'join' || rankType === 'intimate') && joinedGroupIds.length === 0) {
-            await e.reply(`本群尚未配置互通群组，无法统计${rankTitle}。`);
+            await e.reply(`本群尚未配置互通群组，无法统计${rankTitle}。`, true, { recallMsg: 10 });
             return true;
         }
 
