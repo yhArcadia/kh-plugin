@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 22:05:05
+ * @LastEditTime: 2026-09-22 15:45:25
  * @FilePath: /kh-plugin/apps/profile.js
  * @Description: 成员基础信息及头像查询
  * 
@@ -65,7 +65,7 @@ export class KhProfile extends BaseApp {
 
         try {
             const res = await e.bot.sendApi('get_stranger_info', { user_id: targetUid });
-            log.d(res);
+            log.d(`get_stranger_info'获取到的响应：\n${res}`);
             if (!res || !res.data) {
                 await e.reply(`无法获取目标 ${targetUid} 的信息，可能是账号不存在或被风控屏蔽。`);
                 return true;
