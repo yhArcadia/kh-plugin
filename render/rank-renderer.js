@@ -15,7 +15,7 @@ import template from 'art-template';
 import puppeteer from '../components/puppeteer.js';
 import { templateDir } from '../components/paths.js';
 import { getPluginVersion } from '../components/version.js';
-import { bodyScale } from '../components/render.js';
+import { bodyScale, bundledFontCss } from '../components/render.js';
 import cfg from '../../../lib/config/config.js';
 
 export async function rankRender({ gid, gname, topN, rankType, rankTitle, config, renderScale }) {
@@ -48,7 +48,8 @@ export async function rankRender({ gid, gname, topN, rankType, rankTitle, config
     const img = await puppeteer.screenshot('who_are_you_rank', {
         tplFile: path.join(templateDir, 'rank.html'),
         saveId: `${gid}_rank`,
-        ...renderData
+        ...renderData,
+        khFontCss: bundledFontCss()
     });
 
     return img;

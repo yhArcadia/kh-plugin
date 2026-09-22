@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 21:40:48
+ * @LastEditTime: 2026-09-22 17:08:49
  * @FilePath: /kh-plugin/resources/template/chat.html
  * @Description: 
  * 
@@ -14,6 +14,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>群聊记录</title>
+    <style>{{@khFontCss}}</style>
     <style>
       *,
       *::before,
@@ -75,10 +76,11 @@
       }
       .nickname {
         color: #888;
-        font-size: 26px;
+        font-size: 24px;
         /* font-weight: 500; */
         font-weight: normal;
         word-break: break-all;
+        letter-spacing: 0.35px;
       }
       .title-badge {
         /* background-color: #dda0dd;  先移除固定颜色，改为内联样式 */

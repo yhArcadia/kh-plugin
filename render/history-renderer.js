@@ -17,7 +17,7 @@ import { templateDir, resolveHeadPath } from '../components/paths.js';
 import { encodeRedisUid } from '../utils/uid-encoder.js';
 import { escapeHtml } from '../utils/html.js';
 import { getPluginVersion } from '../components/version.js';
-import { bodyScale } from '../components/render.js';
+import { bodyScale, bundledFontCss } from '../components/render.js';
 import cfg from '../../../lib/config/config.js';
 import { log } from '../utils/logger.js';
 
@@ -294,7 +294,8 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
         // saveId: `${groupId}_${e.at}`,
         saveId: `${groupId}_${targetUid}`,
         // 传递渲染数据给模板
-        ...renderData
+        ...renderData,
+        khFontCss: bundledFontCss()
     });
 
     return img;

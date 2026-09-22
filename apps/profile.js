@@ -22,7 +22,7 @@ import { getHistoryDetailed } from '../components/storage.js';
 import { log } from '../utils/logger.js';
 import { getAvatarPalette } from '../utils/avatar-palette.js';
 import { getPluginVersion } from '../components/version.js';
-import { bodyScale } from '../components/render.js';
+import { bodyScale, bundledFontCss } from '../components/render.js';
 
 export class KhProfile extends BaseApp {
     constructor() {
@@ -294,7 +294,8 @@ export class KhProfile extends BaseApp {
         const img = await puppeteer.screenshot('who_are_you_profile', {
             tplFile: path.join(templateDir, 'profile-avatar.html'),
             saveId: `avatar_${e.group_id}_${targetUid}`,
-            ...renderData
+            ...renderData,
+            khFontCss: bundledFontCss()
         });
 
         await e.reply(img);
