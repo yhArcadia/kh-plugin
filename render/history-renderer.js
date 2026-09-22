@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:18:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 22:39:26
+ * @LastEditTime: 2026-09-22 18:06:57
  * @FilePath: /kh-plugin/render/history-renderer.js
  * @Description: 历史身份渲染组件
  * 
@@ -155,8 +155,10 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
         }
 
         let mainText = '';
-        let badgeColor = '#E3E3E3';
-        let badgeTextColor = '#818181';
+        // let badgeColor = '#E3E3E3';
+        // let badgeTextColor = '#818181';
+        let badgeColor = 'rgb(181, 181, 181)';
+        let badgeTextColor = '#ffffff';
 
         if (recordTitle) {
             mainText = recordTitle;
@@ -167,14 +169,20 @@ export async function renderHistory({ e, groupId, gname, member, inquirer, fullH
         }
 
         if (recordRole === 'owner') {
-            badgeColor = '#FFE3C1'; // 狗群主
-            badgeTextColor = '#FF7B01';
+            // badgeColor = '#FFE3C1'; // 狗群主
+            // badgeTextColor = '#FF7B01';
+            badgeColor = 'rgb(246, 199, 81)';  // 狗群主
+            badgeTextColor = '#ffffff';
         } else if (recordRole === 'admin') {
-            badgeColor = '#CFEFEC'; // 狗管理
-            badgeTextColor = '#1FB19F';
+            // badgeColor = '#CFEFEC'; // 狗管理
+            // badgeTextColor = '#1FB19F';
+            badgeColor = 'rgb(119, 211, 200)'; // 狗管理
+            badgeTextColor = '#ffffff';
         } else if (recordTitle) {
-            badgeColor = '#F3D4FF'; // 紫色 (普通用户有头衔)
-            badgeTextColor = '#AB5DD4';
+            // badgeColor = '#F3D4FF'; // 紫色 (普通用户有头衔)
+            // badgeTextColor = '#AB5DD4';
+            badgeColor = 'rgb(201, 153, 251)'; // 紫色 (普通用户有头衔)
+            badgeTextColor = '#ffffff';
         }
 
         const badgeText = mainText ? `${levelText} ${mainText}` : levelText;
