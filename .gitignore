@@ -15,6 +15,7 @@ sync-help-img*
 *.cer
 *token*
 *cookie*
+.vscode
 
 *.rdb
 *.aof
