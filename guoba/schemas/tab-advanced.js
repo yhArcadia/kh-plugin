@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:25:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-26 16:58:29
+ * @LastEditTime: 2026-09-26 17:26:55
  * @FilePath: /kh-plugin/guoba/schemas/tab-advanced.js
  * @Description: 进阶配置页面
  * 
@@ -14,7 +14,7 @@ export default [
   { component: 'SOFT_GROUP_BEGIN', label: '进阶配置' },
 
 
-  { component: 'Divider', label: '自动更新与定时任务' },
+  { component: 'Divider', label: '定时更新群员信息' },
   {
     field: 'updateSchedule',
     label: labels.updateSchedule,
@@ -60,7 +60,38 @@ export default [
   },
 
 
-  { component: 'Divider', label: '闲置头像扫描' },
+  { component: 'Divider', label: '退群通报' },
+  {
+    field: 'leaveNoticeAllGroups',
+    label: labels.leaveNoticeAllGroups,
+    component: 'Switch',
+    componentProps: { defaultValue: true },
+    bottomHelpMessage: '开启后对全群启用退群通报。关闭后仅在下方列表中配置的群启用。'
+  },
+  {
+    field: 'leaveNoticeGroups',
+    label: labels.leaveNoticeGroups,
+    component: 'GSelectGroup',
+    componentProps: { placeholder: '选择需要启用退群通报的群' }
+  },
+
+
+  { component: 'Divider', label: '渲染精度' },
+  {
+    field: 'renderScale',
+    label: labels.renderScale,
+    component: 'InputNumber',
+    componentProps: {
+      min: 50,
+      max: 300,
+      step: 10,
+      placeholder: ''
+    },
+    bottomHelpMessage: '控制生成图片的清晰度。增大此值提高图片清晰度，但会增加耗时，建议不超过200。图片过大可能导致OOM，以及协议端发送失败。如果较长的记录出现发不出图的情况，请考虑降低精度。'
+  },
+
+
+  { component: 'Divider', label: '其他定时任务' },
   {
     field: 'orphanScanSchedule',
     label: labels.orphanScanSchedule,
@@ -81,34 +112,4 @@ export default [
     },
     bottomHelpMessage: 'KH临时HTML缓存清理计划，默认每天凌晨04:40执行一次.'
   },
-
-  { component: 'Divider', label: '退群通报' },
-  {
-    field: 'leaveNoticeAllGroups',
-    label: labels.leaveNoticeAllGroups,
-    component: 'Switch',
-    componentProps: { defaultValue: true },
-    bottomHelpMessage: '开启后对全群启用退群通报。关闭后仅在下方列表中配置的群启用。'
-  },
-  {
-    field: 'leaveNoticeGroups',
-    label: labels.leaveNoticeGroups,
-    component: 'GSelectGroup',
-    componentProps: { placeholder: '选择需要启用退群通报的群' }
-  },
-
-  { component: 'Divider', label: '渲染精度' },
-  {
-    field: 'renderScale',
-    label: labels.renderScale,
-    component: 'InputNumber',
-    componentProps: {
-      min: 50,
-      max: 300,
-      step: 10,
-      placeholder: ''
-    },
-    bottomHelpMessage: '控制生成图片的清晰度。增大此值提高图片清晰度，但会增加耗时，建议不超过200。图片过大可能导致OOM，以及协议端发送失败。如果较长的记录出现发不出图的情况，请考虑降低精度。'
-  },
-
 ];
