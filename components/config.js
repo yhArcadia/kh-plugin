@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 21:15:15
+ * @LastEditTime: 2026-09-26 16:57:00
  * @FilePath: /kh-plugin/components/config.js
  * @Description: 配置文件管理
  * 
@@ -68,6 +68,7 @@ export const defaultConfig = Object.freeze({
   autoUpdateGroups: [],
   updateSchedule: '30 3 * * *',
   orphanScanSchedule: '30 4 * * *',
+  htmlCacheCleanSchedule: '40 4 * * *',
   notifyGroups: [],
   leaveNoticeAllGroups: false,
   leaveNoticeGroups: [],
@@ -135,7 +136,7 @@ function normalize(raw = {}, fallbacks = defaultConfig) {
         ? normalizeLinkedGroups(value)
         : [...new Set(value.map(Number).filter(Number.isFinite))];
     }
-    if (field === 'updateSchedule' || field === 'orphanScanSchedule') value = String(value || fallback).trim();
+    if (field === 'updateSchedule' || field === 'orphanScanSchedule' || field === 'htmlCacheCleanSchedule') value = String(value || fallback).trim();
     if (field === 'notifyRules') value = normalizeNotifyRules(value);
     out[field] = value;
   }
@@ -149,7 +150,7 @@ function writeUserOverrides(overrides) {
     return;
   }
   const doc = new YAML.Document(overrides);
-  for (const key of ['updateSchedule', 'orphanScanSchedule']) {
+  for (const key of ['updateSchedule', 'orphanScanSchedule', 'htmlCacheCleanSchedule']) {
     if (doc.has(key)) {
       const node = doc.get(key, true);
       if (node instanceof YAML.Scalar && node.value && typeof node.value === 'string' && node.value.includes('*')) {

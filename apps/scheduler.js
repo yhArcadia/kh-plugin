@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-06 20:43:39
+ * @LastEditTime: 2026-09-26 17:13:20
  * @FilePath: /kh-plugin/apps/scheduler.js
  * @Description: 定时任务初始化（不继承 plugin，由 index.js 统一调用）
  * 
@@ -14,6 +14,8 @@ import { log } from '../utils/logger.js';
 import { isGroupAllowed } from '../utils/group-policy.js';
 import { runOrphanScan } from '../services/orphan-scanner.js';
 import { headsDir } from '../components/paths.js';
+import path from 'node:path';
+import { cleanKhHtmlCache } from '../services/html-cache.js';
 
 async function scheduleUpdateCore(operation = null) {
     const Bot = getBot();
@@ -49,6 +51,11 @@ async function scheduleUpdateCore(operation = null) {
 async function scheduleOrphanScan(operation = null) {
     log.i('[闲置头像扫描] 定时任务触发');
     await runOrphanScan({ redis, config, headsDir, operation });
+}
+
+async function scheduleHtmlCacheClean() {
+    const result = await cleanKhHtmlCache(path.join(process.cwd(), 'temp', 'html'), log);
+    log.i(`[临时HTML缓存清理] 删除 ${result.deletedFiles} 个文件，释放 ${result.deletedSize} 字节`);
 }
 
 export function initScheduler() {
@@ -87,5 +94,22 @@ export function initScheduler() {
             label: '闲置头像扫描'
         });
         state.orphanScheduler.start();
+    }
+
+    if (state.htmlCacheScheduler) {
+        state.htmlCacheScheduler.config = config;
+        state.htmlCacheScheduler.run = () => scheduleHtmlCacheClean();
+        state.htmlCacheScheduler.log = log;
+        state.htmlCacheScheduler.reschedule();
+    } else {
+        state.htmlCacheScheduler = new Scheduler({
+            config,
+            redis,
+            run: () => scheduleHtmlCacheClean(),
+            log,
+            scheduleKey: 'htmlCacheCleanSchedule',
+            label: 'HTML缓存清理'
+        });
+        state.htmlCacheScheduler.start();
     }
 }

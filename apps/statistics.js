@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-22 22:40:07
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-08 17:20:51
+ * @LastEditTime: 2026-09-26 17:17:21
  * @FilePath: /kh-plugin/apps/statistics.js
  * @Description: 头像存储统计
  * 
@@ -18,6 +18,7 @@ import { config } from '../components/runtime.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { log } from '../utils/logger.js';
 import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
+import { collectKhHtmlCacheStats, cleanKhHtmlCache } from '../services/html-cache.js';
 
 
 const OLD_FORMAT_RE = /^(\d+)_(.+)_(\d+)\.jpg$/i;
@@ -25,6 +26,7 @@ const NEW_FORMAT_RE = /^(.+)_(\d+)\.jpg$/i;
 const STAT_CONCURRENCY = 48;
 const TOP_N_USERS = 50;
 const ORPHAN_PREVIEW_LIMIT = 50;
+const khHtmlDir = path.join(process.cwd(), 'temp', 'html');
 
 let orphanCleaning = false;
 
@@ -134,6 +136,10 @@ export class KhStatistics extends plugin {
                 {
                     reg: '^#?kh清理闲置(头像)?$',
                     fnc: 'cleanOrphanAvatars'
+                },
+                {
+                    reg: '^#?kh清理缓存$',
+                    fnc: 'cleanHtmlCache'
                 }
             ]
         });
@@ -161,9 +167,14 @@ export class KhStatistics extends plugin {
             const dedupSavings = stats.totalPossibleSize - stats.totalActualSize;
             msg += '📦 全局概览\n';
             msg += `  活跃头像：${stats.activeFiles.toLocaleString('zh-CN')} 个\n`;
-            msg += `  磁盘占用：${formatBytes(stats.totalActualSize)}\n`;
+            msg += `  头像占用：${formatBytes(stats.totalActualSize)}\n`;
             if (dedupSavings > 0) {
                 msg += `  跨群共享：${formatBytes(dedupSavings)}\n`;
+            }
+            if (stats.htmlCacheStats.totalFiles > 0) {
+                msg += `\n  html缓存：${stats.htmlCacheStats.totalFiles.toLocaleString('zh-CN')} 个文件 · ${formatBytes(stats.htmlCacheStats.totalSize)}\n`;
+                const totalStorage = stats.totalActualSize + stats.orphanStats.totalSize + stats.htmlCacheStats.totalSize;
+                msg += `\n  kh总占用：${formatBytes(totalStorage)}\n`;
             }
 
             // 维度二：分群占用（全量归因）
@@ -214,7 +225,11 @@ export class KhStatistics extends plugin {
                 if (stats.orphanStats.earliestDate) {
                     msg += `  最早：${stats.orphanStats.earliestDate} · 最新：${stats.orphanStats.latestDate}\n`;
                 }
-                msg += '  输入 #kh闲置头像 查看 · #kh清理闲置 清除\n';
+                msg += '  发送 #kh闲置头像 查看\n  发送 #kh清理闲置 清除\n';
+            }
+            if (stats.htmlCacheStats.totalFiles > 0) {
+                msg += `\n🧹 临时HTML缓存\n  待清理：${stats.htmlCacheStats.totalFiles} 个文件 · ${formatBytes(stats.htmlCacheStats.totalSize)}\n`;
+                msg += '  发送 #kh清理缓存 来清除\n';
             }
 
             const forwardMsg = await (e.isGroup
@@ -375,14 +390,30 @@ export class KhStatistics extends plugin {
             log.d(`统计孤儿头像: orphans目录访问失败: ${err.message}`);
         }
 
+        const htmlCacheStats = await collectKhHtmlCacheStats(khHtmlDir);
+
         return {
             activeFiles: uniqueFiles.size,
             totalActualSize,
             totalPossibleSize,
             groupStats,
             topUsers,
-            orphanStats
+            orphanStats,
+            htmlCacheStats
         };
+    }
+
+    async cleanHtmlCache(e) {
+        if (!e.isMaster) return false;
+        if (isDivingGroup(e, config)) return false;
+        try {
+            const result = await cleanKhHtmlCache(khHtmlDir, log);
+            await e.reply(`KH临时HTML缓存清理完成\n删除：${result.deletedFiles} 个文件\n释放：${formatBytes(result.deletedSize)}`);
+        } catch (error) {
+            log.e('清理kH临时HTML缓存失败', error);
+            await e.reply('清理KH临时HTML缓存时发生错误，请查看控制台日志。');
+        }
+        return true;
     }
 
     async showOrphanAvatars(e) {

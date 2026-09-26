@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:24:34
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-16 20:50:27
+ * @LastEditTime: 2026-09-26 16:57:57
  * @FilePath: /kh-plugin/guoba/schemas/labels.js
  * @Description: 
  * 
@@ -26,5 +26,6 @@ export default {
   leaveNoticeAllGroups: '退群通报全群启用',
   leaveNoticeGroups: '退群通报群列表',
   orphanScanSchedule: '闲置头像扫描 Cron',
+  htmlCacheCleanSchedule: '临时HTML缓存清理Cron',
   renderScale: '渲染精度'
 };
