@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-26 16:57:00
+ * @LastEditTime: 2026-09-26 18:44:37
  * @FilePath: /kh-plugin/components/config.js
  * @Description: 配置文件管理
  * 
@@ -68,7 +68,7 @@ export const defaultConfig = Object.freeze({
   autoUpdateGroups: [],
   updateSchedule: '30 3 * * *',
   orphanScanSchedule: '30 4 * * *',
-  htmlCacheCleanSchedule: '40 4 * * *',
+  htmlCacheCleanSchedule: '0 * * * *',
   notifyGroups: [],
   leaveNoticeAllGroups: false,
   leaveNoticeGroups: [],

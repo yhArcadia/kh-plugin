@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-07 00:23:33
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-08-14 23:17:45
+ * @LastEditTime: 2026-09-26 18:43:42
  * @FilePath: /kh-plugin/utils/format.js
  * @Description: 一些格式化工具
  * 
@@ -71,3 +71,12 @@ export function getProgressBar(current, total, barLength = 40) {
     return `${filledStr}${emptyStr} ${percent}% (${current}/${total})`;
 }
 
+
+// 格式化字节数为可读格式
+export function formatBytes(bytes) {
+    if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+    const value = bytes / (1024 ** index);
+    return `${value >= 100 || index === 0 ? value.toFixed(0) : value.toFixed(2)} ${units[index]}`;
+}

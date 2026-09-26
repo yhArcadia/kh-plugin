@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-22 22:40:07
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-26 17:18:50
+ * @LastEditTime: 2026-09-26 18:34:15
  * @FilePath: /kh-plugin/apps/statistics.js
  * @Description: 头像存储统计
  * 
@@ -19,7 +19,7 @@ import { isDivingGroup } from '../utils/group-policy.js';
 import { log } from '../utils/logger.js';
 import { acquireOperationLock, startLockRenewer } from '../components/operation-lock.js';
 import { collectKhHtmlCacheStats, cleanKhHtmlCache } from '../services/html-cache.js';
-
+import { formatBytes } from '../utils/format.js';
 
 const OLD_FORMAT_RE = /^(\d+)_(.+)_(\d+)\.jpg$/i;
 const NEW_FORMAT_RE = /^(.+)_(\d+)\.jpg$/i;
@@ -29,14 +29,6 @@ const ORPHAN_PREVIEW_LIMIT = 50;
 const khHtmlDir = path.join(process.cwd(), 'temp', 'html');
 
 let orphanCleaning = false;
-
-function formatBytes(bytes) {
-    if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
-    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-    const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
-    const value = bytes / (1024 ** index);
-    return `${value >= 100 || index === 0 ? value.toFixed(0) : value.toFixed(2)} ${units[index]}`;
-}
 
 function normalizeFileEntry(filename) {
     const oldMatch = filename.match(OLD_FORMAT_RE);

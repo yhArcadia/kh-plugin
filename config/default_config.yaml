@@ -63,7 +63,7 @@ updateSchedule: '30 3 * * *'  #每天凌晨3:30
 orphanScanSchedule: '30 4 * * *'  #每天凌晨4:30
 
 # KH临时HTML缓存清理 Cron 表达式
-htmlCacheCleanSchedule: '0 0/4 * * *'
+htmlCacheCleanSchedule: '0 * * * *'
 
 
 

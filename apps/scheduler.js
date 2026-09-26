@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-08 20:52:03
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-26 17:13:20
+ * @LastEditTime: 2026-09-26 18:41:05
  * @FilePath: /kh-plugin/apps/scheduler.js
  * @Description: 定时任务初始化（不继承 plugin，由 index.js 统一调用）
  * 
@@ -16,6 +16,7 @@ import { runOrphanScan } from '../services/orphan-scanner.js';
 import { headsDir } from '../components/paths.js';
 import path from 'node:path';
 import { cleanKhHtmlCache } from '../services/html-cache.js';
+import { formatBytes } from '../utils/format.js';
 
 async function scheduleUpdateCore(operation = null) {
     const Bot = getBot();
@@ -55,7 +56,10 @@ async function scheduleOrphanScan(operation = null) {
 
 async function scheduleHtmlCacheClean() {
     const result = await cleanKhHtmlCache(path.join(process.cwd(), 'temp', 'html'), log);
-    log.i(`[临时HTML缓存清理] 删除 ${result.deletedFiles} 个文件，释放 ${result.deletedSize} 字节`);
+    if (result.deletedFiles === 0)
+        log.i(`[临时HTML缓存清理] 未检测到kh-plugin相关缓存文件`);
+    else
+        log.i(`[临时HTML缓存清理] 删除 ${result.deletedFiles} 个文件，释放 ${formatBytes(result.deletedSize)} 空间`);
 }
 
 export function initScheduler() {
