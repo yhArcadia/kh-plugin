@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:58
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-11 19:18:15
+ * @LastEditTime: 2026-09-26 17:17:55
  * @FilePath: /kh-plugin/index.js
  * @Description: 插件入口
  * 
@@ -105,8 +105,8 @@ if (migration.status === 'migrated') {
   const elapsed = Date.now() - startTime;
   const boxLines = [];
 
-  // boxLines.push(boxLine(`载入完成！`));
-  boxLines.push(boxLine(`载入完成，耗时: ${elapsed}ms`));
+  boxLines.push(boxLine(`载入完成！`));
+  // boxLines.push(boxLine(`载入完成，耗时: ${elapsed}ms`));
 
   if (successModules.length > 0) {
     boxLines.push(boxLine(`成功载入 ${successModules.length} 个模块：`));
