@@ -43,6 +43,10 @@ export function refreshConfig() {
     state.orphanScheduler.config = _config;
     state.orphanScheduler.reschedule();
   }
+  if (state?.htmlCacheScheduler) {
+    state.htmlCacheScheduler.config = _config;
+    state.htmlCacheScheduler.reschedule();
+  }
   return _config;
 }
 

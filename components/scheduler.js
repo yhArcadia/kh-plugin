@@ -13,13 +13,14 @@ import { acquireOperationLock, startLockRenewer } from './operation-lock.js';
 import { log as defaultLog } from '../utils/logger.js';
 
 export class Scheduler {
-  constructor({ config, redis, run, log = defaultLog, scheduleKey = 'updateSchedule', label = '定时任务' }) {
+  constructor({ config, redis, run, log = defaultLog, scheduleKey = 'updateSchedule', label = '定时任务', lockName = 'auto-update' }) {
     this.config = config;
     this.redis = redis;
     this.run = run;
     this.log = log;
     this.scheduleKey = scheduleKey;
     this.label = label;
+    this.lockName = lockName;
     this.job = null;
   }
 
@@ -51,7 +52,7 @@ export class Scheduler {
 
   async execute() {
     const key = `${this.config.redisPrefix}${this.config.lockKeyOperation}`;
-    const lock = await acquireOperationLock(this.redis, key, this.config.lockTTL, 'auto-update');
+    const lock = await acquireOperationLock(this.redis, key, this.config.lockTTL, this.lockName);
     if (!lock) return false;
 
     let lost = false;

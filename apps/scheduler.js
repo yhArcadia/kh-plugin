@@ -100,6 +100,7 @@ export function initScheduler() {
         state.htmlCacheScheduler.config = config;
         state.htmlCacheScheduler.run = () => scheduleHtmlCacheClean();
         state.htmlCacheScheduler.log = log;
+        state.htmlCacheScheduler.lockName = 'html-cache-clean';
         state.htmlCacheScheduler.reschedule();
     } else {
         state.htmlCacheScheduler = new Scheduler({
@@ -108,7 +109,8 @@ export function initScheduler() {
             run: () => scheduleHtmlCacheClean(),
             log,
             scheduleKey: 'htmlCacheCleanSchedule',
-            label: 'HTML缓存清理'
+            label: 'HTML缓存清理',
+            lockName: 'html-cache-clean'
         });
         state.htmlCacheScheduler.start();
     }
