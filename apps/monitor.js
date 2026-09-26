@@ -57,7 +57,7 @@ export class Monitor extends BaseApp {
 
         bot.on('message.group', handler);
         globalThis[MONITOR_LISTENER_KEY] = handler;
-        log.i('已注册message.group监听全部目标群消息。');
+        log.i('已注册message.group监听');
     }
 
     async monitorMessage(e) {

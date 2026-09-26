@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-22 22:40:07
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-26 17:17:21
+ * @LastEditTime: 2026-09-26 17:18:50
  * @FilePath: /kh-plugin/apps/statistics.js
  * @Description: 头像存储统计
  * 
@@ -173,8 +173,8 @@ export class KhStatistics extends plugin {
             }
             if (stats.htmlCacheStats.totalFiles > 0) {
                 msg += `\n  html缓存：${stats.htmlCacheStats.totalFiles.toLocaleString('zh-CN')} 个文件 · ${formatBytes(stats.htmlCacheStats.totalSize)}\n`;
-                const totalStorage = stats.totalActualSize + stats.orphanStats.totalSize + stats.htmlCacheStats.totalSize;
-                msg += `\n  kh总占用：${formatBytes(totalStorage)}\n`;
+                // const totalStorage = stats.totalActualSize + stats.orphanStats.totalSize + stats.htmlCacheStats.totalSize;
+                // msg += `\n  kh总占用：${formatBytes(totalStorage)}\n`;
             }
 
             // 维度二：分群占用（全量归因）
