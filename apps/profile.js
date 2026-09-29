@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-22 15:45:25
+ * @LastEditTime: 2026-09-29 22:14:36
  * @FilePath: /kh-plugin/apps/profile.js
  * @Description: 成员基础信息及头像查询
  * 
@@ -98,7 +98,8 @@ export class KhProfile extends BaseApp {
             let regDaysStr = '未知';
             if (regTime > 0) {
                 const regMoment = moment(regTime * 1000);
-                regTimeStr = regMoment.format('YYYY-MM-DD HH:mm');
+                //这里暂时改为只精确到年份先
+                regTimeStr = regMoment.format('YYYY');
                 const days = moment().diff(regMoment, 'days');
                 const years = (days / 365).toFixed(1);
                 regDaysStr = `${days}天 (≈${years}年)`;
@@ -130,9 +131,9 @@ export class KhProfile extends BaseApp {
             msg += `查询签名： ${longNick}\n`;
             msg += `性别年龄： ${sexStr} / ${age}\n`;
             msg += `所在地区： ${locationStr}\n`;
-            msg += `注册时间： ${regTimeStr}\n`;
+            msg += `注册时间： ${regTimeStr}年\n`;
             if (regTime > 0) msg += `注册时长： ${regDaysStr}\n`;
-            if (loginDays > 0) msg += `活跃天数： ${loginDays}天\n`;
+            if (loginDays > 0) msg += `活跃天数： 约${loginDays}天\n`;
             if (richTime > 0) msg += `资料更新： ${richTimeStr}\n`;
             msg += `会员状态： ${vipStr}\n`;
             msg += `══════════════\n`;
