@@ -10,16 +10,16 @@
  */
 export function parseLouvreOptions(msg) {
     const options = {
-      style: /^#?线稿/.test(msg || '') ? '精细' : '一般',
+      style: '一般',
       lineWeight: 118,
       toneCount: 108,
       denoise: true,
-      kiss: !/^#?线稿/.test(msg || ''),
+      kiss: true,
       watermark: true,
       firstEdition: true,
     };
     if (!msg) return options;
-    const cleanMsg = msg.replace(/^#?(?:卢浮宫|louvre|线稿)/i, '').trim();
+    const cleanMsg = msg.replace(/^#?(?:卢浮宫|louvre)/i, '').trim();
     const lowerCaseMsg = cleanMsg.toLowerCase();
 
     const styles = ['精细', '一般', '稍粗', '超粗', '极粗', '浮雕', '线稿'];
