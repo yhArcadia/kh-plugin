@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-10-03 17:08:19
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-10-03 18:23:31
+ * @LastEditTime: 2026-10-03 18:53:06
  * @FilePath: /kh-plugin/apps/louvre.js
  * @Description: 卢浮宫滤镜
  * 
@@ -34,7 +34,7 @@ export class Louvre extends BaseApp {
     if (isDivingGroup(e, this.config)) return false;
     if (/帮助|help/i.test(e.msg || '')) {
       // return false;
-      await e.reply('卢浮宫滤镜：\n  #卢浮宫\n  #卢浮宫+图片\n  #卢浮宫+引用图片回复\n  #卢浮宫@某人\n线稿：\n  #线稿（用法同上）\n\n自定义参数：\n  线条：精细、一般、稍粗、超粗、极粗、浮雕、线稿\n  开关：开/关降噪、开/关Kiss、开/关水印、开/关初回\n  线迹80-126（默认118），调子20-200（默认108）\n默认：一般、降噪/Kiss/水印/初回开启。初回仅在开启水印时生效。\n例：#卢浮宫 超粗 关水印 调子150');
+      await e.reply('卢浮宫滤镜：\n  #卢浮宫\n  #卢浮宫+图片\n  #卢浮宫+引用图片回复\n  #卢浮宫@某人\n线稿：\n  #线稿（用法同上）\n\n自定义参数：\n  线条：精细、一般、稍粗、超粗、极粗、浮雕、线稿\n  开关：开/关降噪、开/关Kiss、开/关水印、开/关初回\n  线迹80-126（默认118），调子20-200（默认108）\n默认：一般、降噪/Kiss/水印/初回开启。初回仅在开启水印时生效。\n例：#卢浮宫 超粗 关水印 调子150\n\n在线使用：https://lab.magiconch.com/one-last-image/');
       return true;
     }
     
