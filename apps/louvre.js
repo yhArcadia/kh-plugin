@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-10-03 17:08:19
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-10-03 18:07:50
+ * @LastEditTime: 2026-10-03 18:13:05
  * @FilePath: /kh-plugin/apps/louvre.js
  * @Description: 卢浮宫滤镜
  * 
@@ -62,7 +62,7 @@ export class Louvre extends BaseApp {
         }
       }
       
-      await e.reply('正在生成卢浮宫风格图片，请稍候…');
+      // await e.reply('正在生成卢浮宫风格图片，请稍候…');
       const image = await renderLouvre(url, parseLouvreOptions(e.msg));
       await e.reply(segment.image(image));
     } catch (error) {
