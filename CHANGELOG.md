@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-10-03 18:02:06
+ * @LastEditTime: 2026-10-03 19:55:53
  * @FilePath: /kh-plugin/CHANGELOG.md
  * @Description: 更新日志
  * 
@@ -12,7 +12,7 @@
 
 # 2.1.9
 
-* 新增`#lououvre`、`#卢浮宫`：用于生成卢浮宫风格化滤镜图片。
+* 新增`#lououvre`、`#卢浮宫`：用于生成one-last-image风格化滤镜图片。
 
 # 2.1.8
 
