@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-10-03 17:09:04
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-10-03 17:23:11
+ * @LastEditTime: 2026-10-03 18:40:15
  * @FilePath: /kh-plugin/services/louvre-renderer.js
  * @Description: 
  * 
@@ -17,7 +17,7 @@ async function loadAssets() {
   if (!assets) assets = Promise.all([
     fs.readFile(new URL('../resources/louvre/louvre.js', import.meta.url), 'utf8'),
     fs.readFile(new URL('../resources/louvre/pencil-texture.jpg', import.meta.url)),
-    fs.readFile(new URL('../resources/louvre/one-last-image-logo2.png', import.meta.url)),
+    fs.readFile(new URL('../resources/louvre/kh-logo.png', import.meta.url)),
   ]).catch(error => { assets = null; throw error; });
   return assets;
 }

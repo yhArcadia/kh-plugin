@@ -500,7 +500,7 @@ let pencilTextureEl;
 const louvreInit = onOver=>{
 	loadImage('pencil-texture.jpg',el=>{
 		pencilTextureEl = el;
-		loadImage('one-last-image-logo2.png',el=>{
+		loadImage('kh-logo.png',el=>{
 			watermarkImageEl = el;
 			onOver();
 		});
