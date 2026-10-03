@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-10-03 17:09:22
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-10-03 17:54:57
+ * @LastEditTime: 2026-10-03 18:15:13
  * @FilePath: /kh-plugin/utils/louvre-options.js
  * @Description: 卢浮宫滤镜选项解析
  * 
@@ -16,7 +16,7 @@ export function parseLouvreOptions(msg) {
       denoise: true,
       kiss: !/^#?线稿/.test(msg || ''),
       watermark: true,
-      firstEdition: false,
+      firstEdition: true,
     };
     if (!msg) return options;
     const cleanMsg = msg.replace(/^#?(?:卢浮宫|louvre|线稿)/i, '').trim();
