@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-19 21:26:57
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-17 00:32:21
+ * @LastEditTime: 2026-10-03 18:04:04
  * @FilePath: /kh-plugin/resources/help/help.md
  * @Description: kh插件帮助文档
  * 
@@ -36,6 +36,7 @@
 # 娱乐功能
 
 - `#猜群友`：娱乐功能，bot发送随机群友头像一角供大家猜人，可引用该图片并at对应群友，或引用并回复“提示”来获取提示。
+- `#卢浮宫`、`#louvre`：对头像或者指定图片应用 One Last Kiss 风格化滤镜。使用`#卢浮宫帮助`以查看详细说明。
 
 # 记录与备注管理
 
