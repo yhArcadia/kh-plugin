@@ -14,6 +14,7 @@ import { mentionedUserId } from '../utils/message.js';
 import { isDivingGroup } from '../utils/group-policy.js';
 import { parseLouvreOptions } from '../utils/louvre-options.js';
 import { renderLouvre } from '../services/louvre-renderer.js';
+import { LouvreError, louvreErrorReply } from '../utils/louvre-errors.js';
 import { log } from '../utils/logger.js';
 
 let running = false;
@@ -64,10 +65,11 @@ export class Louvre extends BaseApp {
       
       // await e.reply('正在生成卢浮宫风格图片，请稍候…');
       const image = await renderLouvre(url, parseLouvreOptions(e.msg));
-      await e.reply(segment.image(image));
+      try { await e.reply(segment.image(image)); }
+      catch (error) { throw new LouvreError('SEND', '发送图片失败', error); }
     } catch (error) {
-      log.e(`卢浮宫图片处理失败：${error.stack || error.message}`);
-      await e.reply('图片处理失败，请检查图片是否有效及 Yunzai 浏览器是否正常；大图可缩小后重试。');
+      log.e(`卢浮宫图片处理失败 [${error.code || 'UNKNOWN'}]：${error.stack || error.message}\n原因：${error.cause?.stack || error.cause?.message || '无'}`);
+      await e.reply(louvreErrorReply(error));
     } finally { running = false; }
     return true;
   }
