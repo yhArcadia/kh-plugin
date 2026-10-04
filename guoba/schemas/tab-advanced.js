@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-01 19:25:44
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-26 18:44:58
+ * @LastEditTime: 2026-10-04 15:39:37
  * @FilePath: /kh-plugin/guoba/schemas/tab-advanced.js
  * @Description: 进阶配置页面
  * 
@@ -110,6 +110,6 @@ export default [
       placeholder: '选择 Cron 表达式',
       hideSecond: true,
     },
-    bottomHelpMessage: 'KH临时HTML缓存清理计划，默认每小时执行一次.'
+    bottomHelpMessage: 'KH临时HTML缓存清理计划，默认每天凌晨04:00执行一次。'
   },
 ];
