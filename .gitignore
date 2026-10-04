@@ -2,7 +2,7 @@ node_modules/
 data/
 config/config.yaml
 *.log
-test/
+tests/
 sync-help-img*
 .env
 .env.*
