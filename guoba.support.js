@@ -2,9 +2,9 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-12 18:26:02
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-12 00:45:04
+ * @LastEditTime: 2026-10-04 17:26:57
  * @FilePath: /kh-plugin/guoba.support.js
- * @Description: 
+ * @Description: 锅巴入口
  * 
  * Copyright (c) 2026 by 渔火Arcadia 1761869682@qq.com, All Rights Reserved. 
  */
@@ -28,7 +28,7 @@ export function supportGuoba() {
       isV3: true,
       showInMenu: 'auto',
       iconPath: path.join(pluginRoot, 'resources/img/icon.png'),
-      description: '群成员头像昵称记录留档工具，有效制裁群友“改头换面”、秽土转生。(如链接打不开请把github换成gitee)'
+      description: '群成员头像昵称记录留档工具，有效应对群友“改头换面”、秽土转生。(如链接打不开请把github换成gitee)'
     },
     configInfo: {
       schemas,
