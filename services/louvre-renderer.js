@@ -12,6 +12,7 @@ import fs from 'node:fs/promises';
 import puppeteer from '../components/puppeteer.js';
 import fetch from 'node-fetch';
 import { LouvreError } from '../utils/louvre-errors.js';
+import { resolveLouvreBrowser } from '../utils/louvre-browser.js';
 
 let assets;
 async function loadAssets() {
@@ -57,9 +58,14 @@ export async function renderLouvre(imageUrl, options) {
   // Use Yunzai's existing browser; never launch or close a separate browser.
   let page;
   try {
-    const initialized = typeof puppeteer.browserInit === 'function' ? await puppeteer.browserInit() : null;
-    const browser = initialized?.newPage ? initialized : puppeteer.browser;
-    if (!browser?.newPage) throw new Error('没有可用的 Yunzai 浏览器实例');
+    const browser = await resolveLouvreBrowser(puppeteer, async () => {
+      try {
+        const { default: loader } = await import('../../../lib/renderer/loader.js');
+        return loader.getRenderer('puppeteer');
+      } catch (error) {
+        throw new Error('无法读取框架注册的 Puppeteer 渲染器', { cause: error });
+      }
+    });
     page = await browser.newPage();
   } catch (error) { throw new LouvreError('BROWSER', '浏览器初始化阶段失败', error); }
   let timedOut = false;
