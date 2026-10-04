@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-06 19:58:55
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-15 16:22:43
+ * @LastEditTime: 2026-10-04 17:23:44
  * @FilePath: /kh-plugin/README.md
  * @Description: 
  * 
@@ -103,7 +103,6 @@ pnpm install --filter kh-plugin
 | 为什么我的排行榜人数很少？ | 初次使用排行类命令，建议先在对应群里执行 `#更新群员信息` 来拉取全员信息，否则排行榜只会包含已发言的群员。 |
 | 为什么群友改名换头像后明明发言了，但是bot没有推送？ | 需要将对应群加入实时推送列表。可以通过锅巴来配置，或者参考[这个](./config/default_config.yaml#L67)去创建和编辑`kh-plugin/config/config.yaml`。另：实时检测功能本身也存在[个人cd](./config/default_config.yaml#L73)，因此改名后发言未必会立刻被检测到。 |
 | 在官Bot无法正常使用？ | 未适配官机。 |
-| `#查信息`每个人得到的注册时间都是xx年01月01日。 | 这个精度只能到年，还没找到更好的抓取方法。 |
 
 
 
