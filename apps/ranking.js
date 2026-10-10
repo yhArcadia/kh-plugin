@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-09-03 22:39:10
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-09-17 17:17:11
+ * @LastEditTime: 2026-10-10 16:38:51
  * @FilePath: /kh-plugin/apps/ranking.js
  * @Description: 群员排行
  * 
@@ -373,7 +373,8 @@ export class KhRanking extends BaseApp {
                 }
             }
 
-            if (rankType === 'join' && score <= 0) continue;
+            // 群数量榜只展示至少 2 个群（或共同群）的成员。
+            if ((rankType === 'join' || rankType === 'intimate') && score <= 1) continue;
             // 此处允许 active 的得分为 0
             if (score <= 0 && rankType !== 'newbie' && rankType !== 'active') continue;
             if ((rankType === 'veteran' || rankType === 'newbie') && latestRecord.join_time === 0) continue;

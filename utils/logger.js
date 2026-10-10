@@ -2,7 +2,7 @@
  * @Author: 渔火Arcadia  https://github.com/yhArcadia
  * @Date: 2026-08-09 19:36:23
  * @LastEditors: 渔火Arcadia
- * @LastEditTime: 2026-10-04 18:12:44
+ * @LastEditTime: 2026-10-10 16:35:52
  * @FilePath: /kh-plugin/utils/logger.js
  * @Description: 覆写logger，添加插件专属前缀。
  * 
@@ -10,8 +10,9 @@
  */
 import { getPluginVersion } from '../components/version.js';
 
-const subVersion = 2
-const PREFIX = `[kh-plugin ${getPluginVersion()}${String.fromCharCode(97 + subVersion - 1)}]`;
+const subVersion = 0
+const subMark = subVersion < 1 ? '' : String.fromCharCode(97 + subVersion - 1)
+const PREFIX = `[kh-plugin ${getPluginVersion()}${subMark}]`;
 
 function write(level, ...args) {
     const method = logger[level];
